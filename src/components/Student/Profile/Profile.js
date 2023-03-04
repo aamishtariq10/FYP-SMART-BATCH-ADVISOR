@@ -1,8 +1,8 @@
 import React from "react";
-import { MainLayout } from "../layouts/MainLayout";
-import es from "../assets/keywords.jpg";
+import { MainLayout } from "../../../layouts/MainLayout";
+import es from "../../../assets/keywords.jpg";
 
-const AboutUs = () => {
+const Profile = () => {
   return (
     <MainLayout>
       <section class="flex w-full h-full justify-center items-center">
@@ -27,4 +27,4 @@ const AboutUs = () => {
   );
 };
 
-export default AboutUs;
+export default Profile;

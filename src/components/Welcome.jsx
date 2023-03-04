@@ -1,6 +1,6 @@
 import React from "react";
 import "../assets/Header.css";
-//import sc from "../assets/space.jpg";
+import sc from "../assets/space.jpg";
 const Welcome = () => {
   return (
     <div className="container">
@@ -9,7 +9,7 @@ const Welcome = () => {
       </header>
       <main className="main">
         <button className="center-btn">Click Me</button>
-        {/* <img src={sc} alt="Center Image" className="center-img"/> */}
+        <image src={sc} alt="Center Image" className="center-img" />
       </main>
     </div>
   );

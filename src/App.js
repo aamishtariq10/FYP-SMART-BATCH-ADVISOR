@@ -3,14 +3,17 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import MonitorBrand from "./components/MonitorBrand";
 // import Mentions from "./components/Mentions/Mentions";
-import PendingCourses from "./components/PendingCourses/PendingCourses";
-import Dashboard from "./components/Dashboard/Dashboard";
+import PendingCourses from "./components/Student/Dashboard/PendingCourses/PendingCourses";
+import RegisteredCourses from "./components/Student/Dashboard/RegisteredCourses/RegisteredCourses";
+import Dashboard from "./components/Student/Dashboard/Dashboard";
 import PageNotFound from "./components/PageNotFound";
 // import Report from "./components/Reports/Report";
+import ResultCard from "./components/Student/ResultCard/ResultCard";
 import ForgotPassword from "./components/ForgotPassword";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Welcome from "./components/Welcome";
+import Profile from "./components/Student/Profile/Profile";
 function App() {
   return (
     <>
@@ -22,9 +25,24 @@ function App() {
           <Route path="monitor" element={<MonitorBrand />} />
           {/* <Route path="mentions" element={<Mentions />} /> */}
           {/* <Route path="comparison" element={<Comparison />} /> */}
+          {/* <Route
+            path="/dashboard/pendingcourse"
+            element={<RegisteredCourses />}
+          /> */}
+          <Route
+            path="/dashboard/registeredcourse"
+            element={<RegisteredCourses />}
+          />
+          {/* <Route
+            path="/dashboard/registeredcourse"
+            element={<RegisteredCourses />}
+          /> */}
+          <Route path="/resultcard" element={<ResultCard />} />
+          <Route path="/dashboard/electives" element={<RegisteredCourses />} />
           <Route path="/pendingcourses" element={<PendingCourses />} />
           <Route path="dashboard" element={<Dashboard />} />
           {/* <Route path="report" element={<Report />} /> */}
+          <Route path="student/profile" element={<Profile />} />
           <Route path="aboutus" element={<AboutUs />} />
           <Route path="contactus" element={<ContactUs />} />
           <Route path="welcome" element={<Welcome />} />

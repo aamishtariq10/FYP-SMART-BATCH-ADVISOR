@@ -5,7 +5,7 @@ import React, { useState } from "react";
 //import { Router } from "react-router-dom";
 
 export const MainLayout = ({ currentProjectFetch = undefined, children }) => {
-  const [showSideBar, setShowSideBar] = useState(true);
+  const [showSideBar, setShowSideBar] = useState(!false);
   // const [IsLoading, setIsLoading] = useState(true);
   // const navigate = useNavigate();
 
