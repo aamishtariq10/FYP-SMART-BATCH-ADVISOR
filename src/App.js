@@ -13,6 +13,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Welcome from "./components/Welcome";
+import Profile from "./components/Student/Profile/Profile";
 function App() {
   return (
     <>
@@ -41,6 +42,7 @@ function App() {
           <Route path="/pendingcourses" element={<PendingCourses />} />
           <Route path="dashboard" element={<Dashboard />} />
           {/* <Route path="report" element={<Report />} /> */}
+          <Route path="student/profile" element={<Profile />} />
           <Route path="aboutus" element={<AboutUs />} />
           <Route path="contactus" element={<ContactUs />} />
           <Route path="welcome" element={<Welcome />} />
