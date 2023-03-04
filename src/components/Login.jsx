@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 //import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { Loader } from "../ui/Loader";
+//import { Loader } from "../ui/Loader";
 
 export default function Login() {
   // const [email, setEmail] = useState("");

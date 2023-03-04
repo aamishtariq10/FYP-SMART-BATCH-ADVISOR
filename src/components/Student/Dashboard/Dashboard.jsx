@@ -1,6 +1,6 @@
 //import React, { useEffect, useState } from "react";
-import { MainLayout } from "../../layouts/MainLayout";
-import { Card, CardBody } from "../../ui/Card";
+import { MainLayout } from "../../../layouts/MainLayout";
+import { Card, CardBody } from "../../../ui/Card";
 import { Table } from "flowbite-react";
 import {
   //ArrowPathIcon,
@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
-const Dashboard = () => {
+const Dashboard = ({ children }) => {
   // const user = JSON.parse(localStorage.getItem("userEmail"));
   // const [allProjects, setallProjects] = useState([]);
   // const [currentProjects, setcurrentProjects] = useState([]);
@@ -100,9 +100,7 @@ const Dashboard = () => {
   //   );
   // };
   return (
-    <MainLayout
-    // currentProjectFetch={{ currentProject, projectFetch: true }}
-    >
+    <MainLayout currentProjectFetch={{ projectFetch: true }}>
       <div className="m-4 min-h-screen">
         <Card className="my-4">
           <CardBody>
@@ -111,7 +109,45 @@ const Dashboard = () => {
             <p>You can manage your projects here</p>
           </CardBody>
         </Card>
-        <div className="flex flex-wrap -mx-4">
+        <nav class="bg-blue-900 dark:bg-gray-700">
+          <div class="max-w-screen-xl px-4 py-1 mx-auto md:px-6">
+            <div class="flex items-center">
+              <ul class="flex flex-row mt-0 mr-4 space-x-4 text-sm font-medium">
+                <li>
+                  <Link
+                    to="/dashboard/registeredcourse"
+                    className="text-white dark:text-white hover:underline"
+                  >
+                    <p>Registered Courses</p>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard/addcourses"
+                    class="text-white dark:text-white hover:underline"
+                  >
+                    Add New Courses
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/dashboard/pendingcourse"
+                    class="text-white dark:text-white hover:underline"
+                  >
+                    Pending Courses
+                  </Link>
+                </li>
+                <Link
+                  to="/dashboard/electives"
+                  class="text-white dark:text-white hover:underline"
+                >
+                  Electives
+                </Link>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        {/* <div className="flex flex-wrap -mx-4">
           <div className="w-full md:w-1/4 px-4 mb-4">
             {" "}
             <a
@@ -156,16 +192,16 @@ const Dashboard = () => {
               </h5>
             </a>
           </div>
-        </div>
+        </div> */}
 
-        <Card className="my-2">
+        {/* <Card className="my-2">
           <CardBody>
             <p className="text-xl font-bold">Welcome</p>
 
             <p>You can manage your projects here</p>
           </CardBody>
-        </Card>
-        <Card className="my-4">
+        </Card> */}
+        {/* <Card className="my-4">
           <CardBody>
             <button className="p-2 rounded-md bg-green-400 my-2">
               <Link to={"/monitor"} className="flex items-center space-x-1">
@@ -216,12 +252,13 @@ const Dashboard = () => {
                       />
                     </Table.Cell>
                   </Table.Row>
-                ))} */}
+                ))} 
               </Table.Body>
             </Table>
           </CardBody>
-        </Card>
+        </Card> */}
       </div>
+      {/* <main>{children}</main> */}
     </MainLayout>
   );
 };
