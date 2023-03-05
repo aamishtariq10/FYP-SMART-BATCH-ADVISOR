@@ -14,6 +14,13 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Welcome from "./components/Welcome";
 import Profile from "./components/Student/Profile/Profile";
+import Profile_New from "./components/Admin/Profile/Profile_New";
+import AddStudent from "./components/Admin/AddStudent/AddStudent";
+import AddCourse from "./components/Admin/AddCourse/AddCourse";
+import AddBatchAdvisor from "./components/Admin/AddBatchAdvisor/AddBatchAdvisor";
+import AddResult from "./components/Admin/AddResult/AddResult";
+import ResultForm from "./components/Admin/AddResult/ResultForm";
+import ListStudents from "./components/Admin/ListStudents/ListStudents";
 function App() {
   return (
     <>
@@ -37,6 +44,13 @@ function App() {
             path="/dashboard/registeredcourse"
             element={<RegisteredCourses />}
           /> */}
+          <Route path="/admin/profile" element={<Profile_New />} />
+          <Route path="/admin/addstudent" element={<AddStudent />} />
+          <Route path="/admin/addcourse" element={<AddCourse />} />
+          <Route path="/admin/addbatchadvisor" element={<AddBatchAdvisor />} />
+          <Route path="/admin/addresult" element={<AddResult />} />
+          <Route path="/admin/resultform" element={<ResultForm />} />
+          <Route path="/admin/liststudents" element={<ListStudents />} />
           <Route path="/resultcard" element={<ResultCard />} />
           <Route path="/dashboard/electives" element={<RegisteredCourses />} />
           <Route path="/pendingcourses" element={<PendingCourses />} />
