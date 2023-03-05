@@ -40,7 +40,7 @@ const Students = () => {
       <div className=" my-4 w-full w-full ">
         <div className=" my-4 text-center md:items-center ">
           <div className="bg-gray-700">
-            <h2 className="text-2xl font-medium mb-4 text-white"></h2>
+            <h2 className="text-2xl font-medium mb-4 text-white">Student</h2>
           </div>
           <div className="flex  overflow-x-auto  bg-gray-100 ">
             <table className="min-w-full divide-y table-auto  divide-gray-200">
