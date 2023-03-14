@@ -14,7 +14,7 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Welcome from "./components/Welcome";
 import Profile from "./components/Student/Profile/Profile";
-import Profile_New from "./components/Admin/Profile/Profile_New";
+import ProfileNew from "./components/Admin/Profile/Profile_New";
 import AddStudent from "./components/Admin/AddStudent/AddStudent";
 import AddCourse from "./components/Admin/AddCourse/AddCourse";
 import AddBatchAdvisor from "./components/Admin/AddBatchAdvisor/AddBatchAdvisor";
@@ -30,34 +30,28 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="monitor" element={<MonitorBrand />} />
-          {/* <Route path="mentions" element={<Mentions />} /> */}
-          {/* <Route path="comparison" element={<Comparison />} /> */}
-          {/* <Route
-            path="/dashboard/pendingcourse"
-            element={<RegisteredCourses />}
-          /> */}
-          <Route
-            path="/dashboard/registeredcourse"
-            element={<RegisteredCourses />}
-          />
-          {/* <Route
-            path="/dashboard/registeredcourse"
-            element={<RegisteredCourses />}
-          /> */}
-          <Route path="/admin/profile" element={<Profile_New />} />
+          <Route path="/admin/profile" element={<ProfileNew />} />
           <Route path="/admin/addstudent" element={<AddStudent />} />
           <Route path="/admin/addcourse" element={<AddCourse />} />
           <Route path="/admin/addbatchadvisor" element={<AddBatchAdvisor />} />
           <Route path="/admin/addresult" element={<AddResult />} />
           <Route path="/admin/resultform" element={<ResultForm />} />
           <Route path="/admin/liststudents" element={<ListStudents />} />
+          <Route path="/admin" element={<ProfileNew />} />
           <Route path="/resultcard" element={<ResultCard />} />
-          <Route path="/dashboard/electives" element={<RegisteredCourses />} />
+          <Route
+            path="/dashboard/registeredcourses"
+            element={<RegisteredCourses />}
+          />
+          <Route
+            path="/dashboard/pendingcourses"
+            element={<PendingCourses />}
+          />
+          <Route path="/dashboard/Electives" element={<RegisteredCourses />} />
           <Route path="/pendingcourses" element={<PendingCourses />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          {/* <Route path="report" element={<Report />} /> */}
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="student/profile" element={<Profile />} />
-          <Route path="aboutus" element={<AboutUs />} />
+          <Route path="aboutus" elemsent={<AboutUs />} />
           <Route path="contactus" element={<ContactUs />} />
           <Route path="welcome" element={<Welcome />} />
           <Route path="*" element={<PageNotFound />} />
