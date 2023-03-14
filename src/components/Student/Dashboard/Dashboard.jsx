@@ -115,7 +115,7 @@ const Dashboard = ({ children }) => {
               <ul class="flex flex-row mt-0 mr-4 space-x-4 text-sm font-medium">
                 <li>
                   <Link
-                    to="/dashboard/registeredcourse"
+                    to="/dashboard/registeredcourses"
                     className="text-white dark:text-white hover:underline"
                   >
                     <p>Registered Courses</p>
@@ -131,7 +131,7 @@ const Dashboard = ({ children }) => {
                 </li>
                 <li>
                   <Link
-                    to="/dashboard/pendingcourse"
+                    to="/dashboard/pendingcourses"
                     class="text-white dark:text-white hover:underline"
                   >
                     Pending Courses
@@ -257,8 +257,8 @@ const Dashboard = ({ children }) => {
             </Table>
           </CardBody>
         </Card> */}
+        <main>{children}</main>
       </div>
-      {/* <main>{children}</main> */}
     </MainLayout>
   );
 };

@@ -1,27 +1,19 @@
 import React from "react";
-import { MainLayout } from "../../../../layouts/MainLayout";
+//import { MainLayout } from "../../../../layouts/MainLayout";
 // import es from "../../../assets/keywords.jpg";
-
+import Dashboard from "../Dashboard";
+import CourseList from "./Courses";
 const PendingCourses = () => {
   return (
-    <MainLayout>
-      <section class="flex w-full h-full justify-center items-center">
-        <div class="flex flex-row justify-center space-x-10 px-10 items-center">
-          <div class="w-1/2">
-            <h1 class="text-4xl font-bold text-center my-4">About Us</h1>
-            <p class="text-justify">Our project</p>
-          </div>
-          <div class="w-1/2">
-            <img
-              // src="https://optinmonster.com/wp-content/uploads/2018/04/ultimate-seo-guide.jpg"
-              // src={es}
-              alt="about us"
-              class="w-full h-full shadow-2xl object-cover"
-            />
+    <Dashboard>
+      <section className="flex w-full h-full justify-center items-center">
+        <div className="flex flex-row justify-center space-x-10 px-10 items-center">
+          <div className="my-4 w-full">
+            <CourseList />
           </div>
         </div>
       </section>
-    </MainLayout>
+    </Dashboard>
   );
 };
 
