@@ -76,9 +76,10 @@ export default function Registration() {
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <img className="mx-auto h-28 w-auto" src={Capture} alt="Your Company" />
+          <h1 className="text-center text-4xl font-bold tracking-tight text-gray-900">Student Portal</h1>
+          {/* <img className="mx-auto h-28 w-auto" src={Capture} alt="Your Company" /> */}
           <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-            Create your account
+            Login to your account
           </h2>
           
         </div>
@@ -171,6 +172,18 @@ export default function Registration() {
                   >
                     Log in
                   </Link>
+                </p>
+
+                <p className="text-left text-sm text-gray-600 mx-8" >
+
+                  <Link
+                    to="/admin/profile"
+                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                  Click for Admin Side{" "}
+
+                  </Link>
+
                 </p>
               </div>
 
