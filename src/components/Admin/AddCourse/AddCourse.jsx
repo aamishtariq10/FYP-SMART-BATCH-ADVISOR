@@ -1,10 +1,10 @@
 import React from "react";
-import { Admin_Layout } from "../../../layouts/Admin_Layout";
+import { AdminLayout } from "../../../layouts/AdminLayout";
 import es from "../../../assets/keywords.jpg";
 
 const AddCourse = () => {
     return (
-        <Admin_Layout>
+        <AdminLayout>
             <section className="flex w-full h-full justify-center items-center">
 
                 {/* <div className="flex justify-center items-center h-screen w-full bg-blue-400"> */}
@@ -30,7 +30,7 @@ const AddCourse = () => {
                 {/* </div> */}
 
             </section>
-        </Admin_Layout>
+        </AdminLayout>
     );
 };
 
