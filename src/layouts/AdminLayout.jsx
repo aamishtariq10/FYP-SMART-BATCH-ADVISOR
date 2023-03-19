@@ -4,7 +4,7 @@ import { Sidebar } from "../ui_Admin/Sidebar/Sidebar";
 import React, { useState } from "react";
 //import { Router } from "react-router-dom";
 
-export const Admin_Layout = ({ currentProjectFetch = undefined, children }) => {
+export const AdminLayout = ({ currentProjectFetch = undefined, children }) => {
   const [showSideBar, setShowSideBar] = useState(!false);
   // const [IsLoading, setIsLoading] = useState(true);
   // const navigate = useNavigate();

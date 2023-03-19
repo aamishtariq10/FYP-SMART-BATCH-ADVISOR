@@ -1,10 +1,10 @@
 import React from "react";
-import { Admin_Layout } from "../../../layouts/Admin_Layout";
+import { AdminLayout } from "../../../layouts/AdminLayout";
 import es from "../../../assets/keywords.jpg";
 
 const Profile_New = () => {
   return (
-    <Admin_Layout>
+    <AdminLayout>
       <section className="flex w-full h-full justify-center items-center">
         <div className="flex flex-row justify-center space-x-10 px-10 items-center">
           <div className="w-1/2">
@@ -23,7 +23,7 @@ const Profile_New = () => {
           </div>
         </div>
       </section>
-    </Admin_Layout>
+    </AdminLayout>
   );
 };
 

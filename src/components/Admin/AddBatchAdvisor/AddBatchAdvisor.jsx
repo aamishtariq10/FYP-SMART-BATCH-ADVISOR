@@ -1,5 +1,5 @@
 import React from "react";
-import { Admin_Layout } from "../../../layouts/Admin_Layout";
+import { AdminLayout } from "../../../layouts/AdminLayout";
 import es from "../../../assets/keywords.jpg";
 const renderOptions = () => {
   const options = [];
@@ -15,7 +15,7 @@ const renderOptions = () => {
 
 const AddBatchAdvisor = () => {
   return (
-    <Admin_Layout>
+    <AdminLayout>
       <section className="flex w-full h-full justify-center items-center">
         {/* <div className="flex justify-center items-center h-screen w-full bg-blue-400"> */}
         <div className="w-full bg-white rounded shadow-2xl p-8 m-4">
@@ -96,7 +96,7 @@ const AddBatchAdvisor = () => {
         </div>
         {/* </div> */}
       </section>
-    </Admin_Layout>
+    </AdminLayout>
   );
 };
 
