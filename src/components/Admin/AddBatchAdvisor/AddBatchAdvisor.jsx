@@ -1,6 +1,5 @@
 import React from "react";
 import { AdminLayout } from "../../../layouts/AdminLayout";
-import es from "../../../assets/keywords.jpg";
 const renderOptions = () => {
   const options = [];
   for (let i = 18; i <= 30; i++) {
@@ -10,7 +9,7 @@ const renderOptions = () => {
       </option>
     );
   }
-  return options;
+return options;
 };
 
 const AddBatchAdvisor = () => {

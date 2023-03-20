@@ -21,6 +21,7 @@ import AddBatchAdvisor from "./components/Admin/AddBatchAdvisor/AddBatchAdvisor"
 import AddResult from "./components/Admin/AddResult/AddResult";
 import ResultForm from "./components/Admin/AddResult/ResultForm";
 import ListStudents from "./components/Admin/ListStudents/ListStudents";
+import BatchAdvisor from "./components/Admin/AddBatchAdvisor/BatchAdvisor";
 function App() {
   return (
     <>
@@ -30,6 +31,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="monitor" element={<MonitorBrand />} />
+          <Route path="admin/batchadvisor" element={<BatchAdvisor />} />
           <Route path="/admin/profile" element={<ProfileNew />} />
           <Route path="/admin/addstudent" element={<AddStudent />} />
           <Route path="/admin/addcourse" element={<AddCourse />} />
