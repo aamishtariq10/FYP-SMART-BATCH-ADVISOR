@@ -34,6 +34,11 @@ const sideNavigation = [
     icon: <ChartPieIcon className={iconClass} />,
   },
   {
+    name: " Batch Advisor",
+    href: "/admin/batchadvisor",
+    icon: <ChartPieIcon className={iconClass} />,
+  },
+  {
     name: "Add Result",
     href: "/admin/addresult",
     icon: <DocumentIcon className={iconClass} />,
