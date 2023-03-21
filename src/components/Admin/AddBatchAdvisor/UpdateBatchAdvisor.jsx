@@ -1,14 +1,10 @@
 
-import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from "react";
-import { GridToolbar } from '@mui/x-data-grid-pro';
-import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Paper, Input,IconButton, FormControl, TextField, Button, Box, Icon, MenuItem } from '@mui/material';
-// import { InputAdornment } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button} from '@mui/material';
 import { AdminLayout } from "../../../layouts/AdminLayout";
-import axios from "axios";
+//import axios from "axios";
+import { ArrowBack } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
-import { ArrowBack, Close  } from '@mui/icons-material';
-
 const AddBatchAdvisor = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,49 +12,75 @@ const AddBatchAdvisor = () => {
   const [department, setDepartment] = useState("");
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
+  // const params = useParams();
+  //   var id = params.id;
+  //   //var name = params.name;
 
- //axios request to add batch advisor
-  const handleSubmit = (e) => {
-    var active = isActive ? "Actice" : "Inactive";
-    e.preventDefault();
-    const data = {
-    BatchAdvisorName: name,
-    BatchAdvisorEmail: email,
-    BatchAdvisorStatus : active,
-    BatchSection: batchSection,
-    BatchAdvisorDep : department,
-   
-    };
-    axios
+  //   React.useEffect(() => {
+  //     const data = {
+  //       BatchAdvisorName: name,
+  //       BatchAdvisorEmail: email,
+  //       BatchAdvisorStatus : active,
+  //       BatchSection: batchSection,
+  //       BatchAdvisorDep : department,
 
-      .post("http://localhost:5000/admin/batchadvisor/add", data)
-      .then((res) => {
-        console.log(res);
-        navigate("/admin/batchadvisor");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  //       };
+  //     axios
+  //       .get("http://localhost:4000/products/" + params.id, {
 
-        
+  //       data
+
+  //       })
+  //       .then((res) => {
+  //         setName(res.data.carCompany);
+  //         setEmail(res.data.carName);
+  //         setIsActive(res.data.carModel);
+  //         setBatchSection(res.data.carPrice);
+  //         setDepartment(res.data.Features);
+  //       });
+  //   }, [params.id]);
+  //  //axios request to add batch advisor
+  //   const handleSubmit = (e) => {
+  //     var active = isActive ? "Actice" : "Inactive";
+  //     e.preventDefault();
+  //     const data = {
+  //     BatchAdvisorName: name,
+  //     BatchAdvisorEmail: email,
+  //     BatchAdvisorStatus : active,
+  //     BatchSection: batchSection,
+  //     BatchAdvisorDep : department,
+
+  //     };
+  //     axios
+
+  //       .put("http://localhost:5000/admin/batchadvisor/add", data)
+  //       .then((res) => {
+  //         console.log(res);
+  //         navigate("/admin/batchadvisor");
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
+
+
   return (
     <AdminLayout>
       <section className="flex w-full h-full justify-center items-center">
         <div className="w-full bg-white rounded p-4 m-4">
-        <AppBar position="static">
-        <Toolbar>
-          <IconButton onClick={() => navigate('/admin/batchadvisor')}>
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h8">Go Back</Typography>
-        </Toolbar>
-      </AppBar>
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton onClick={() => navigate('/admin/batchadvisor')}>
+                <ArrowBack />
+              </IconButton>
+              <Typography variant="h8">Go Back</Typography>
+            </Toolbar>
+          </AppBar>
           <h1 className="block w-full text-center text-gray-800 text-2xl font-bold mb-6 p-4">
             Add Batch Advisor
           </h1>
           <form
-            onSubmit={handleSubmit} 
+            //  onSubmit={handleSubmit} 
             className="bg-white shadow-md rounded  px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">
               <FormControl fullWidth>
@@ -123,7 +145,7 @@ const AddBatchAdvisor = () => {
             </div>
             <div className="flex items-center justify-between">
               <Button type="submit" variant="contained" color="primary">
-                Add Advisor
+                Update Records
               </Button>
             </div>
           </form>
