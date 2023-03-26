@@ -17,7 +17,6 @@ import Profile from "./components/Student/Profile/Profile";
 import ProfileNew from "./components/Admin/Profile/Profile_New";
 import AddStudent from "./components/Admin/AddStudent/AddStudent";
 import AddCourse from "./components/Admin/AddCourse/AddCourse";
-
 import AddResult from "./components/Admin/AddResult/AddResult";
 import ResultForm from "./components/Admin/AddResult/ResultForm";
 import ListStudents from "./components/Admin/ListStudents/ListStudents";
@@ -36,7 +35,7 @@ function App() {
           <Route path="/admin/profile" element={<ProfileNew />} />
           <Route path="/admin/addstudent" element={<AddStudent />} />
           <Route path="/admin/addcourse" element={<AddCourse />} />
-          <Route path="/admin/batchadvisor/update/:batchadvisor/:id" element={<UpdateBatchAdvisor />} />
+          <Route path="/admin/batchadvisor/update/:batchadvisorname/:id" element={<UpdateBatchAdvisor />} />
           <Route path="/admin/batchadvisor/new" element={<AddBatchAdvisor />} />
           <Route path="admin/batchadvisor" element={<BatchAdvisor />} />
           <Route path="/admin/addresult" element={<AddResult />} />

@@ -1,13 +1,11 @@
 
-import { DataGrid } from '@mui/x-data-grid';
 import React, { useState } from "react";
-import { GridToolbar } from '@mui/x-data-grid-pro';
-import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Paper, Input,IconButton, FormControl, TextField, Button, Box, Icon, MenuItem } from '@mui/material';
-// import { InputAdornment } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, FormControlLabel, Checkbox, Paper, Input, IconButton, FormControl, TextField, Button, Box, Icon, MenuItem } from '@mui/material';
 import { AdminLayout } from "../../../layouts/AdminLayout";
+import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ArrowBack, Close  } from '@mui/icons-material';
+import { ArrowBack, Close } from '@mui/icons-material';
 
 const AddBatchAdvisor = () => {
   const [name, setName] = useState("");
@@ -17,55 +15,58 @@ const AddBatchAdvisor = () => {
   const [isActive, setIsActive] = useState(false);
   const navigate = useNavigate();
 
- //axios request to add batch advisor
+  //axios request to add batch advisor
   const handleSubmit = (e) => {
     var active = isActive ? "Actice" : "Inactive";
     e.preventDefault();
     const data = {
-    BatchAdvisorName: name,
-    BatchAdvisorEmail: email,
-    BatchAdvisorStatus : active,
-    BatchSection: batchSection,
-    BatchAdvisorDep : department,
-   
+      BatchAdvisorName: name,
+      BatchAdvisorEmail: email,
+      BatchAdvisorStatus: active,
+      BatchSection: batchSection,
+      BatchAdvisorDep: department,
+
     };
     axios
 
       .post("http://localhost:5000/admin/batchadvisor/add", data)
       .then((res) => {
         console.log(res);
+        toast.success(res.data.message);
         navigate("/admin/batchadvisor");
       })
       .catch((err) => {
+        toast.error(err.response.data.message);
         console.log(err);
       });
   };
 
-        
+
   return (
     <AdminLayout>
       <section className="flex w-full h-full justify-center items-center">
-        <div className="w-full bg-white rounded p-4 m-4">
-        <AppBar position="static">
-        <Toolbar>
-          <IconButton onClick={() => navigate('/admin/batchadvisor')}>
-            <ArrowBack />
-          </IconButton>
-          <Typography variant="h8">Go Back</Typography>
-        </Toolbar>
-      </AppBar>
-          <h1 className="block w-full text-center text-gray-800 text-2xl font-bold mb-6 p-4">
-            Add Batch Advisor
-          </h1>
+        <div className="w-full bg-white-100 rounded p-4 m-4">
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton onClick={() => navigate('/admin/batchadvisor')}>
+                <ArrowBack />
+              </IconButton>
+              <Typography variant="h8">Back</Typography>
+              <Typography variant="h5" className="block w-full text-center font-bold ">
+                Add Batch Advisor
+              </Typography>
+            </Toolbar>
+          </AppBar>
           <form
-            onSubmit={handleSubmit} 
-            className="bg-white shadow-md rounded  px-8 pt-6 pb-8 mb-4">
+            onSubmit={handleSubmit}
+            className="bg-gray shadow-md rounded  px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">
               <FormControl fullWidth>
                 <TextField
                   id="name"
-                  label="Name"
-                  variant="filled"
+                  label="Enter Name"
+                  variant="outlined"
+                  placeholder="Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -76,10 +77,11 @@ const AddBatchAdvisor = () => {
               <FormControl fullWidth>
                 <TextField
                   id="email"
-                  label="Email"
-                  variant="filled"
+                  label="Enter Email"
+                  variant="outlined"
+                  placeholder="xyz@cuilahoe.edu.pk"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
                   required
                 />
               </FormControl>
@@ -89,9 +91,10 @@ const AddBatchAdvisor = () => {
                 <TextField
                   id="batch-section"
                   label="Batch Section"
-                  variant="filled"
+                  placeholder="FA19-BCS-A"
+                  variant="outlined"
                   value={batchSection}
-                  onChange={(e) => setBatchSection(e.target.value)}
+                  onChange={(e) => setBatchSection(e.target.value.toUpperCase())}
                   required
                 />
               </FormControl>
@@ -101,9 +104,10 @@ const AddBatchAdvisor = () => {
                 <TextField
                   id="department"
                   label="Department"
-                  variant="filled"
+                  variant="outlined"
+                  placeholder="CS / SE / EE / ME / CE / BS / IS / MATH etc"
                   value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
+                  onChange={(e) => setDepartment(e.target.value.toUpperCase())}
                   required
                 />
               </FormControl>
@@ -127,7 +131,18 @@ const AddBatchAdvisor = () => {
               </Button>
             </div>
           </form>
-
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </div>
         {/* </div> */}
       </section>
