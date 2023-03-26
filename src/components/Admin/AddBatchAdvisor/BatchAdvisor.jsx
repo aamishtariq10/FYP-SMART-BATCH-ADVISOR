@@ -1,40 +1,33 @@
-
+import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useState } from "react";
+import React from "react";
 import { GridToolbar } from '@mui/x-data-grid-pro';
-import { InputLabel, Typography, Paper, Input, FormControl, TextField, Button, Box, Icon, MenuItem } from '@mui/material';
-// import { InputAdornment } from '@material-ui/core';
+import { Typography, Paper, TextField, Button, Box, Checkbox } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const columns = [
-    //{ field: 'SrNo', headerName: 'SrNo', width: 200 },
-    { field: 'BatchAdvisorID', headerName: 'BatchAdvisorID', width: 130 },
-    { field: 'BatchAdvisorName', headerName: 'Name', width: 200 },
-    { field: 'BatchAdvisorEmail', headerName: 'Email', width: 300 },
-    { field: 'BatchAdvisorStatus', headerName: 'Status', width: 130 },
-    { field: 'BatchSection', headerName: 'Section', width: 130 },
-    { field: 'BatchAdvisorDep', headerName: 'Department', width: 130 },
-];
+import 'react-toastify/dist/ReactToastify.css';
 
 const BatchAdvisor = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
     const getRowId = (row) => row.BatchAdvisorID;
     const [searchValue, setSearchValue] = React.useState('');
+    const [selectedRows, setSelectedRows] = React.useState([]);
     const getData = () => {
         axios
             .get("http://localhost:5000/admin/batchadvisor/get")
             .then((res) => {
                 setRows(res.data.data);
-
-                console.log(res.data.data);
+                //  console.log(res.data.data);
             })
             .catch((err) => {
-                console.log(err);
+                toast.error("No data found");
+
             });
     };
     React.useEffect(getData, []);
@@ -45,8 +38,57 @@ const BatchAdvisor = () => {
         navigate(`new`);
     };
     const filterRowsByName = (rows) => {
+        if (!rows || rows.length === 0) {
+            return [];
+        }
         return rows.filter(row => row.BatchAdvisorName.toLowerCase().includes(searchValue.toLowerCase()));
     };
+    const selectRowstoDelete = (row) => {
+        const selectedRows = row;
+        setSelectedRows(selectedRows);
+    };
+
+    const handleDelete = (row) => {
+        if (selectedRows.length === 0) {
+            toast.error("No rows selected");
+        }
+        else {
+            axios
+                .delete(`http://localhost:5000/admin/batchadvisor/delete`, { data: { ids: selectedRows } })
+                .then((res) => {
+                    toast.success("Deleted Successfully",);
+                    getData();
+                })
+                .catch((err) => {
+                    toast.error("Error Occured");
+                });
+        }
+    };
+
+    const columns = [
+
+        {
+            field: "delete",
+            width: 75,
+            sortable: false,
+            disableColumnMenu: true,
+            renderHeader: () => (
+                <IconButton onClick={handleDelete}
+                >
+                    <DeleteIcon />
+                </IconButton>
+            ),
+        },
+        { field: 'BatchAdvisorID', headerName: 'BatchAdvisorID', width: 130 },
+        { field: 'BatchAdvisorName', headerName: 'Name', width: 200 },
+        { field: 'BatchAdvisorEmail', headerName: 'Email', width: 300 },
+        { field: 'BatchAdvisorStatus', headrName: 'Status', width: 130 },
+        { field: 'BatchSection', headerName: 'Section', width: 130 },
+        { field: 'BatchAdvisorDep', headerName: 'Department', width: 130 },
+
+    ];
+
+
     return (
         <AdminLayout>
             <Box
@@ -83,15 +125,14 @@ const BatchAdvisor = () => {
                 >
                     <TextField
                         variant="standard"
-                        margin="normal"
+                        margin="small"
                         required
                         fullWidth
                         id="Search"
                         name="Search"
-                        autoComplete="Search"
+                        autoComplete="BatchAdvisorName"
                         autoFocus
                         onChange={(e) => setSearchValue(e.target.value)}
-
                         placeholder="Search Batch Advisor By Name"
                         InputProps={{
                             startAdornment: <PersonSearchIcon />,
@@ -100,6 +141,7 @@ const BatchAdvisor = () => {
                     />
                 </Paper>
                 <div className="rounded-lg bg-white text-center shadow p-4 my-4 mx-4 w-full h-screen
+
                 ">
                     <DataGrid
                         className="p-4"
@@ -107,7 +149,12 @@ const BatchAdvisor = () => {
                         columns={columns}
                         getRowId={getRowId}
                         pageSize={10}
-                        checkboxSelection rowCount={rows.length}
+                        onRowSelectionModelChange={(rows) => {
+                            selectRowstoDelete(rows);
+                        }}
+                        checkboxSelection
+
+                        //rowCount={rows.length}
                         onRowClick={(rows) => {
                             handleClickOpen(rows.row);
                         }}
@@ -115,6 +162,20 @@ const BatchAdvisor = () => {
                             Toolbar: GridToolbar,
                         }}
                     />
+
+                    <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                    />
+
                 </div>
             </section>
         </AdminLayout>
