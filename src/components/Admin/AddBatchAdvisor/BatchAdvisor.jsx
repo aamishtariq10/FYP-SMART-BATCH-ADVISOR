@@ -96,11 +96,11 @@ const BatchAdvisor = () => {
             ),
         },
         { field: 'BatchAdvisorID', headerName: 'BatchAdvisorID', width: 130 },
-        { field: 'BatchAdvisorName', headerName: 'Name', width: 200 },
-        { field: 'BatchAdvisorEmail', headerName: 'Email', width: 300 },
-        { field: 'BatchAdvisorStatus', headrName: 'Status', width: 130 },
-        { field: 'BatchSection', headerName: 'Section', width: 130 },
-        { field: 'BatchAdvisorDep', headerName: 'Department', width: 130 },
+        { field: 'BatchAdvisorName', headerName: 'BatchAdvisorName', width: 200 },
+        { field: 'BatchAdvisorEmail', headerName: 'BatchAdvisorEmail', width: 300 },
+        { field: 'BatchAdvisorStatus', headrName: 'BatchAdvisorStatus', width: 150 },
+        { field: 'BatchSection', headerName: 'BatchSection', width: 130 },
+        { field: 'BatchAdvisorDep', headerName: 'BatchAdvisorDep', width: 130 },
     ];
     return (
         <AdminLayout>
@@ -119,7 +119,7 @@ const BatchAdvisor = () => {
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="mb-4 sm:mb-0">
-                        <AddByUpload />
+                        <AddByUpload  getData={getData} />
                     </div>
                     <Button
                         onClick={ClicktoAddNewBatchAdvisor}

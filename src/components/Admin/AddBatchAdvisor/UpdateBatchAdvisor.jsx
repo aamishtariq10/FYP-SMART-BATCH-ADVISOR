@@ -64,8 +64,8 @@ const UpdateBatchAdvisor = () => {
           toast.success(res.data.message, { autoClose: 1500 })
           navigate("/admin/batchadvisor");
         }, 1000);
-        toast.success(res.data.message)
-        navigate("/admin/batchadvisor");
+        // toast.success(res.data.message)
+        // navigate("/admin/batchadvisor");
       })
       .catch((err) => {
         toast.error(err.response.data.message, { autoClose: 1500 })
