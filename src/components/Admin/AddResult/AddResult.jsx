@@ -1,10 +1,10 @@
 import React from "react";
-import { Admin_Layout } from "../../../layouts/Admin_Layout";
+import { AdminLayout } from "../../../layouts/AdminLayout";
 import Students from "./Students";
 //import es from "../assets/keywords.jpg";
 const AddResult = () => {
   return (
-    <Admin_Layout>
+    <AdminLayout>
       <section class="flex flex-row w-full h-full justify-center items-center">
         <div className="mx-4 my-4 w-full w-full">
           <div className="rounded-lg bg-white text-center shadow md:items-center md:p-6 xl:p-8">
@@ -19,7 +19,7 @@ const AddResult = () => {
           </div>
         </div>
       </section>
-    </Admin_Layout>
+    </AdminLayout>
   );
 };
 export default AddResult;

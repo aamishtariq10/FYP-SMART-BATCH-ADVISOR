@@ -24,15 +24,21 @@ const sideNavigation = [
     icon: <AcademicCapIcon className={iconClass} />,
   },
   {
+    name: " Batch Advisor",
+    href: "/admin/batchadvisor",
+    icon: <ChartPieIcon className={iconClass} />,
+  },
+  {
     name: "Add Courses",
     href: "/admin/addcourse",
     icon: <DocumentIcon className={iconClass} />,
   },
-  {
-    name: "Add Batch Advisor",
-    href: "/admin/addbatchadvisor",
-    icon: <ChartPieIcon className={iconClass} />,
-  },
+  // {
+  //   name: "Add Batch Advisor",
+  //   href: "/admin/addbatchadvisor",
+  //   icon: <ChartPieIcon className={iconClass} />,
+  // },
+
   {
     name: "Add Result",
     href: "/admin/addresult",
@@ -70,11 +76,10 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
   return (
     <aside
       id="sidebar"
-      className={`fixed top-0 left-0 z-20 h-full  bg-white flex-shrink-0 flex-col pt-16 transition-width duration-75 sm:w-0 flex lg:w-64 ${
-        !showSideBar && "w-0 sm:w-0 lg:-w-64"
+      className={`fixed top-0 left-0 z-20 h-full  bg-white flex-shrink-0 flex-col pt-16 transition-width duration-75 sm:w-0 flex lg:w-64 ${!showSideBar && "w-0 sm:w-0 lg:-w-64"
           ? "w-64 sm:w-64 md:w-64 lg:w-0"
           : "w-0"
-      }  `}
+        }  `}
     >
       <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
         <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
@@ -86,8 +91,8 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                   key={item.name}
                   className={({ isActive }) =>
                     isActive
-                      ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 bg-blue-900  "
-                      : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-blue-100 "
+                      ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-white-900 bg-gray-200  "
+                      : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 "
                   }
                 >
                   {item.icon}
@@ -115,8 +120,8 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
 
             {/* <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
         <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4"> */}
-              <ul >
-                {/* {brandKey && (
+            <ul >
+              {/* {brandKey && (
                 <NavLink
                   to="/mentions"
                   className="flex border-l-4 border-0 rounded-none border-lime-600 cursor-pointer items-center p-2 text-base font-normal text-white-900"
@@ -130,28 +135,28 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                   <div className="flex-shrink-0 w-2 h-2 rounded-full bg-lime-600"></div>
                 </NavLink>
               )} */}
-                {BottomsideNavigation.map((item) => (
-                  <NavLink
-                    to={item.href}
-                    key={item.name}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 bg-blue-900  "
-                        : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-blue-100 "
-                    }
+              {BottomsideNavigation.map((item) => (
+                <NavLink
+                  to={item.href}
+                  key={item.name}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 bg-blue-900  "
+                      : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-blue-100 "
+                  }
+                >
+                  {item.icon}
+                  <span
+                    className="ml-3 flex-1 whitespace-nowrap  "
+                    data-testid="sidebar-item-content"
                   >
-                    {item.icon}
-                    <span
-                      className="ml-3 flex-1 whitespace-nowrap  "
-                      data-testid="sidebar-item-content"
-                    >
-                      {item.name}
-                    </span>
-                  </NavLink>
-                ))}
-                {/* <hr /> */}
+                    {item.name}
+                  </span>
+                </NavLink>
+              ))}
+              {/* <hr /> */}
 
-                {/* {brandKeys &&
+              {/* {brandKeys &&
                   brandKeys?.map((item, idx) => (
                     <NavLink
                       to="/mentions"
@@ -161,10 +166,10 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                       {item}
                     </NavLink>
                   ))} */}
-              </ul>
-            </div>
+            </ul>
           </div>
         </div>
+      </div>
     </aside>
   );
 };
