@@ -20,7 +20,7 @@ const sideNavigation = [
   },
   {
     name: "Add Student",
-    href: "/admin/addstudent",
+    href: "/admin/students",
     icon: <AcademicCapIcon className={iconClass} />,
   },
   {
@@ -77,8 +77,8 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
     <aside
       id="sidebar"
       className={`fixed top-0 left-0 z-20 h-full  bg-white flex-shrink-0 flex-col pt-16 transition-width duration-75 sm:w-0 flex lg:w-64 ${!showSideBar && "w-0 sm:w-0 lg:-w-64"
-          ? "w-64 sm:w-64 md:w-64 lg:w-0"
-          : "w-0"
+        ? "w-64 sm:w-64 md:w-64 lg:w-0"
+        : "w-0"
         }  `}
     >
       <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">

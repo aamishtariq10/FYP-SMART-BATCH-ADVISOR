@@ -1,7 +1,7 @@
 import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
-import { GridToolbar } from '@mui/x-data-grid-pro';
+import { GridToolbar, GridContextProvider } from '@mui/x-data-grid-pro';
 import { Typography, Paper, TextField, Button, Box, Checkbox } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Dialog from '@mui/material/Dialog';
@@ -19,43 +19,43 @@ import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import AddByUpload from './AddByUpload';
 
-const BatchAdvisor = () => {
+const Student = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
-    const getRowId = (row) => row.BatchAdvisorID;
+    const getRowId = (row) => row.SrNO;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
-
+    //const [openUpdate, setOpenUpdate] = React.useState(false);
     const [open, setOpen] = React.useState(false);
-
-
-    const getData = () => {
-        axios
-            .get("http://localhost:5000/admin/batchadvisor/get")
-            .then((res) => {
-                setRows(res.data.data);
-                //  console.log(res.data.data);
-            })
-            .catch((err) => {
-                toast.error("No data found");
-
-            });
+    //if update is clicked
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getData = async () => {
+        try {
+            const student = await axios.get("http://localhost:5000/admin/students/get");
+            setRows(student.data.data);
+            console.log(student);
+        } catch (error) {
+            toast.error("No data found");
+        }
     };
-    React.useEffect(getData, []);
+
+    React.useEffect(() => {
+        getData();
+    }, []);
+
     const handleClickOpen = (row) => {
-        navigate(`update/${row.BatchAdvisorName}/${row.BatchAdvisorID}`, { state: { rowData: row } });
+        navigate(`update/${row.StudentName}/${row.SrNO}`, { state: { data: row } });
     };
-    const ClicktoAddNewBatchAdvisor = (row) => {
+    const AddNewStudent = (row) => {
         navigate(`new`);
     };
     const filterRowsByName = (rows) => {
         if (!rows || rows.length === 0) {
             return [];
         }
-        return rows.filter(row => row.BatchAdvisorName.toLowerCase().includes(searchValue.toLowerCase()));
+        return rows.filter(row => row.StudentName.toLowerCase().includes(searchValue.toLowerCase()));
     };
     const selectRowstoDelete = (row) => {
-        console.log(row);
         const selectedRows = row;
         setSelectedRows(selectedRows);
     };
@@ -71,14 +71,15 @@ const BatchAdvisor = () => {
         setOpen(false);
     };
     const handleClose = (row) => {
+        console.log(selectedRows)
         axios
-            .delete(`http://localhost:5000/admin/batchadvisor/delete`, { data: { ids: selectedRows } })
+            .put(`http://localhost:5000/admin/students/delete`, { data: { ids: selectedRows } })
             .then((res) => {
-                toast.success("Deleted Successfully",);
+                toast.info(res.data.message);
                 getData();
             })
             .catch((err) => {
-                toast.error("Error Occured");
+                toast.error(err.data.message);
             });
 
         setOpen(false);
@@ -97,11 +98,12 @@ const BatchAdvisor = () => {
             ),
         },
         // { field: 'BatchAdvisorID', headerName: 'BatchAdvisorID', width: 130 },
-        { field: 'BatchAdvisorName', headerName: 'BatchAdvisorName', width: 200 },
-        { field: 'BatchAdvisorEmail', headerName: 'BatchAdvisorEmail', width: 300 },
-        { field: 'BatchAdvisorStatus', headrName: 'BatchAdvisorStatus', width: 150 },
-        { field: 'BatchSection', headerName: 'BatchSection', width: 130 },
-        { field: 'BatchAdvisorDep', headerName: 'BatchAdvisorDep', width: 130 },
+        { field: 'StudentRegNo', headerName: 'StudentRegNo', width: 200 },
+        { field: 'StudentName', headerName: 'StudentName', width: 150 },
+        { field: 'StudentEmail', headrName: 'StudentEmail', width: 250 },
+        { field: 'StudentSection', headerName: 'StudentSection', width: 130 },
+        { field: 'StudentStatus', headerName: 'StudentStatus', width: 130 },
+        { field: 'CurrentSemester', headerName: 'CurrentSemester', width: 130 },
     ];
     return (
         <AdminLayout>
@@ -111,19 +113,21 @@ const BatchAdvisor = () => {
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Batch Advisors
+                        Students
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the batch advisors here
+                        You can see all the Students here
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="mb-4 sm:mb-0">
-                        <AddByUpload getData={getData} />
+                        <AddByUpload
+                        //  getData={getData}
+                        />
                     </div>
                     <Button
-                        onClick={ClicktoAddNewBatchAdvisor}
+                        onClick={AddNewStudent}
                         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
                     >
                         <PersonAddAlt1Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
@@ -142,15 +146,15 @@ const BatchAdvisor = () => {
                 >
                     <TextField
                         variant="standard"
-                        margin="small"
+                        margin="dense"
                         required
                         fullWidth
                         id="Search"
                         name="Search"
-                        autoComplete="BatchAdvisorName"
+                        autoComplete="StudentName"
                         autoFocus
                         onChange={(e) => setSearchValue(e.target.value)}
-                        placeholder="Search Batch Advisor By Name"
+                        placeholder="Search Student By Name"
                         InputProps={{
                             startAdornment: <PersonSearchIcon />,
                             disableUnderline: true,
@@ -177,6 +181,7 @@ const BatchAdvisor = () => {
                             Toolbar: GridToolbar,
                         }}
                     />
+
 
                     <ToastContainer
                         position="top-right"
@@ -216,4 +221,4 @@ const BatchAdvisor = () => {
     );
 };
 
-export default BatchAdvisor;
+export default Student;

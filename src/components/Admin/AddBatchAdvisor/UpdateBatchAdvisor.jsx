@@ -4,9 +4,10 @@ import { AppBar, Toolbar, Typography, Alert, FormControlLabel, Checkbox, IconBut
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { ArrowBack } from '@mui/icons-material';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 const UpdateBatchAdvisor = () => {
+  //console.log(props.row);
   const [BatchAdvisorName, setName] = useState("");
   const [BatchAdvisorEmail, setEmail] = useState("");
   const [BatchSection, setBatchSection] = useState("");
@@ -14,6 +15,9 @@ const UpdateBatchAdvisor = () => {
   const [BatchAdvisorStatus, setIsActive] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
+  const rowData = location.state?.rowData;
+  console.log(rowData)
   const { batchadvisorname } = useParams();
   React.useEffect(() => {
     const data = {
@@ -64,12 +68,12 @@ const UpdateBatchAdvisor = () => {
           toast.success(res.data.message, { autoClose: 1500 })
           navigate("/admin/batchadvisor");
         }, 1000);
-        // toast.success(res.data.message)
+        toast.success(res.data.message)
         // navigate("/admin/batchadvisor");
       })
       .catch((err) => {
         toast.error(err.response.data.message, { autoClose: 1500 })
-        //   console.log(err.response.data.message);  
+        // console.log(err.response.data.message);
         // console.log(err);
       });
   };
