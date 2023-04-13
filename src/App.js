@@ -15,7 +15,6 @@ import ContactUs from "./components/ContactUs";
 import Welcome from "./components/Welcome";
 import Profile from "./components/Student/Profile/Profile";
 import ProfileNew from "./components/Admin/Profile/Profile_New";
-import AddStudent from "./components/Admin/AddStudent/AddStudent";
 import AddCourse from "./components/Admin/AddCourse/AddCourse";
 import AddResult from "./components/Admin/AddResult/AddResult";
 import ResultForm from "./components/Admin/AddResult/ResultForm";
@@ -23,6 +22,8 @@ import ListStudents from "./components/Admin/ListStudents/ListStudents";
 import BatchAdvisor from "./components/Admin/AddBatchAdvisor/BatchAdvisor";
 import UpdateBatchAdvisor from "./components/Admin/AddBatchAdvisor/UpdateBatchAdvisor";
 import AddBatchAdvisor from "./components/Admin/AddBatchAdvisor/AddBatchAdvisor";
+import Student from "./components/Admin/AddStudent/Student";
+import UpdateStudent from "./components/Admin/AddStudent/UpdateStudent";
 function App() {
   return (
     <>
@@ -33,13 +34,23 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="monitor" element={<MonitorBrand />} />
           <Route path="/admin/profile" element={<ProfileNew />} />
-          <Route path="/admin/addstudent" element={<AddStudent />} />
+
+          <Route
+            path="/admin/students/update/:studentname/:id"
+            element={<UpdateStudent />}
+          />
+          <Route path="/admin/students/new" element={<UpdateStudent />} />
+          <Route path="/admin/students" element={<Student />} />
           <Route path="/admin/addcourse" element={<AddCourse />} />
-          <Route path="/admin/batchadvisor/update/:batchadvisorname/:id" element={<UpdateBatchAdvisor />} />
+          <Route
+            path="/admin/batchadvisor/update/:batchadvisorname/:id"
+            element={<UpdateBatchAdvisor />}
+          />
           <Route path="/admin/batchadvisor/new" element={<AddBatchAdvisor />} />
           <Route path="admin/batchadvisor" element={<BatchAdvisor />} />
           <Route path="/admin/addresult" element={<AddResult />} />
           <Route path="/admin/resultform" element={<ResultForm />} />
+
           <Route path="/admin/liststudents" element={<ListStudents />} />
           <Route path="/admin" element={<ProfileNew />} />
           <Route path="/resultcard" element={<ResultCard />} />
