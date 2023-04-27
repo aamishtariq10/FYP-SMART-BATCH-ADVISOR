@@ -19,7 +19,7 @@ const sideNavigation = [
     icon: <HomeIcon className={iconClass} />,
   },
   {
-    name: "Add Student",
+    name: "Student",
     href: "/admin/students",
     icon: <AcademicCapIcon className={iconClass} />,
   },
@@ -29,8 +29,8 @@ const sideNavigation = [
     icon: <ChartPieIcon className={iconClass} />,
   },
   {
-    name: "Add Courses",
-    href: "/admin/addcourse",
+    name: "Courses",
+    href: "/admin/courses",
     icon: <DocumentIcon className={iconClass} />,
   },
   // {
@@ -40,8 +40,8 @@ const sideNavigation = [
   // },
 
   {
-    name: "Add Result",
-    href: "/admin/addresult",
+    name: "Student Results",
+    href: "/admin/results",
     icon: <DocumentIcon className={iconClass} />,
   },
 ];

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/FYP-SMART-BATCH-ADVISOR.iml" filepath="$PROJECT_DIR$/.idea/FYP-SMART-BATCH-ADVISOR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sba_backend/.idea/sba_backend.iml" filepath="$PROJECT_DIR$/../sba_backend/.idea/sba_backend.iml" />
+    </modules>
+  </component>
+</project>

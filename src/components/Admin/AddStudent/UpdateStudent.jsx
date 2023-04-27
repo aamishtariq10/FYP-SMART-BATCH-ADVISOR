@@ -81,7 +81,7 @@ const UpdateStudent = () => {
       e.preventDefault();
       console.log(dataA);
       const add = await axios.post(`http://localhost:5000/admin/students/add`, dataA)
-      // navigate("/admin/students");
+      navigate("/admin/students");
       console.log(add.data);
       toast.info(add.data.message, { autoClose: 1500 })
     }
@@ -188,6 +188,8 @@ const UpdateStudent = () => {
                   <TextField
                     id="Reg_No"
                     label="Reg No"
+                    type="number"
+                    inputProps={{ min: "000", max: "999", step: 1}}
                     variant="outlined"
                     placeholder="000"
                     value={RollNo}

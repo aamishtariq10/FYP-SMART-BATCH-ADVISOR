@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router";
 export default function PageNotFound() {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
+  function handleClick() {
+    navigate(-1); // Navigate back one page in the history stack
+  }
   return (
     <>
       <div className="flex min-h-full flex-col bg-white pt-16 pb-12">
@@ -17,9 +20,10 @@ export default function PageNotFound() {
                 Sorry, we couldn’t find the page you’re looking for.
               </p>
               <div className="mt-6">
-                <Link to="/dashboard">
+                <Link   onClick={handleClick}>
                   <a
                     href="/"
+                  
                     className="text-base font-medium text-indigo-600 hover:text-indigo-500 "
                   >
                     Go back
