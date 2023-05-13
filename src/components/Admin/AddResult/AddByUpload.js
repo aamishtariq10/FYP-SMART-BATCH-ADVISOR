@@ -25,18 +25,13 @@ function AddByUpload(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-
   const handleUpload = () => {
     const formData = new FormData();
     formData.append("file", selectedFile);
     axios
       .post("http://localhost:5000/admin/batchadvisor/upload", formData, {
         headers: {
-
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-
         },
       })
       .then((res) => {

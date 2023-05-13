@@ -17,7 +17,7 @@ const AddBatchAdvisor = () => {
 
   //axios request to add batch advisor
   const handleSubmit = (e) => {
-    var active = isActive ? "Actice" : "Inactive";
+    var active = isActive ? "Active" : "Inactive";
     e.preventDefault();
     const data = {
       BatchAdvisorName: name,
@@ -27,18 +27,24 @@ const AddBatchAdvisor = () => {
       BatchAdvisorDep: department,
 
     };
-    axios
-
-      .post("http://localhost:5000/admin/batchadvisor/add", data)
-      .then((res) => {
-        console.log(res);
-        toast.success(res.data.message);
-        navigate("/admin/batchadvisor");
-      })
-      .catch((err) => {
-        toast.error(err.response.data.message);
-        console.log(err);
-      });
+    const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
+    console.log("token", token);
+    axios.post("http://localhost:5000/admin/batchadvisor/add", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => {
+      console.log(res);
+      toast.success(res.data.message);
+      navigate("/admin/batchadvisor");
+    })
+    .catch((err) => {
+      toast.error(err.response.data.message);
+      console.log(err);
+    });
   };
 
 

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ForgotPassword = () => {
         alert("Password must be at least 8 characters long.")
         return;
       }
-      if (!passwordRegex.test(formStates.password)){
+      if (!passwordRegex.test(formStates.password)) {
         setformStates({
           ...formStates,
           errorMessage: "Password must contain at least one letter, one number, and one special character.",
@@ -49,18 +50,20 @@ const ForgotPassword = () => {
         alert("Passwords do not match.")
         return;
       }
-      const res = await fetch("http://localhost:8000/forgetPassword", {
-        method: "POST",
+      const res = await fetch("http://localhost:5000/forgetpassword", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          u_email: formStates.email,
-          p_id: formStates.password,
+          email: formStates.email,
+          pass: formStates.password,
         }),
       });
       const data = await res.json();
-      alert(data.message);
+      console.log("data", data);
+      toast.info(data.message, { hideProgressBar: true });
+      localStorage.clear();
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -104,7 +107,10 @@ const ForgotPassword = () => {
             id=""
           />
         </div>
-        <div>
+        {formStates.errorMessage ? (
+          <div className="text-red-500 text-sm">{formStates.errorMessage + " \n"}</div>
+        ) : null}
+        < div >
           <button
             onClick={resetPassword}
             type="submit"
@@ -113,8 +119,20 @@ const ForgotPassword = () => {
             Reset Password
           </button>
         </div>
-      </form>
-    </div>
+      </form >
+      <ToastContainer
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
+
+    </div >
   );
 };
 

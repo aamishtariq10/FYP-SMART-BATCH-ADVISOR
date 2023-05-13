@@ -1,68 +1,101 @@
 import { Link } from "react-router-dom";
-//import { useState, useEffect } from "react";
-import { ToastContainer } from "react-toastify";
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-//import { Loader } from "../ui/Loader";
+import { Loader } from "../ui/Loader";
 
 export default function Login() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState([]);
+  const [role, setRole] = useState("");
+  console.log("role", email);
+  console.log("role", errorMsg);
   const navigate = useNavigate();
 
-  // var user = localStorage.getItem("userEmail"));
+  var userRole = localStorage.getItem("userRole");
+  var userEmail = localStorage.getItem("email");
 
-  // useEffect(() => {
-  //   if (user) {
-  //     navigate("/mentions");
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    setIsLoading(false);
+    if (userRole === "admin" && userEmail) {
+      navigate("/admin/profile");
+    } else if (userRole === "" && userEmail) {
+      navigate("/dashboard");
+    } else if (userRole === "batch advisor" && userEmail) {
+      navigate("/batchadvisor/profile");
 
-  // async function logIn(e) {
-  //   e.preventDefault();
-  //   setIsLoading(true);
+    }
 
-  //   let values = { email, password };
-  //   try {
-  //     await fetch("http://127.0.0.1:8000/login", {
-  //       method: "POST",
-  //       body: JSON.stringify(values),
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("response: ", data);
-  //         if (data.message === "Success") {
-  //           toast.success("You are successfully logged in!", {
-  //             hideProgressBar: true,
-  //           });
-  //           localStorage.setItem(
-  //             "userEmail",
-  //             JSON.stringify({
-  //               email: data.user_email,
-  //               id: data.user_id,
-  //               username: data.username,
-  //             })
-  //           );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  //           setIsLoading(false);
-  //           // navigate("/mentions");
-  //           navigate("/dashboard");
-  //         } else {
-  //           toast.error(data.message);
-  //           setIsLoading(false);
-  //         }
-  //       });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  async function logIn(e) {
+    e.preventDefault();
+    setIsLoading(true);
+
+    let values = { role, email, password };
+    try {
+      await fetch("http://localhost:5000/login", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data", data);
+          console.log("data", data.message);
+          setErrorMsg(data.message);
+          // console.log("data", data.data.payload);
+          if (data.message === "Successfully login") {
+            toast.success("You are successfully logged in!", {
+              hideProgressBar: true,
+            });
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: data.data.payload.email,
+                token: data.data.token,
+                role: data.data.payload.role,
+              })
+            );
+
+            setIsLoading(false);
+            // navigate("/mentions");
+            let role = data.data.payload.role;
+            console.log("fisrt login", data.data.payload.firstLogin);
+            if ((role == 'student' || role == 'batch advisor') && data.data.payload.firstLogin === 1) {
+              navigate("/forgot-password");
+            }
+            else {
+              setTimeout(() => {
+                if (role === "student") navigate("/dashboard", { replace: true });
+                if (role === "admin") navigate("/admin/profile");
+                if (role === "batch advisor") navigate("/dashboard");
+               window.location.reload();
+              }, 1000);
+            }
+          } else if (data.status !== 200) {
+            setIsLoading(false);
+            toast.error(data.message);
+          }
+          else {
+
+            toast.error(
+              "Something went wrong, please try again later!",
+            );
+          }
+          setIsLoading(false);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -80,6 +113,27 @@ export default function Login() {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <form className="space-y-6">
+
+              <div>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                  Role
+                </label>
+                <div className="mt-1">
+                  <select
+                    required
+                    className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value.toLowerCase())}
+                  >
+                    <option value="">Select a role</option>
+                    <option value="admin">Admin</option>
+                    <option value="student">Student</option>
+                    <option value="batch advisor">Batch Advisor</option>
+                  </select>
+
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -89,13 +143,13 @@ export default function Login() {
                 </label>
                 <div className="mt-1">
                   <input
-                    // id="email"
-                    // name="email"
-                    // type="email"
-                    // autoComplete="email"
-                    // required
-                    //value={email}
-                    // onChange={(e) => setEmail(e.target.value)}
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value.toLowerCase())}
                     className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
@@ -109,22 +163,22 @@ export default function Login() {
                 </label>
                 <div className="mt-1">
                   <input
-                    // id="password"
-                    // name="password"
-                    // type="password"
-                    // autoComplete="current-password"
-                    // required
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
                     // pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                    //  title="Minimum eight characters, at least one letter, one number and one special character:"
-                    //onChange={(e) => setPassword(e.target.value)}
-                    //value={password}
+                    // title="Minimum eight characters, at least one letter, one number and one special character:"
+                    onChange={(e) => setPassword(e.target.value.toLowerCase())}
+                    value={password}
                     className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  {/* <input
+                  <input
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
@@ -135,7 +189,7 @@ export default function Login() {
                     className="ml-2 block text-sm text-gray-900"
                   >
                     Remember me
-                  </label> */}
+                  </label>
                 </div>
 
                 <div className="text-sm">
@@ -148,16 +202,24 @@ export default function Login() {
                 </div>
               </div>
               <div>
-                {/* {isLoading ? (
+                {errorMsg ? (
+                  <div className="text-red-500 text-sm">{errorMsg + " \n"}</div>
+                ) : null
+
+                }
+              </div>
+              <div>
+                {isLoading ? (
                   <Loader center className="text-indigo-600" />
-                ) : ( */}
-                <button
-                  className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={navigate("/dashboard")}
-                >
-                  Sign in
-                </button>
-                {/* )} */}
+                ) : (
+                  <button
+                    className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={logIn}
+                  //onClick={navigate("/admin/profile")}
+                  >
+                    Sign in
+                  </button>
+                )}
               </div>
             </form>
 
@@ -171,12 +233,7 @@ export default function Login() {
                   >
                     Sign Up
                   </Link>{" "}
-                  <Link
-                    to="/dashboard"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    dashboard
-                  </Link>
+
                 </p>
               </div>
             </div>

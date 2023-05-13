@@ -19,7 +19,7 @@ const sideNavigation = [
     icon: <HomeIcon className={iconClass} />,
   },
   {
-    name: "Add Student",
+    name: "Student",
     href: "/admin/students",
     icon: <AcademicCapIcon className={iconClass} />,
   },
@@ -29,8 +29,8 @@ const sideNavigation = [
     icon: <ChartPieIcon className={iconClass} />,
   },
   {
-    name: "Add Courses",
-    href: "/admin/addcourse",
+    name: "Courses",
+    href: "/admin/courses",
     icon: <DocumentIcon className={iconClass} />,
   },
   // {
@@ -40,8 +40,8 @@ const sideNavigation = [
   // },
 
   {
-    name: "Add Result",
-    href: "/admin/addresult",
+    name: "Student Results",
+    href: "/admin/results",
     icon: <DocumentIcon className={iconClass} />,
   },
 ];
@@ -52,6 +52,13 @@ const BottomsideNavigation = [
     href: "/admin/listStudents",
     icon: <HomeIcon className={iconClass} />,
   },
+  {
+    name: "Users",
+    href: "/admin/users",
+    icon: <HomeIcon className={iconClass} />,
+  },
+
+
 ];
 
 export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
@@ -141,9 +148,8 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                   key={item.name}
                   className={({ isActive }) =>
                     isActive
-                      ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 bg-blue-900  "
-                      : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-blue-100 "
-                  }
+                    ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-white-900 bg-gray-200  "
+                    : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 "                  }
                 >
                   {item.icon}
                   <span
