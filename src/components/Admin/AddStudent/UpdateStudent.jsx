@@ -26,6 +26,7 @@ const UpdateStudent = () => {
   const location = useLocation();
   const data = location.state?.data;
   console.log(data)
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
 
   //Dropdowns
   const DepartmentOption = [...DepartmentOptions];
@@ -65,7 +66,14 @@ const UpdateStudent = () => {
   const UpdateStudent = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put(`http://localhost:5000/admin/students/update/${StudentName}/${id}`, dataA);
+      const res = await axios.put(`http://localhost:5000/admin/students/update/${StudentName}/${id}`, dataA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        },);
       console.log(res);
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
@@ -80,7 +88,14 @@ const UpdateStudent = () => {
     try {
       e.preventDefault();
       console.log(dataA);
-      const add = await axios.post(`http://localhost:5000/admin/students/add`, dataA)
+      const add = await axios.post(`http://localhost:5000/admin/students/add`, dataA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        },)
       navigate("/admin/students");
       console.log(add.data);
       toast.info(add.data.message, { autoClose: 1500 })
@@ -189,7 +204,7 @@ const UpdateStudent = () => {
                     id="Reg_No"
                     label="Reg No"
                     type="number"
-                    inputProps={{ min: "000", max: "999", step: 1}}
+                    inputProps={{ min: "000", max: "999", step: 1 }}
                     variant="outlined"
                     placeholder="000"
                     value={RollNo}

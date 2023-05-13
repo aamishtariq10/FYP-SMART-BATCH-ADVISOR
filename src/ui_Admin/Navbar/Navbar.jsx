@@ -4,42 +4,45 @@ import { useState } from "react";
 import React from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import axios from "axios";
 export const Navbar = ({ handleSideBarStatus }) => {
   const [isActive, setActive] = useState(false);
-  //const [username, setUsername] = useState("");
-  const name = "Aamish Tariq";
-  const email = "aamishtariq943@gmail.com";
-  //const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  // const email = "aamishtariq943@gmail.com";
+  const navigate = useNavigate();
+
 
   const toggleClass = () => {
     setActive(!isActive);
   };
-  //   const SignoutButton = () => {
-  //     return (
-  //       <a
-  //         href="#/"
-  //         className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-  //         onClick={() => {
-  //           localStorage.clear();
-  //           navigate("/login");
-  //         }}
-  //         role="menuitem"
-  //       >
-  //         LogOut
-  //       </a>
-  //     );
-  //   };
+  const SignoutButton = () => {
+    axios.get("http://localhost:5000/logout") 
+        .then((res) => {
+          console.log(res);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    localStorage.clear();
+
+          navigate("/login");
+        };
   const toggleSidebar = () => {
     handleSideBarStatus();
   };
 
-  //useEffect(() => {
-  //     const users = JSON.parse(localStorage.getItem("userEmail"));
-  //     if (users) {
-  //       setUsername(users.username);
-  //     }
-  //   }, []);
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.role === "admin") {
+      console.log(user);
+      setUsername(user.role);
+      setEmail(user.email);
+    }
+  }, []);
 
   return (
     <>
@@ -47,26 +50,6 @@ export const Navbar = ({ handleSideBarStatus }) => {
         <div className="py-3 px-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              {/* <button
-                id="toggleSidebar"
-                aria-expanded="true"
-                aria-controls="sidebar"
-                onClick={toggleSidebar}
-                className="mr-3 hidden cursor-pointer rounded p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white lg:inline"
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
-              </button> */}
               <button
                 id="toggleSidebarMobile"
                 aria-expanded="true"
@@ -78,16 +61,16 @@ export const Navbar = ({ handleSideBarStatus }) => {
                 <SidebarMobileClose />
               </button>
               <a href="/" className="lg:mr-14">
-                <p className="lg:px-6"> Admin</p>
+                <p className="lg:px-6"> Admin panel</p>
               </a>
             </div>
             <div className="flex items-center">
               <p className="font-semibold flex items-center space-x-4 px-4">
               </p>
-              {/* <p className="mr-2 hidden text-sm font-normal lg:block">
+              <p className="mr-2 hidden text-sm font-normal lg:block">
                 Good Morning,
-              <span className="ml-1 font-semibold">{username}</span> 
-              </p> */}
+                <span className="ml-1 font-semibold">{username}</span>
+              </p>
 
               <div className="ml-3 flex flex-none items-center">
                 <div>
@@ -105,14 +88,13 @@ export const Navbar = ({ handleSideBarStatus }) => {
                   </button>
                 </div>
                 <div
-                  className={`absolute top-11 right-5 z-50 my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700 ${
-                    isActive ? "" : "hidden"
-                  }`}
+                  className={`absolute top-11 right-5 z-50 my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700 ${isActive ? "" : "hidden"
+                    }`}
                   id="dropdown-2"
                 >
                   <div className="px-4 py-4">
                     <span className="block text-sm text-gray-900 dark:text-white">
-                      {name}
+                      {username}
                     </span>
                     <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
                       {email}
@@ -129,12 +111,14 @@ export const Navbar = ({ handleSideBarStatus }) => {
                     </li>
                     <li>
                       <a
-                        href="/"
+                        onClick={SignoutButton}
+                        href="/login"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                       >
                         Sign out
                       </a>
                     </li>
+
                   </ul>
                 </div>
               </div>

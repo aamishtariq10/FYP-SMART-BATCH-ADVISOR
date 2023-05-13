@@ -16,20 +16,18 @@ const UpdateBatchAdvisor = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const location = useLocation();
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
   const rowData = location.state?.rowData;
   console.log(rowData)
   const { batchadvisorname } = useParams();
   React.useEffect(() => {
-    const data = {
-      BatchAdvisorName,
-      BatchAdvisorEmail,
-      BatchAdvisorStatus,
-      BatchSection,
-      BatchAdvisorDep
-    };
     axios
       .get(`http://localhost:5000/admin/batchadvisor/get/${batchadvisorname}/${id}`, {
-        data
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       })
       .then((res) => {
         var data = res.data.data[0];
@@ -41,7 +39,8 @@ const UpdateBatchAdvisor = () => {
         setBatchSection(data.BatchSection);
         setDepartment(data.BatchAdvisorDep);
       });
-  }, [id]);
+  }, [id, batchadvisorname, token]);
+  
 
   //axios request to add batch advisor
   const handleSubmit = (e) => {
@@ -61,7 +60,14 @@ const UpdateBatchAdvisor = () => {
       BatchAdvisorDep,
     };
     //console.log(data);
-    axios.put(`http://localhost:5000/admin/batchadvisor/update/${batchadvisorname}/${id}`, data)
+    axios.put(`http://localhost:5000/admin/batchadvisor/update/${batchadvisorname}/${id}`, data,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+    )
       .then((res) => {
         console.log(res.data.message);
         setTimeout(() => {

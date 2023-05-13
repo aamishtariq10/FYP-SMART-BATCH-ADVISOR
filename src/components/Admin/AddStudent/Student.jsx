@@ -25,13 +25,22 @@ const Student = () => {
     const getRowId = (row) => row.SrNO;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
+    const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
+
     //const [openUpdate, setOpenUpdate] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     //if update is clicked
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getData = async () => {
         try {
-            const student = await axios.get("http://localhost:5000/admin/students/get");
+            const student = await axios.get("http://localhost:5000/admin/students/get",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },);
             setRows(student.data.data);
             console.log(student);
         } catch (error) {
@@ -73,7 +82,16 @@ const Student = () => {
     const handleClose = (row) => {
         console.log(selectedRows)
         axios
-            .put(`http://localhost:5000/admin/students/delete`, { data: { ids: selectedRows } })
+            .put(`http://localhost:5000/admin/students/delete`, {
+                data: { ids: selectedRows },
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },)
             .then((res) => {
                 toast.info(res.data.message);
                 getData();

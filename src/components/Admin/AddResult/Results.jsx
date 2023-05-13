@@ -32,11 +32,18 @@ const Results = () => {
     const [selectedCourse, setSelectedCourse] = React.useState('');
     const [warningMsg, setWarningMsg] = React.useState('');
     console.log(selectedRegNo);
+    const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     const getData = async () => {
         try {
 
-            const results = await axios.get("http://localhost:5000/admin/results/get/");
+            const results = await axios.get("http://localhost:5000/admin/results/get/", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+            },);
             setRows(results.data.data);
             if (results.data.data.length === 0) {
                 toast.error("No data found");
