@@ -19,6 +19,7 @@ const UpdateUser = () => {
   const [EmailOptions, setEmailOptions] = useState([]);
   const [Status, setStatus] = useState("");
   const [Role, setRole] = useState("");
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
 
   // Params , headers and navigate
   const navigate = useNavigate();
@@ -27,7 +28,16 @@ const UpdateUser = () => {
   const data = location.state?.data;
   const getEmails = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/admin/users/email/get");
+      const response = await axios.get(
+        "http://localhost:5000/admin/users/email/get",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        }
+      );
       const { batchAdvisorEmails, studentEmails } = response?.data?.data || {};
       let emails = [];
       let errorMsg = "";
@@ -53,9 +63,7 @@ const UpdateUser = () => {
   useEffect(() => {
     if (data) {
       setStatus(data.allowed.toLowerCase());
-
       setRole(data.role.toLowerCase());
-
       setEmail(data.email.toLowerCase());
 
     }
@@ -72,8 +80,17 @@ const UpdateUser = () => {
         allowed: Status === 'allowed' ? true : false,
         email: email,
       };
-      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, dataA);
+      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, dataA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        })
+        ;
       console.log(res);
+      setErrorMsg(res.data.message)
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
         navigate("/admin/users");
@@ -93,7 +110,14 @@ const UpdateUser = () => {
       };
       e.preventDefault();
       console.log(Data);
-      const add = await axios.post(`http://localhost:5000/admin/users/create`, Data)
+      const add = await axios.post(`http://localhost:5000/admin/users/create`, Data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        })
       console.log(add.data);
       // toast.info(add.data.message, { autoClose: 1500 })
       add.data.status == "400" ? toast.error(add.data.message, { autoClose: 1500 }) : toast.info(add.data.message, { autoClose: 1500 });
@@ -106,6 +130,11 @@ const UpdateUser = () => {
       toast.error("internal server error", { autoClose: 1500 })
     }
   }
+  const handleRoleChange = (e) => {
+    setEmail(null);
+    setInputValue('');
+    setRole(e.target.value);
+  };
   return (
     <AdminLayout>
       <section className="flex h-full w-full  justify-center items-center">
@@ -137,7 +166,7 @@ const UpdateUser = () => {
                     label="Role"
                     value={Role}
                     required
-                    onChange={(event) => setRole(event.target.value)}
+                    onChange={handleRoleChange}
                   >
 
                     <MenuItem value={"batch advisor"}>Batch Advisor</MenuItem>
@@ -150,14 +179,17 @@ const UpdateUser = () => {
 
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <Autocomplete
+                  required
                   value={email}
                   onChange={(event, newValue) => {
                     setEmail(newValue);
+
                   }}
                   inputValue={inputValue}
                   onInputChange={(event, newInputValue) => {
                     setInputValue(newInputValue);
                   }}
+
                   id="email"
                   options={EmailOptions}
                   // sx={{ width: 300 }}
@@ -177,6 +209,7 @@ const UpdateUser = () => {
                   <TextField
                     label='Some label'
                     variant="outlined"
+                    required
                     value={password}
                     type={showPassword ? "text" : "password"} // <-- This is where the magic happens
                     onChange={(event) => setPassword(event.target.value)}

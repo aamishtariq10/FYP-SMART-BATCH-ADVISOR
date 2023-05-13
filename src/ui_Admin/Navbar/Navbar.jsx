@@ -5,6 +5,7 @@ import React from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast ,ToastContainer} from "react-toastify";
 export const Navbar = ({ handleSideBarStatus }) => {
   const [isActive, setActive] = useState(false);
   const [username, setUsername] = useState("");
@@ -18,19 +19,19 @@ export const Navbar = ({ handleSideBarStatus }) => {
     setActive(!isActive);
   };
   const SignoutButton = () => {
-    axios.get("http://localhost:5000/logout") 
-        .then((res) => {
-          console.log(res);
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    axios.get("http://localhost:5000/logout")
+      .then((res) => {
+        toast.info("Logged Out Successfully");
+      })
+      .catch((err) => {
+
+        toast.error("Error Logging Out");
+      });
 
     localStorage.clear();
 
-          navigate("/login");
-        };
+    navigate("/login");
+  };
   const toggleSidebar = () => {
     handleSideBarStatus();
   };
@@ -38,7 +39,6 @@ export const Navbar = ({ handleSideBarStatus }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.role === "admin") {
-      console.log(user);
       setUsername(user.role);
       setEmail(user.email);
     }
@@ -124,6 +124,18 @@ export const Navbar = ({ handleSideBarStatus }) => {
               </div>
             </div>
           </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </div>
       </nav>
     </>

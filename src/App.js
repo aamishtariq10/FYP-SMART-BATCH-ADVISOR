@@ -62,7 +62,7 @@ function App() {
             <Route path="*" element={<CircularProgress />} />
           ) : (
             <>
-              <Route path="/" element={<Registration />} />
+              {/* <Route path="/" element={<Registration />} /> */}
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/monitor" element={<MonitorBrand />} />

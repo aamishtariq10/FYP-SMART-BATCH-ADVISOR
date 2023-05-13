@@ -25,9 +25,7 @@ const UpdateStudent = () => {
   const { id } = useParams();
   const location = useLocation();
   const data = location.state?.data;
-  console.log(data)
-  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null
   //Dropdowns
   const DepartmentOption = [...DepartmentOptions];
   const semester = [...semesters];
@@ -74,7 +72,7 @@ const UpdateStudent = () => {
             Accept: "application/json",
           }
         },);
-      console.log(res);
+
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
         navigate("/admin/students");
