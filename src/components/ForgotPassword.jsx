@@ -50,10 +50,13 @@ const ForgotPassword = () => {
         alert("Passwords do not match.")
         return;
       }
+      const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
       const res = await fetch("http://localhost:5000/forgetpassword", {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           email: formStates.email,

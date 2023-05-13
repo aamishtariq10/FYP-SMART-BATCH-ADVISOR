@@ -11,8 +11,6 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState([]);
   const [role, setRole] = useState("");
-  console.log("role", email);
-  console.log("role", errorMsg);
   const navigate = useNavigate();
 
   var userRole = localStorage.getItem("userRole");
@@ -48,10 +46,7 @@ export default function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("data", data);
-          console.log("data", data.message);
           setErrorMsg(data.message);
-          // console.log("data", data.data.payload);
           if (data.message === "Successfully login") {
             toast.success("You are successfully logged in!", {
               hideProgressBar: true,
@@ -66,9 +61,7 @@ export default function Login() {
             );
 
             setIsLoading(false);
-            // navigate("/mentions");
             let role = data.data.payload.role;
-            console.log("fisrt login", data.data.payload.firstLogin);
             if ((role == 'student' || role == 'batch advisor') && data.data.payload.firstLogin === 1) {
               navigate("/forgot-password");
             }
@@ -77,7 +70,7 @@ export default function Login() {
                 if (role === "student") navigate("/dashboard", { replace: true });
                 if (role === "admin") navigate("/admin/profile");
                 if (role === "batch advisor") navigate("/dashboard");
-               window.location.reload();
+                window.location.reload();
               }, 1000);
             }
           } else if (data.status !== 200) {
@@ -93,7 +86,7 @@ export default function Login() {
           setIsLoading(false);
         });
     } catch (err) {
-      console.log(err);
+      toast.error("Something went wrong, please try again later!",);
     }
   }
   return (
@@ -170,7 +163,7 @@ export default function Login() {
                     required
                     // pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                     // title="Minimum eight characters, at least one letter, one number and one special character:"
-                    onChange={(e) => setPassword(e.target.value.toLowerCase())}
+                    onChange={(e) => setPassword(e.target.value)}
                     value={password}
                     className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                   />
@@ -223,8 +216,8 @@ export default function Login() {
               </div>
             </form>
 
-            <div className="mt-6">
-              <div className="flex">
+            {/* <div className="mt-6">
+               <div className="flex">
                 <p className="text-center text-sm text-gray-600">
                   Don't have an account?{" "}
                   <Link
@@ -234,12 +227,12 @@ export default function Login() {
                     Sign Up
                   </Link>{" "}
 
-                </p>
-              </div>
-            </div>
+                </p> 
+              </div> 
+          </div> */}
           </div>
         </div>
-      </div>
+      </div >
       <ToastContainer />
     </>
   );

@@ -19,6 +19,7 @@ const UpdateUser = () => {
   const [EmailOptions, setEmailOptions] = useState([]);
   const [Status, setStatus] = useState("");
   const [Role, setRole] = useState("");
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
 
   // Params , headers and navigate
   const navigate = useNavigate();
@@ -27,7 +28,16 @@ const UpdateUser = () => {
   const data = location.state?.data;
   const getEmails = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/admin/users/email/get");
+      const response = await axios.get(
+        "http://localhost:5000/admin/users/email/get",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        }
+      );
       const { batchAdvisorEmails, studentEmails } = response?.data?.data || {};
       let emails = [];
       let errorMsg = "";
@@ -72,7 +82,15 @@ const UpdateUser = () => {
         allowed: Status === 'allowed' ? true : false,
         email: email,
       };
-      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, dataA);
+      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, dataA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        })
+        ;
       console.log(res);
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
@@ -93,7 +111,14 @@ const UpdateUser = () => {
       };
       e.preventDefault();
       console.log(Data);
-      const add = await axios.post(`http://localhost:5000/admin/users/create`, Data)
+      const add = await axios.post(`http://localhost:5000/admin/users/create`, Data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          }
+        })
       console.log(add.data);
       // toast.info(add.data.message, { autoClose: 1500 })
       add.data.status == "400" ? toast.error(add.data.message, { autoClose: 1500 }) : toast.info(add.data.message, { autoClose: 1500 });

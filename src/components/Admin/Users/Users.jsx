@@ -25,25 +25,31 @@ const Users = () => {
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
     //const [openUpdate, setOpenUpdate] = React.useState(false);
-    console.log(rows);
+    const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     //if update is clicked
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getData = async () => {
         try {
-          const student = await axios.get("http://localhost:5000/admin/users/get");
-          console.log(student.data.data);
-          
-          const data = student.data.data.map(row => ({
-            ...row,
-            allowed: row.allowed ? "Allowed" : "Blocked"
-          }));
-          setRows(data);
+            const student = await axios.get("http://localhost:5000/admin/users/get", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                }
+            },);
+            console.log(student.data.data);
+
+            const data = student.data.data.map(row => ({
+                ...row,
+                allowed: row.allowed ? "Allowed" : "Blocked"
+            }));
+            setRows(data);
         } catch (error) {
-          toast.error("No data found");
+            toast.error("No data found");
         }
-      };
-      
+    };
+
     React.useEffect(() => {
         getData();
     }, []);
@@ -77,9 +83,19 @@ const Users = () => {
         setOpen(false);
     };
     const handleClose = (row) => {
-        console.log(selectedRows)
         axios
-            .put(`http://localhost:5000/admin/users/delete`, { data: { ids: selectedRows } })
+            .put(
+                "http://localhost:5000/admin/users/delete", {
+                data: { ids: selectedRows },
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                }
+            )
             .then((res) => {
                 toast.info(res.data.message);
                 getData();
@@ -90,6 +106,7 @@ const Users = () => {
 
         setOpen(false);
     };
+
     const columns = [
         {
             field: "delete",
