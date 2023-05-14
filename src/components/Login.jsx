@@ -69,7 +69,7 @@ export default function Login() {
               setTimeout(() => {
                 if (role === "student") navigate("/dashboard", { replace: true });
                 if (role === "admin") navigate("/admin/profile");
-                if (role === "batch advisor") navigate("/dashboard");
+                if (role === "batch advisor") navigate("/batchadvisor/dashboard");
                 window.location.reload();
               }, 1000);
             }
