@@ -63,9 +63,7 @@ const UpdateUser = () => {
   useEffect(() => {
     if (data) {
       setStatus(data.allowed.toLowerCase());
-
       setRole(data.role.toLowerCase());
-
       setEmail(data.email.toLowerCase());
 
     }
@@ -92,6 +90,7 @@ const UpdateUser = () => {
         })
         ;
       console.log(res);
+      setErrorMsg(res.data.message)
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
         navigate("/admin/users");
@@ -131,6 +130,11 @@ const UpdateUser = () => {
       toast.error("internal server error", { autoClose: 1500 })
     }
   }
+  const handleRoleChange = (e) => {
+    setEmail(null);
+    setInputValue('');
+    setRole(e.target.value);
+  };
   return (
     <AdminLayout>
       <section className="flex h-full w-full  justify-center items-center">
@@ -162,7 +166,7 @@ const UpdateUser = () => {
                     label="Role"
                     value={Role}
                     required
-                    onChange={(event) => setRole(event.target.value)}
+                    onChange={handleRoleChange}
                   >
 
                     <MenuItem value={"batch advisor"}>Batch Advisor</MenuItem>
@@ -175,14 +179,17 @@ const UpdateUser = () => {
 
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <Autocomplete
+                  required
                   value={email}
                   onChange={(event, newValue) => {
                     setEmail(newValue);
+
                   }}
                   inputValue={inputValue}
                   onInputChange={(event, newInputValue) => {
                     setInputValue(newInputValue);
                   }}
+
                   id="email"
                   options={EmailOptions}
                   // sx={{ width: 300 }}
@@ -202,6 +209,7 @@ const UpdateUser = () => {
                   <TextField
                     label='Some label'
                     variant="outlined"
+                    required
                     value={password}
                     type={showPassword ? "text" : "password"} // <-- This is where the magic happens
                     onChange={(event) => setPassword(event.target.value)}

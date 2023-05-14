@@ -46,6 +46,7 @@ export default function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
           setErrorMsg(data.message);
           if (data.message === "Successfully login") {
             toast.success("You are successfully logged in!", {
@@ -66,6 +67,7 @@ export default function Login() {
               navigate("/forgot-password");
             }
             else {
+              
               setTimeout(() => {
                 if (role === "student") navigate("/dashboard", { replace: true });
                 if (role === "admin") navigate("/admin/profile");
