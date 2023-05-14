@@ -30,6 +30,11 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UpdateUser from "./components/Admin/Users/UpdateUser";
+
+import DashboardBatchAdvisor from "./components/BatchAdvisor/Profile/ProfileBatchAdvisor";
+import StudentsList from "./components/BatchAdvisor/ListStudents/ListStudents";
+import StudentRequests from "./components/BatchAdvisor/StudentRequests/StudentRequests";
+
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,6 +52,7 @@ function App() {
 
   const isAdmin = user && user.role === "admin";
   const isStudent = user && user.role === "student";
+  const isBatchAdvisor = user && user.role === "batch advisor";
   if (isLoading) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -106,25 +112,19 @@ function App() {
                     path="/admin/liststudents"
                     element={<ListStudents />}
                   />
+                  <Route path="/admin/users" element={<Users />} />
                   <Route
-                    path="/admin/users"
-                    element={<Users />}
-
-                  />
-                   <Route
                     path="/admin/users/update/:email/:id"
                     element={<UpdateUser />}
-                    
                   />
-                   <Route
-                    path="/admin/users/new"
-                    element={<UpdateUser />}  
-                  />
+                  <Route path="/admin/users/new" element={<UpdateUser />} />
                   <Route path="/admin" element={<ProfileNew />} />{" "}
                 </>
               ) : (
                 <></>
               )}
+              {isStudent ? (
+                <>
               <Route
                 path="/dashboard/pendingcourses"
                 element={<PendingCourses />}
@@ -138,12 +138,38 @@ function App() {
                 path="/dashboard/Electives"
                 element={<RegisteredCourses />}
               />
+
+
               <Route path="/pendingcourses" element={<PendingCourses />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/student/profile" element={<Profile />} />
+              </>
+              ) : (
+                <></>
+              )}
+              
               <Route path="/aboutus" elemsent={<AboutUs />} />
               <Route path="contactus" element={<ContactUs />} />
               <Route path="welcome" element={<Welcome />} />
+
+              {isBatchAdvisor ? (
+                <>
+
+              <Route
+                path="/batchadvisor/dashboard"
+                element={<DashboardBatchAdvisor />}
+              />
+              <Route
+                path="/batchadvisor/studentslist"
+                element={<StudentsList />}
+              />
+              <Route
+                path="/batchadvisor/studentrequests"
+                element={<StudentRequests />}
+              /></>
+              ) : (
+                <></>
+              )}
               {isLoading ? null : <Route path="*" element={<PageNotFound />} />}
             </>
           )}
