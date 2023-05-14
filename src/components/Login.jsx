@@ -29,68 +29,66 @@ export default function Login() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   async function logIn(e) {
     e.preventDefault();
     setIsLoading(true);
 
     let values = { role, email, password };
+
     try {
-      await fetch("http://localhost:5000/login", {
+      const res = await fetch("http://localhost:5000/login", {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setErrorMsg(data.message);
-          if (data.message === "Successfully login") {
-            toast.success("You are successfully logged in!", {
-              hideProgressBar: true,
-            });
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                email: data.data.payload.email,
-                token: data.data.token,
-                role: data.data.payload.role,
-              })
-            );
+      });
 
-            setIsLoading(false);
-            let role = data.data.payload.role;
-            if ((role == 'student' || role == 'batch advisor') && data.data.payload.firstLogin === 1) {
-              navigate("/forgot-password");
-            }
-            else {
-              
-              setTimeout(() => {
-                if (role === "student") navigate("/dashboard", { replace: true });
-                if (role === "admin") navigate("/admin/profile");
-                if (role === "batch advisor") navigate("/batchadvisor/dashboard");
-                window.location.reload();
-              }, 1000);
-            }
-          } else if (data.status !== 200) {
-            setIsLoading(false);
-            toast.error(data.message);
-          }
-          else {
+      const data = await res.json();
 
-            toast.error(
-              "Something went wrong, please try again later!",
-            );
-          }
-          setIsLoading(false);
+      if (data.message === "Successfully login") {
+        toast.success("You are successfully logged in!", {
+          hideProgressBar: true,
         });
+
+        const { email, role } = data.data.payload;
+        const token = data.data.token;
+        const user = { email, token, role };
+
+        if (role === "student") {
+          console.log(data.data.payload);
+          const { profile, StudentRegNo, StudentName, StudentSection, StudentStatus, CurrentSemester } = data.data.payload;
+          localStorage.setItem("user", JSON.stringify({ ...user, profile, StudentRegNo, StudentName, StudentSection, StudentStatus, CurrentSemester }));
+        } else if (role === "batch advisor") {
+          const { profile, BatchAdvisorName, BatchSection, BatchAdvisorStatus, BatchAdvisorDep } = data.data.payload;
+          localStorage.setItem("user", JSON.stringify({ ...user, profile, BatchAdvisorName, BatchSection, BatchAdvisorStatus, BatchAdvisorDep }));
+        } else if (role === "admin") {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+        setIsLoading(false);
+        if ((role == 'student' || role == 'batch advisor') && data.data.payload.firstLogin === 1) {
+          navigate("/forgot-password");
+        } else {
+          setTimeout(() => {
+            if (role === "student") navigate("/dashboard", { replace: true });
+            if (role === "admin") navigate("/admin/profile");
+            if (role === "batch advisor") navigate("/batchadvisor/dashboard");
+            window.location.reload();
+          }, 1000);
+        }
+      } else if (data.status !== 200) {
+        setIsLoading(false);
+        toast.error(data.message);
+        setErrorMsg(data.message);
+      } else {
+        toast.error("Something went wrong, please try again later!");
+      }
     } catch (err) {
-      toast.error("Something went wrong, please try again later!",);
+      toast.error("Something went wrong, please try again later!");
     }
   }
+
   return (
     <>
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
