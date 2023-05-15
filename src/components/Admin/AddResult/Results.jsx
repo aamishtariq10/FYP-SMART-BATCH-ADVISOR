@@ -214,6 +214,7 @@ const Results = () => {
                         <PersonAddAlt1Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
                         <span className="hidden sm:inline-block">Add New</span>
                     </Button>
+
                 </div>
 
 

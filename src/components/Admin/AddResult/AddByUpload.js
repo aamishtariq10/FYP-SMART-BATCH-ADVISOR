@@ -61,6 +61,7 @@ function AddByUpload(props) {
       <Button
         component="span"
         onClick={handleClickOpen}
+        disabled
         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
       >
         <UploadFileIcon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
