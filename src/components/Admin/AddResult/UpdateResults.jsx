@@ -45,19 +45,24 @@ const UpdateResults = () => {
   const data = location.state?.data;
   const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
   const getStudentRegNo = async (e) => {
-    const res = await axios.get(`http://localhost:5000/admin/results/get/regNo`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
-    const regNosArray = res?.data?.data?.map(item => item.StudentRegNo);
-    setStudentRegNo(regNosArray)
-    if (res.status !== '200') {
-      setErrorMsg(res.data.message)
-      // setStudentRegNo([])
+    try {
+      const res = await axios.get(`http://localhost:5000/admin/results/get/regNo`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        })
+      const regNosArray = res?.data?.data?.map(item => item.StudentRegNo);
+      setStudentRegNo(regNosArray)
+      if (res.status !== '200') {
+        setErrorMsg(res.data.message)
+        // setStudentRegNo([])
+      }
+    }
+    catch (err) {
+      toast.error("Internal Server error ")
     }
   }
   useEffect(() => {
@@ -191,14 +196,13 @@ const UpdateResults = () => {
         },
       }
       )
-      if (add.status !== 200) {
-        toast.error(add.data.message, { autoClose: 1500 })
-        setErrorMsg(add.data.message)
-      }
-
-      else {
-        navigate("/admin/results");
+      if (add.data.status == 200) {
         toast.info(add.data.message, { autoClose: 1500 })
+        navigate("/admin/results");
+      }
+      else {
+        setErrorMsg(add.data.message)
+        toast.error(add.data.message, { autoClose: 1500 })
       }
     }
     catch (err) {
@@ -358,7 +362,7 @@ const UpdateResults = () => {
                     value={cgpa}
                     placeholder="0.0"
                     onChange={(e) => setCgpa(e.target.value.toLowerCase())}
-                    required
+
                   />
                 </FormControl>
               </div>
@@ -389,8 +393,8 @@ const UpdateResults = () => {
                     variant="outlined"
                     value={courseCode}
                     placeholder="CSE000"
-                    onChange={(e) => setCourseCode(e.target.value)}
-                    required
+                    onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
+
                   />
                 </FormControl>
               </div>
@@ -402,8 +406,8 @@ const UpdateResults = () => {
                     variant="outlined"
                     value={courseCredit}
                     placeholder="4(1,0)"
-                    onChange={(e) => setCourseCredit(e.target.value)}
-                    required
+                    onChange={(e) => setCourseCredit(e.target.value.toUpperCase())}
+
                   />
                 </FormControl>
               </div>
@@ -481,7 +485,7 @@ const UpdateResults = () => {
                     value={teacher}
                     placeholder="John Doe"
                     onChange={(e) => setTeacher(e.target.value.toLowerCase())}
-                    required
+
                   />
                 </FormControl>
               </div>

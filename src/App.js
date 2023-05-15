@@ -69,14 +69,15 @@ function App() {
           ) : (
             <>
               {/* <Route path="/" element={<Registration />} /> */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/monitor" element={<MonitorBrand />} />
 
               {isAdmin ? (
                 <>
                   <Route path="/admin/profile" element={<ProfileNew />} />
                   {/* admin student routes */}
+                  <Route
+                    path="/admin/courses"
+                    element={<AddCourse />}
+                  />
                   <Route
                     path="/admin/students/update/:studentname/:id"
                     element={<UpdateStudent />}
@@ -125,54 +126,54 @@ function App() {
               )}
               {isStudent ? (
                 <>
-              <Route
-                path="/dashboard/pendingcourses"
-                element={<PendingCourses />}
-              />
-              <Route
-                path="/dashboard/registeredcourses"
-                element={<RegisteredCourses />}
-              />
+                  <Route
+                    path="/dashboard/pendingcourses"
+                    element={<PendingCourses />}
+                  />
+                  <Route
+                    path="/dashboard/registeredcourses"
+                    element={<RegisteredCourses />}
+                  />
 
-              <Route
-                path="/dashboard/Electives"
-                element={<RegisteredCourses />}
-              />
+                  <Route
+                    path="/dashboard/Electives"
+                    element={<RegisteredCourses />}
+                  />
 
-
-              <Route path="/pendingcourses" element={<PendingCourses />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/student/profile" element={<Profile />} />
-              </>
+                  <Route path="/pendingcourses" element={<PendingCourses />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/student/profile" element={<Profile />} />
+                </>
               ) : (
                 <></>
               )}
-              
-              <Route path="/aboutus" elemsent={<AboutUs />} />
-              <Route path="contactus" element={<ContactUs />} />
-              <Route path="welcome" element={<Welcome />} />
-
               {isBatchAdvisor ? (
                 <>
-
-              <Route
-                path="/batchadvisor/dashboard"
-                element={<DashboardBatchAdvisor />}
-              />
-              <Route
-                path="/batchadvisor/studentslist"
-                element={<StudentsList />}
-              />
-              <Route
-                path="/batchadvisor/studentrequests"
-                element={<StudentRequests />}
-              /></>
+                  <Route
+                    path="/batchadvisor/dashboard"
+                    element={<DashboardBatchAdvisor />}
+                  />
+                  <Route
+                    path="/batchadvisor/studentslist"
+                    element={<StudentsList />}
+                  />
+                  <Route
+                    path="/batchadvisor/studentrequests"
+                    element={<StudentRequests />}
+                  />
+                </>
               ) : (
                 <></>
               )}
-              {isLoading ? null : <Route path="*" element={<PageNotFound />} />}
             </>
           )}
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/monitor" element={<MonitorBrand />} />
+          <Route path="*" element={<PageNotFound />} />
+          <Route path="/aboutus" elemsent={<AboutUs />} />
+          <Route path="contactus" element={<ContactUs />} />
+          <Route path="welcome" element={<Welcome />} />
         </Routes>
       </div>
     </>

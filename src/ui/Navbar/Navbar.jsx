@@ -10,16 +10,17 @@ export const Navbar = ({ handleSideBarStatus }) => {
   const [isActive, setActive] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState("");
 
   // const email = "aamishtariq943@gmail.com";
   const navigate = useNavigate();
-
 
   const toggleClass = () => {
     setActive(!isActive);
   };
   const SignoutButton = () => {
-    axios.get("http://localhost:5000/logout")
+    axios
+      .get("http://localhost:5000/logout")
       .then((res) => {
         toast.info("Logged Out Successfully");
       })
@@ -40,6 +41,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
     if (user) {
       setUsername(user.role);
       setEmail(user.email);
+      setProfile(user.profile);
     }
   }, []);
 
@@ -64,8 +66,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
               </a>
             </div>
             <div className="flex items-center">
-              <p className="font-semibold flex items-center space-x-4 px-4">
-              </p>
+              <p className="font-semibold flex items-center space-x-4 px-4"></p>
               <p className="mr-2 hidden text-sm font-normal lg:block">
                 Good Morning,
                 <span className="ml-1 font-semibold">{username}</span>
@@ -83,12 +84,19 @@ export const Navbar = ({ handleSideBarStatus }) => {
                     onClick={toggleClass}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <div className="flex-shrink-0 h-8 w-8 rounded-full bg-black"></div>
+                    <div className="flex-shrink-0 h-8 w-8 rounded-full">
+                      <img
+                        src={profile}
+                        className="rounded-full"
+                        alt="Profile"
+                      />
+                    </div>
                   </button>
                 </div>
                 <div
-                  className={`absolute top-11 right-5 z-50 my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700 ${isActive ? "" : "hidden"
-                    }`}
+                  className={`absolute top-11 right-5 z-50 my-4 list-none divide-y divide-gray-100 rounded bg-white text-base shadow dark:divide-gray-600 dark:bg-gray-700 ${
+                    isActive ? "" : "hidden"
+                  }`}
                   id="dropdown-2"
                 >
                   <div className="px-4 py-4">
@@ -117,7 +125,6 @@ export const Navbar = ({ handleSideBarStatus }) => {
                         Sign out
                       </a>
                     </li>
-
                   </ul>
                 </div>
               </div>

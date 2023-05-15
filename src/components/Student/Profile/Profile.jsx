@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { MainLayout } from "../../../layouts/MainLayout";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import userAvatar from "./pic.png"; // Import the image
+import userAvatar from "./../../../assets/nouser.png"; // Import the image
 import { toast, ToastContainer } from "react-toastify";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,42 +33,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const Profile = () => {
   const classes = useStyles();
-  const em = JSON.parse(localStorage.getItem("user"));
-
+  const user = JSON.parse(localStorage.getItem("user"));
   const [image, setImage] = useState(userAvatar);
   const [image_pic, setFile] = useState(null);
 
-  // Mock user data from a database
-  const user = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    batch: "FA19",
-    section: "C", // Replace with actual image URL
-  };
 
   const handleFileSelect = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-
     const reader = new FileReader();
-
     reader.onloadend = () => {
       setImage(reader.result);
     };
-
     if (selectedFile) {
       reader.readAsDataURL(selectedFile);
     }
-
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("image_pic", image_pic);
-    formData.append("email", em.email);
-    formData.append("role", em.role);
+    console.log(image_pic)
+    formData.append("email", user.email);
+    formData.append("role", user.role);
 
     const response = await fetch("http://localhost:5000/upload/profile", {
       method: "PUT",
@@ -76,13 +66,22 @@ const Profile = () => {
     });
     const data = await response.json();
     if (response.status === 200) {
-      console.log(data);
-      console.log(data.message);
+      user.profile = data.data.uri;
+      localStorage.setItem('user', JSON.stringify(user));
+      setImage(data.data.uri)
       toast.info(data.message, { hideProgressBar: true });
     } else {
       toast.error(data.message, { hideProgressBar: true });
     }
+
   };
+
+  useEffect(() => {
+    if (user && user.profile) {
+      setImage(user.profile);
+    }
+  }, [handleSubmit, user]);
+
 
   return (
     <MainLayout>
@@ -98,7 +97,7 @@ const Profile = () => {
             <Grid item xs={12} md={3}>
               <Avatar
                 alt="User avatar"
-                src={image}
+                src={image ? image : userAvatar}
                 className={classes.avatar}
               />
               <div>
@@ -121,25 +120,23 @@ const Profile = () => {
                 Basic Information
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Name: {user.name}
+                Name: {user.StudentName}
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Email: {user.email}
               </Typography>
               <Typography variant="h6" gutterBottom>
-                Batch: {user.batch}
+                Batch: {user.StudentSection}
               </Typography>
-              <Typography variant="h6" gutterBottom>
-                Section: {user.section}
-              </Typography>
-              <Button
+
+              {/* <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
               // onClick={handleEditProfile}
               >
                 Edit Profile
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
         </Paper>
