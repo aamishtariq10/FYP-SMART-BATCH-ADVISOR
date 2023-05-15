@@ -1,97 +1,210 @@
 
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Select, Alert, InputLabel, Autocomplete, MenuItem, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Select, InputLabel, Autocomplete, MenuItem, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button } from '@mui/material';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
-import { BatchOptions, Status, DepartmentOptions, semesters, Section } from "./DropDowns";
+import { BatchOptions, Status, DepartmentOptions, Section } from "./DropDowns";
+import gradingSystem from "./gradinSystem";
 
-const options = ['Option 1', 'Option 2'];
 const UpdateResults = () => {
-  const [value, setValue] = React.useState(options[0]);
-  const [inputValue, setInputValue] = React.useState('');
-  //States
-  const [StudentName, setName] = useState("");
-  const [StudentRegNo, setRegNo] = useState("");
-  const [StudentEmail, setEmail] = useState("");
+  const batchOptions = BatchOptions()
+  const status = [...Status];
+  const DepartmentOption = [...DepartmentOptions];
+  const section = [...Section];
   const [StudentStatus, setStatus] = useState("");
-  const [Batch, setBatch] = useState("");
-  const [RollNo, setRollNo] = useState("");
-  const [sectionString, setSectionString] = useState();
-  const [StudentSection, setSection] = useState("");
   const [Department, setDepartment] = useState("");
-  const [CurrentSemester, setCurrentSemester] = useState("");
+  const [studentRegNo, setStudentRegNo] = useState([]);
+  const [selectedRegNo, setSelectedRegNo] = useState('');
+  const [session, setSession] = React.useState("");
+  const [inputValue, setInputValue] = React.useState("");
+  const [lg, setlg] = useState("");
+  const [lgOptions, setLgOtions] = useState([]);
+  const [marks, setMarks] = useState("");
+  const [marksOptions, setMarksOptions] = useState([]);
+  const [gpa, setgpa] = useState("");
+  const [gpaOptions, setgpaOptions] = useState([]);
+  const [cgpa, setCgpa] = useState("");
+  const [ss, setss] = useState("");
+  const [Batch, setBatch] = useState('');
+  const [sectionString, setSectionString] = useState('');
+  const [courseName, setCourseName] = useState('');
+  const [courseCode, setCourseCode] = useState('');
+  const [courseCredit, setCourseCredit] = useState("");
+  const [teacher, setTeacher] = useState('');
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const [disable, setDisable] = useState(false);
+
+
   //Params , headers and navigate
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { ResultID } = useParams();
   const location = useLocation();
   const data = location.state?.data;
-  console.log(data)
+  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
+  const getStudentRegNo = async (e) => {
+    const res = await axios.get(`http://localhost:5000/admin/results/get/regNo`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+    const regNosArray = res?.data?.data?.map(item => item.StudentRegNo);
+    setStudentRegNo(regNosArray)
+    if (res.status !== '200') {
+      setErrorMsg(res.data.message)
+      // setStudentRegNo([])
+    }
+  }
+  useEffect(() => {
+    getStudentRegNo();
+  }, [])
+  useEffect(() => {
+    const sessionKeys = Object.keys(gradingSystem.session);
+    const lgKeys =
+      session <= sessionKeys[0]
+        ? Object.keys(gradingSystem?.session['FA21']?.lg)
+        : Object.keys(gradingSystem?.session['SP22']?.lg);
+    setLgOtions(lgKeys);
+    const lgData =
+      session === sessionKeys[0]
+        ? gradingSystem.session[sessionKeys[0]].lg[lg]?.marks || [0]
+        : gradingSystem.session[sessionKeys[1]].lg[lg]?.marks || [0];
+    setMarksOptions(lgData);
+    const lggpa =
+      session === sessionKeys[0]
+        ? gradingSystem.session[sessionKeys[0]].lg[lg]?.gpa
+        : gradingSystem.session[sessionKeys[1]].lg[lg]?.gpa;
+    const GpaArr = [lggpa]
+    setgpaOptions(GpaArr)
+  }, [session, lg]);
 
-  //Dropdowns
-  // const DepartmentOption = [...DepartmentOptions];
-  // const semester = [...semesters];
-  // const section = [...Section];
-  // const BatchOption = BatchOptions();
-  // const status = [...Status];
+  useEffect(() => {
+    if (StudentStatus == 'withdraw') {
+      setlg("withdraw")
+      setMarks(0)
+      setgpa(0)
+    }
+    else if (StudentStatus == 'failed') {
+      setlg('F')
+    }
+    else {
+      setlg("")
+      setMarks("")
+      setgpa("")
+    }
+  }, [StudentStatus]);
+  useEffect(() => {
+    if (marksOptions && marks !== "" && !marksOptions.includes(marks)) {
+      setMarks(null);
+    }
+  }, [marksOptions, marks]);
 
-  //UseEffect to set data
-  // useEffect(() => {
-  //   if (data) {
-  //     setName(data.StudentName);
-  //     setEmail(data.StudentEmail);
-  //     const RegNo = data.StudentRegNo.split('-');
-  //     setBatch(RegNo[0]);
-  //     setDepartment(RegNo[1]);
-  //     setRollNo(RegNo[2]);
-  //     setRegNo(data.StudentRegNo);
-  //     setSection(data.StudentSection);
-  //     const Section = data.StudentSection.split('-');
-  //     setSectionString(Section[2]);
-  //     setCurrentSemester(data.CurrentSemester);
-  //     setStatus(data.StudentStatus);
-  //   }
-  // }, [data]);
-  // console.log(StudentName, Batch, RollNo, sectionString, Department, StudentEmail, StudentStatus, StudentSection, CurrentSemester);
-  // console.log(sectionString)
+  useEffect(() => {
+    if (cgpa < 2.0 && cgpa >= 0) {
+      setss('pb-probation')
+    }
+    else if (cgpa >= 2.0) {
+      setss("gas")
+    }
+    else {
+      setss('');
+    }
+  }, [cgpa]);
 
-  // const dataA = {
-  //   StudentName,
-  //   StudentEmail,
-  //   StudentRegNo: `${Batch}-${Department}-${RollNo}`,
-  //   StudentSection: `${Batch}-${Department}-${sectionString}`,
-  //   CurrentSemester,
-  //   StudentStatus
-  // };
-  // const UpdateStudent = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.put(`http://localhost:5000/admin/students/update/${StudentName}/${id}`, dataA);
-  //     console.log(res);
-  //     toast.info(res.data.message, { autoClose: 1500 })
-  //     setTimeout(() => {
-  //       navigate("/admin/students");
-  //     }, 1000);
-  //   }
-  //   catch (error) {
-  //     toast.error(error.response.data.message, { autoClose: 1500 })
-  //   }
-  // }
-  // const AddStudent = async (e) => {
-  //   try {
-  //     e.preventDefault();
-  //   //  console.log(dataA);
-  //     const add = await axios.post(`http://localhost:5000/admin/students/add`, dataA)
-  //     navigate("/admin/students");
-  //     console.log(add.data);
-  //     toast.info(add.data.message, { autoClose: 1500 })
-  //   }
-  //   catch (error) {
-  //     toast.error(error.response.data.message, { autoClose: 1500 })
-  //   }
-  // }
+
+
+
+
+  useEffect(() => {
+    if (data) {
+      setSelectedRegNo(data.StudentRegNo)
+      setSession(data.SessionYear)
+      setlg(data.Grade_LG)
+      setStatus(data.CourseStatus)
+      setMarks(data.Marks)
+      const section = data.Class.split('-');
+      setBatch(section[0]);
+      setDepartment(section[1]);
+      setSectionString(section[2]);
+      setCgpa(data.CGPA)
+      setCourseCode(data.CourseCode)
+      setCourseCredit(data.CourseCredit)
+      setCourseName(data.Course)
+      setss(data.SS)
+      setgpa(data.GPA)
+      setTeacher(data.Teacher)
+      setDisable(true);
+    }
+  }, [data])
+  const dataA = {
+    ResultID,
+    studentRegNo: selectedRegNo,
+    Class: `${Batch}-${Department}-${sectionString}`,
+    session: session,
+    status: StudentStatus,
+    SS: ss,
+    lg: lg,
+    marks: marks,
+    gpa: gpa,
+    cgpa: cgpa,
+    courseName: courseName,
+    courseCode: courseCode,
+    courseCredit: courseCredit,
+    Teacher: teacher
+  };
+
+
+  const UpdateResults = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(`http://localhost:5000/admin/results/update/${data.StudentRegNo}/${ResultID}`, dataA,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+      toast.info(res.data.message, { autoClose: 1500 })
+      setTimeout(() => {
+        // navigate("/admin/students");
+      }, 1000);
+    }
+    catch (error) {
+      toast.error(error.response.data.message, { autoClose: 1500 })
+    }
+  }
+
+  const AddResults = async (e) => {
+    try {
+      e.preventDefault();
+      const add = await axios.post(`http://localhost:5000/admin/results/create`, dataA, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+      )
+      if (add.status !== 200) {
+        toast.error(add.data.message, { autoClose: 1500 })
+        setErrorMsg(add.data.message)
+      }
+
+      else {
+        navigate("/admin/results");
+        toast.info(add.data.message, { autoClose: 1500 })
+      }
+    }
+    catch (err) {
+      toast.error("inernal server error", { autoClose: 1500 })
+    }
+  }
   return (
     <AdminLayout>
       <section className="flex h-full w-full  justify-center items-center">
@@ -107,7 +220,7 @@ const UpdateResults = () => {
             </Toolbar>
           </AppBar>
           <form
-            //  onSubmit={data ? UpdateStudent : AddStudent}
+            onSubmit={data ? UpdateResults : AddResults}
             className="bg-gray shadow-md rounded  py-8 px-8 pt-6 pb-8 mb-4 h-screen">
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">Enter Student Details</Typography>
@@ -115,20 +228,23 @@ const UpdateResults = () => {
             <div className="mb-4 lg:flex lg:items-center lg:justify-between">
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
+                  value={selectedRegNo}
+                  onChange={(event, selectedRegNo) => {
+                    setSelectedRegNo(selectedRegNo);
                   }}
                   inputValue={inputValue}
                   onInputChange={(event, newInputValue) => {
                     setInputValue(newInputValue);
                   }}
-                  id="controllable-states-demo"
-                  options={options}
-                  // sx={{ width: 300 }}
-                  renderInput={(params) => <TextField {...params} label="Registeration No" />}
+                  disabled={disable}
+                  id="studentregno"
+                  options={studentRegNo}
+                  required
+                  renderInput={(params) => <TextField {...params} label="Registration No" />}
                 />
+
               </div>
+
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <FormControl className="w-full mr-2">
                   <InputLabel id="BatchInput">Session</InputLabel>
@@ -137,14 +253,15 @@ const UpdateResults = () => {
                     id="demo-select-small"
                     label="Batch"
                     required
-                    value={Batch}
-                    onChange={(event) => setBatch(event.target.value)}
+
+                    value={session || ''}
+                    onChange={(event) => setSession(event.target.value)}
                   >
-                    {/* {BatchOption.map((option) => (
+                    {batchOptions.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
-                    ))} */}
+                    ))}
                   </Select>
                 </FormControl>
               </div>
@@ -154,18 +271,95 @@ const UpdateResults = () => {
                   <Select
                     labelId="demo-select-small"
                     id="demo-select-small"
-                    label="Batch"
+                    label="Status"
                     required
                     value={StudentStatus}
                     onChange={(event) => setStatus(event.target.value)}
                   >
-                    {/* {status.map((option) => (
+                    {status.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
                     ))
-                    } */}
+                    }
                   </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+              <Typography variant="h9" component="h1">Enter Marks</Typography>
+            </div>
+            <div className="lg:flex lg:items-center lg:justify-between">
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl className="w-full mr-2">
+                  <InputLabel id="BatchInput">lg (grades)</InputLabel>
+                  <Select
+                    labelId="BatchSelect"
+                    id="demo-select-small"
+                    label="Batch"
+                    required
+                    value={lg}
+                    onChange={(event) => setlg(event.target.value)}
+                  >
+                    {lgOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl className="w-full m-1">
+                  <InputLabel id="DepartmentLabel">Marks</InputLabel>
+                  <Select
+                    labelId="marks"
+                    id="marks"
+                    label="marks"
+                    required
+                    value={marks}
+                    onChange={(event) => setMarks(event.target.value)}
+                  >
+                    {marksOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl className="w-full mr-2">
+                  <InputLabel id="SectionSelect">GPA</InputLabel>
+                  <Select
+                    labelId="gpa"
+                    id="gpa"
+                    label="Gpa"
+                    value={gpa}
+                    required
+                    onChange={(event) => setgpa(event.target.value)}
+                  >
+                    {gpaOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl fullWidth>
+                  <TextField
+                    id="Cgpa"
+                    label="Cgpa"
+                    variant="outlined"
+                    value={cgpa}
+                    placeholder="0.0"
+                    onChange={(e) => setCgpa(e.target.value.toLowerCase())}
+                    required
+                  />
                 </FormControl>
               </div>
             </div>
@@ -176,37 +370,45 @@ const UpdateResults = () => {
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <FormControl fullWidth>
                   <TextField
-                    id="course code"
-                    label="Course Code"
+                    id="Coursename"
+                    label="Course Name"
                     variant="outlined"
-                    value={StudentEmail}
-                    // placeholder="xyz@cuilahore.edu.pk"
-                    //  onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                    value={courseName}
+                    placeholder="Applied Physics"
+                    onChange={(e) => setCourseName(e.target.value)}
                     required
                   />
                 </FormControl>
               </div>
 
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                <FormControl className="w-full m-1">
-                  <InputLabel id="DepartmentLabel">Course Name</InputLabel>
-                  <Select
-                    labelId="DepartmentSelect"
-                    id="Department"
-                    label="Course Name"
+                <FormControl fullWidth>
+                  <TextField
+                    id="course code"
+                    label="Course Code"
+                    variant="outlined"
+                    value={courseCode}
+                    placeholder="CSE000"
+                    onChange={(e) => setCourseCode(e.target.value)}
                     required
-                    value={Department}
-                    onChange={(event) => setDepartment(event.target.value)}
-                  >
-                    {/* {DepartmentOption.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))} */}
-                  </Select>
+                  />
+                </FormControl>
+              </div>
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl fullWidth>
+                  <TextField
+                    id="course credit"
+                    label="Course credit"
+                    variant="outlined"
+                    value={courseCredit}
+                    placeholder="4(1,0)"
+                    onChange={(e) => setCourseCredit(e.target.value)}
+                    required
+                  />
                 </FormControl>
               </div>
             </div>
+
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">Enter Class Details</Typography>
             </div>
@@ -220,13 +422,13 @@ const UpdateResults = () => {
                     label="Batch"
                     required
                     value={Batch}
-                  //  onChange={(event) => setBatch(event.target.value)}
+                    onChange={(event) => setBatch(event.target.value)}
                   >
-                    {/* {BatchOption.map((option) => (
+                    {batchOptions.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
-                    ))} */}
+                    ))}
                   </Select>
                 </FormControl>
               </div>
@@ -240,13 +442,13 @@ const UpdateResults = () => {
                     label="Department"
                     required
                     value={Department}
-                   // onChange={(event) => setDepartment(event.target.value)}
+                    onChange={(event) => setDepartment(event.target.value)}
                   >
-                    {/* {DepartmentOption.map((option) => (
+                    {DepartmentOption.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
-                    ))} */}
+                    ))}
                   </Select>
                 </FormControl>
               </div>
@@ -259,89 +461,55 @@ const UpdateResults = () => {
                     label="Section"
                     value={sectionString ? sectionString : ""}
                     required
-                  //  onChange={(event) => setSectionString(event.target.value)}
+                    onChange={(event) => setSectionString(event.target.value)}
                   >
-                    {/* {section.map((option) => (
+                    {section.map((option) => (
                       <MenuItem key={option} value={option}>
                         {option}
                       </MenuItem>
-                    ))} */}
+                    ))}
                   </Select>
                 </FormControl>
 
               </div>
               <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                <FormControl className="w-full mr-2">
-                  <InputLabel id="demo-select-small">Select Teacher</InputLabel>
-                  <Select
-                    labelId="CurrentSemesterSelectct"
-                    id="CurrentSemesterSelect"
-                    label="Semester"
-                    value={CurrentSemester}
-                    onChange={(event) => setCurrentSemester(event.target.value)}
-                  >
-                    {/* {semester.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))
-                    } */}
-                  </Select>
-
+                <FormControl fullWidth>
+                  <TextField
+                    id="teacher name"
+                    label="Teacher Name"
+                    variant="outlined"
+                    value={teacher}
+                    placeholder="John Doe"
+                    onChange={(e) => setTeacher(e.target.value.toLowerCase())}
+                    required
+                  />
                 </FormControl>
               </div>
             </div>
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-              <Typography variant="h9" component="h1">Class Details</Typography>
-            </div>
-            <div className="lg:flex lg:items-start lg:justify-between">
-           
-              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                <FormControl className="w-full mr-2">
-                  <InputLabel id="demo-select-small">Semester</InputLabel>
-                  <Select
-                    labelId="CurrentSemesterSelectct"
-                    id="CurrentSemesterSelect"
-                    label="Semester"
-                    value={CurrentSemester}
-                    onChange={(event) => setCurrentSemester(event.target.value)}
-                  >
-                    {/* {semester.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))
-                    } */}
-                  </Select>
-
-                </FormControl>
-              </div>
-            </div>
-            <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-              <Typography variant="h9" component="h1">Status :</Typography>
+              <Typography variant="h9" component="h1">SS :</Typography>
             </div>
             <div className="lg:flex lg:items-center lg:justify-between">
               <div className="w-full lg:w-1/4 lg:mr-4 mb-4">
                 <FormControl className="w-full mr-2">
-                  <InputLabel id="demo-select-small">Status</InputLabel>
+                  <InputLabel id="demo-select-small">SS</InputLabel>
                   <Select
                     labelId="demo-select-small"
                     id="demo-select-small"
-                    label="Batch"
+                    label="SS"
                     required
-                    value={StudentStatus}
-                    onChange={(event) => setStatus(event.target.value)}
+                    value={ss}
+                    onChange={(event) => setss(event.target.value)}
                   >
-                    {/* {status.map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))
-                    } */}
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="gas">GAS</MenuItem>
+                    <MenuItem value="pb-probation">PB-PROBATION</MenuItem>
+                    <MenuItem value="di-discontinued">DI-DISCONTINUED</MenuItem>
                   </Select>
                 </FormControl>
               </div>
             </div>
+
             <div className="flex items-center justify-between ">
               {data ?
                 <Button type="submit" variant="contained" color="primary">
@@ -352,8 +520,14 @@ const UpdateResults = () => {
                   Add Records
                 </Button>
               }
+              {errorMsg ? (
+                <div className="text-red-500 text-sm">{errorMsg + " \n"}</div>
+              ) : null
+
+              }
             </div>
           </form>
+
           <ToastContainer
             position="top-right"
             autoClose={5000}
