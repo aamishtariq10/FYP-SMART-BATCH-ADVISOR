@@ -18,6 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import AddByUpload from './AddByUpload';
+
 const Results = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
@@ -136,13 +137,24 @@ const Results = () => {
     const handleClose = (row) => {
         console.log(selectedRows)
         axios
-            .put(`http://localhost:5000/admin/students/delete`, { data: { ids: selectedRows } })
+            .put(`http://localhost:5000/admin/results/delete`, {
+                data: { ids: selectedRows },
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },
+            )
             .then((res) => {
+                console.log(res)
                 toast.info(res.data.message);
                 getData();
             })
             .catch((err) => {
-                toast.error(err.data.message);
+                toast.error("");
             });
 
         setOpen(false);
@@ -164,7 +176,8 @@ const Results = () => {
         { field: 'SessionYear', headerName: 'Session', width: 80 },
         { field: 'CourseStatus', headrName: 'CourseStatus', width: 100 },
         { field: 'CourseCode', headerName: 'CourseCode', width: 100 },
-        { field: 'Course', headerName: 'Course', width: 200 },
+        { field: 'Course', headerName: 'Course', width: 100 },
+        { field: 'CourseCredit', headerName: 'Credit', width: 100 },
         { field: 'Class', headerName: 'Class', width: 130 },
         { field: 'Teacher', headerName: 'Teacher', width: 200 },
         { field: 'Marks', headerName: 'Marks', width: 80 },
