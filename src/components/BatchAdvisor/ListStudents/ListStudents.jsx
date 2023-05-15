@@ -92,9 +92,7 @@ const ListStudents = () => {
         return rows.filter(row => row.email.toLowerCase().includes(searchValue.toLowerCase()));
     };
     const selectRowstoDelete = (row) => {
-        const selectedRows = row;
-
-        setSelectedRows(selectedRows);
+        
     };
     const handleClickOpenDialogue = () => {
         if (selectedRows.length === 0) {
@@ -108,23 +106,10 @@ const ListStudents = () => {
         setOpen(false);
     };
     const columns = [
-        {
-            field: "delete",
-            width: 75,
-            sortable: false,
-            disableColumnMenu: true,
-            renderHeader: () => (
-                <IconButton onClick={handleClickOpenDialogue}
-                >
-                    <DeleteIcon />
-                </IconButton>
-            ),
-        },
-
-        { field: 'id', headerName: 'User id', width: 100 },
-        { field: 'role', headerName: 'Role', width: 200 },
+        { field: 'id', headerName: 'Id', width: 100 },
+        { field: 'role', headerName: 'Name', width: 200 },
         { field: 'email', headrName: 'Email', width: 300 },
-        { field: 'allowed', headerName: 'Status', width: 100 },
+        { field: 'allowed', headerName: 'Batch', width: 100 },
 
     ];
     return (
@@ -135,19 +120,14 @@ const ListStudents = () => {
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Users
+                        Students
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the Users here
+                        You can see all the Students of Batch Advisor here
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
-                    {/* <div className="mb-4 sm:mb-0">
-                        <AddByUpload
-                        //  getData={getData}
-                        />
-                    </div> */}
                    
                 </div>
 
@@ -186,13 +166,9 @@ const ListStudents = () => {
                         columns={columns}
                         getRowId={getRowId}
                         pageSize={10}
-                        onRowSelectionModelChange={(rows) => {
-                            selectRowstoDelete(rows);
-                        }}
-                        checkboxSelection
-                        onRowClick={(rows) => {
-                            handleClickOpen(rows.row);
-                        }}
+                        // onRowClick={(rows) => {
+                        //     handleClickOpen(rows.row);
+                        // }}
                         components={{
                             Toolbar: GridToolbar,
                         }}
@@ -211,26 +187,7 @@ const ListStudents = () => {
                         pauseOnHover
                         theme="colored"
                     />
-                    <Dialog
-                        open={open}
-                        
-                        aria-labelledby="draggable-dialog-title"
-                    >
-                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-                            Confirm Delete
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Are you sure you want to delete?
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button autoFocus onClick={handleCancel}>
-                                Cancel
-                            </Button>
-                            <Button >Delete</Button>
-                        </DialogActions>
-                    </Dialog>
+                   
                 </div>
             </section>
         </BatchAdvisorLayout>
