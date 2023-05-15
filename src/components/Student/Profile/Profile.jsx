@@ -37,32 +37,26 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("user"));
-
   const [image, setImage] = useState(userAvatar);
   const [image_pic, setFile] = useState(null);
-
-
 
 
   const handleFileSelect = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-
     const reader = new FileReader();
-
     reader.onloadend = () => {
       setImage(reader.result);
     };
-
     if (selectedFile) {
       reader.readAsDataURL(selectedFile);
     }
-
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("image_pic", image_pic);
+    console.log(image_pic)
     formData.append("email", user.email);
     formData.append("role", user.role);
 
@@ -72,30 +66,21 @@ const Profile = () => {
     });
     const data = await response.json();
     if (response.status === 200) {
-      // console.log(data);
-      // console.log(data.data.uri);
       user.profile = data.data.uri;
       localStorage.setItem('user', JSON.stringify(user));
-      // localStorage.setItem(user.profile, JSON.stringify(data.data.uri));
+      setImage(data.data.uri)
       toast.info(data.message, { hideProgressBar: true });
     } else {
       toast.error(data.message, { hideProgressBar: true });
     }
-    
+
   };
-  
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Code to be executed after the delay
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      if (user && user.profile) {
-        setFile(user.profile);
-      }
-    }, 6000); 
-
-    return () => clearTimeout(timer);
-  }, [handleSubmit]);
+    if (user && user.profile) {
+      setImage(user.profile);
+    }
+  }, [handleSubmit, user]);
 
 
   return (
@@ -112,7 +97,7 @@ const Profile = () => {
             <Grid item xs={12} md={3}>
               <Avatar
                 alt="User avatar"
-                src={image_pic ? image_pic : userAvatar}
+                src={image ? image : userAvatar}
                 className={classes.avatar}
               />
               <div>
@@ -143,7 +128,7 @@ const Profile = () => {
               <Typography variant="h6" gutterBottom>
                 Batch: {user.StudentSection}
               </Typography>
-             
+
               {/* <Button
                 variant="contained"
                 color="primary"
