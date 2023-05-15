@@ -1,8 +1,9 @@
 import {
   HomeIcon,
-  // StarIcon,
-  //ChatBubbleOvalLeftIcon,
-  ChartPieIcon,
+  StarIcon,
+  UsersIcon,
+  ClipboardDocumentListIcon,
+  UserCircleIcon,
   DocumentIcon,
   AcademicCapIcon,
 } from "@heroicons/react/24/solid";
@@ -17,21 +18,25 @@ const sideNavigation = [
     name: "Dashboard",
     href: "/admin/profile",
     icon: <HomeIcon className={iconClass} />,
+    disable: false,
   },
   {
     name: "Student",
     href: "/admin/students",
     icon: <AcademicCapIcon className={iconClass} />,
+    disable: false,
   },
   {
     name: " Batch Advisor",
     href: "/admin/batchadvisor",
-    icon: <ChartPieIcon className={iconClass} />,
+    icon: <UserCircleIcon className={iconClass} />,
+    disable: false,
   },
   {
     name: "Courses",
     href: "/admin/courses",
     icon: <DocumentIcon className={iconClass} />,
+    disable: true,
   },
   // {
   //   name: "Add Batch Advisor",
@@ -42,20 +47,17 @@ const sideNavigation = [
   {
     name: "Student Results",
     href: "/admin/results",
-    icon: <DocumentIcon className={iconClass} />,
+    icon: <ClipboardDocumentListIcon className={iconClass} />,
+    disable: false,
   },
 ];
 
+
 const BottomsideNavigation = [
-  {
-    name: "List of Students",
-    href: "/admin/listStudents",
-    icon: <HomeIcon className={iconClass} />,
-  },
   {
     name: "Users",
     href: "/admin/users",
-    icon: <HomeIcon className={iconClass} />,
+    icon: <UsersIcon className={iconClass} />,
   },
 
 
@@ -104,11 +106,13 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                 >
                   {item.icon}
                   <span
+
                     className="ml-3 flex-1 whitespace-nowrap  "
                     data-testid="sidebar-item-content"
                   >
                     {item.name}
                   </span>
+
                 </NavLink>
               ))}
               <hr />
@@ -146,10 +150,11 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
                 <NavLink
                   to={item.href}
                   key={item.name}
+                  disable={item.disable}
                   className={({ isActive }) =>
                     isActive
-                    ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-white-900 bg-gray-200  "
-                    : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 "                  }
+                      ? "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-white-900 bg-gray-200  "
+                      : "flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 "}
                 >
                   {item.icon}
                   <span
