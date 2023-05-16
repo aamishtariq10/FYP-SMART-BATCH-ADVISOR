@@ -10,6 +10,8 @@ export const Navbar = ({ handleSideBarStatus }) => {
   const [isActive, setActive] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState("");
+
 
   // const email = "aamishtariq943@gmail.com";
   const navigate = useNavigate();
@@ -41,6 +43,8 @@ export const Navbar = ({ handleSideBarStatus }) => {
     if (user && user.role === "batch advisor") {
       setUsername(user.role);
       setEmail(user.email);
+      setProfile(user.profile);
+
     }
   }, []);
 
@@ -84,7 +88,13 @@ export const Navbar = ({ handleSideBarStatus }) => {
                     onClick={toggleClass}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <div className="flex-shrink-0 h-8 w-8 rounded-full bg-black"></div>
+                    <div className="flex-shrink-0 h-8 w-8 rounded-full">
+                    <img
+                        src={profile}
+                        className="flex-shrink-0 h-8 w-8 rounded-full"
+                        alt="Profile"
+                      />
+                    </div>
                   </button>
                 </div>
                 <div

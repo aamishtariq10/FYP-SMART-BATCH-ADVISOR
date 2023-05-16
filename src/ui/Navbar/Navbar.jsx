@@ -85,9 +85,9 @@ export const Navbar = ({ handleSideBarStatus }) => {
                   >
                     <span className="sr-only">Open user menu</span>
                     <div className="flex-shrink-0 h-8 w-8 rounded-full">
-                      <img
+                    <img
                         src={profile}
-                        className="rounded-full"
+                        className="flex-shrink-0 h-8 w-8 rounded-full"
                         alt="Profile"
                       />
                     </div>

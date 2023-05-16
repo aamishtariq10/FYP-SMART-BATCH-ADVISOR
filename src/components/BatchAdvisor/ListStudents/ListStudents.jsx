@@ -1,30 +1,3 @@
-// import React from "react";
-// import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
-// //import es from "../assets/keywords.jpg";
-// const ListStudents = () => {
-//   return (
-//     <BatchAdvisorLayout>
-//       <section class="flex flex-row w-full h-full justify-center items-center">
-//         <div className="mx-4 my-4 w-full w-full">
-//           <div className="rounded-lg bg-white text-center shadow md:items-center md:p-6 xl:p-8">
-//             <div className="bg-blue-900">
-              
-//             </div>
-//             <div>
-             
-//             </div>
-//           </div>
-//         </div>
-//       </section>
-//     </BatchAdvisorLayout>
-//   );
-// };
-// export default ListStudents;
-
-
-
-
-
 import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
@@ -38,7 +11,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
@@ -52,11 +26,15 @@ const ListStudents = () => {
     //const [openUpdate, setOpenUpdate] = React.useState(false);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
-    //if update is clicked
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const user = JSON.parse(localStorage.getItem("user"));
+     const dataa = {
+                BatchSection : user.BatchSection,
+                BatchAdvisorEmail: user.email
+              };
+
     const getData = async () => {
         try {
-            const student = await axios.get("http://localhost:5000/batchadvisor/liststudents/get", {
+            const student = await axios.post("http://localhost:5000/batchadvisor/student/records/get",dataa, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -65,11 +43,17 @@ const ListStudents = () => {
             },);
             console.log(student.data.data);
 
-            const data = student.data.data.map(row => ({
-                ...row,
-                allowed: row.allowed ? "Allowed" : "Blocked"
-            }));
-            setRows(data);
+            // const data = student.data.data.map(row => ({
+            //     ...row,
+            //     allowed: row.allowed ? "Allowed" : "Blocked"
+            // }));
+            // const data = student.data.data.map(row => ({
+            //     StudentRegNo: row.id, // Add the necessary fields based on your data structure
+            //     StudentEmail: row.email,
+            //     StudentName: row.name,
+                
+            // }));
+            // setRows(data);
         } catch (error) {
             toast.error("No data found");
         }
@@ -85,45 +69,51 @@ const ListStudents = () => {
     const AddNewStudent = (row) => {
         navigate(`new`);
     };
-    const filterRowsByName = (rows) => {
-        if (!rows || rows.length === 0) {
-            return [];
-        }
-        return rows.filter(row => row.email.toLowerCase().includes(searchValue.toLowerCase()));
-    };
-    const selectRowstoDelete = (row) => {
-        
-    };
-    const handleClickOpenDialogue = () => {
-        if (selectedRows.length === 0) {
-            toast.error("No rows selected");
-        }
-        else {
-            setOpen(true);
-        }
-    };
+    // const filterRowsByName = (rows) => {
+    //     if (!rows || rows.length === 0) {
+    //         return [];
+    //     }
+    //     return rows.filter(row => row.email.toLowerCase().includes(searchValue.toLowerCase()));
+    // };
+    // const selectRowstoDelete = (row) => {
+    //     const selectedRows = row;
+
+    //     setSelectedRows(selectedRows);
+    // };
+    // const handleClickOpenDialogue = () => {
+    //     if (selectedRows.length === 0) {
+    //         toast.error("No rows selected");
+    //     }
+    //     else {
+    //         setOpen(true);
+    //     }
+    // };
     const handleCancel = () => {
         setOpen(false);
     };
+    
+
     const columns = [
-        { field: 'id', headerName: 'Id', width: 100 },
-        { field: 'role', headerName: 'Name', width: 200 },
-        { field: 'email', headrName: 'Email', width: 300 },
-        { field: 'allowed', headerName: 'Batch', width: 100 },
+
+
+        { field: 'StudentRegNo', headerName: 'Reg No', width: 100 },
+        { field: 'StudentName', headerName: 'Name', width: 200 },
+        { field: 'StudentEmail', headrName: 'Email', width: 300 },
+        { field: 'StudentSemester', headerName: 'Semester', width: 100 },
 
     ];
     return (
-        <BatchAdvisorLayout>
+        <AdminLayout>
             <Box
                 sx={{ borderBottom: 1, borderColor: "divider" }}
                 className="p-10 flex justify-between items-center flex-row"
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Students
+                        Lit of Students
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the Students of Batch Advisor here
+                        You can see all the stuents here
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
@@ -162,13 +152,17 @@ const ListStudents = () => {
                 ">
                     <DataGrid
                         className="p-4"
-                        rows={filterRowsByName(rows)}
+                        // rows={filterRowsByName(rows)}
                         columns={columns}
                         getRowId={getRowId}
                         pageSize={10}
-                        // onRowClick={(rows) => {
-                        //     handleClickOpen(rows.row);
+                        // onRowSelectionModelChange={(rows) => {
+                        //     selectRowstoDelete(rows);
                         // }}
+                        checkboxSelection
+                        onRowClick={(rows) => {
+                            handleClickOpen(rows.row);
+                        }}
                         components={{
                             Toolbar: GridToolbar,
                         }}
@@ -190,7 +184,7 @@ const ListStudents = () => {
                    
                 </div>
             </section>
-        </BatchAdvisorLayout>
+        </AdminLayout>
     );
 };
 
