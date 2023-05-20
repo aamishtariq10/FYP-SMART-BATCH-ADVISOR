@@ -19,6 +19,7 @@ const UpdateUser = () => {
   const [EmailOptions, setEmailOptions] = useState([]);
   const [Status, setStatus] = useState("");
   const [Role, setRole] = useState("");
+  const [disable, setDisable] = useState(false);
   const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
 
   // Params , headers and navigate
@@ -52,6 +53,7 @@ const UpdateUser = () => {
       }
       setEmailOptions(emails);
       setErrorMsg(errorMsg);
+
     } catch (error) {
       console.error(error);
       setEmailOptions([]);
@@ -65,22 +67,23 @@ const UpdateUser = () => {
       setStatus(data.allowed.toLowerCase());
       setRole(data.role.toLowerCase());
       setEmail(data.email.toLowerCase());
+      setDisable(true);
 
     }
   }, [data]);
   useEffect(() => {
     getEmails();
   }, [Role]);
+
+  const Data = {
+    role: Role,
+    allowed: Status === 'allowed' ? true : false,
+    email: email,
+  };
   const UpdateStudent = async (e) => {
     e.preventDefault();
     try {
-      const dataA = {
-        id: id,
-        role: Role,
-        allowed: Status === 'allowed' ? true : false,
-        email: email,
-      };
-      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, dataA,
+      const res = await axios.put(`http://localhost:5000/admin/users/update/${data.email}/${id}`, Data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,9 +95,10 @@ const UpdateUser = () => {
       console.log(res);
       setErrorMsg(res.data.message)
       toast.info(res.data.message, { autoClose: 1500 })
-      setTimeout(() => {
-        navigate("/admin/users");
-      }, 1000);
+      if (res.data.status === 200)
+        setTimeout(() => {
+          navigate("/admin/users");
+        }, 1000);
     }
     catch (error) {
       toast.error("internal server error", { autoClose: 1500 })
@@ -102,12 +106,7 @@ const UpdateUser = () => {
   }
   const AddStudent = async (e) => {
     try {
-      const Data = {
-        role: Role,
-        allowed: Status === 'allowed' ? true : false,
-        email: email,
-        pass: password,
-      };
+
       e.preventDefault();
       console.log(Data);
       const add = await axios.post(`http://localhost:5000/admin/users/create`, Data,
@@ -120,7 +119,7 @@ const UpdateUser = () => {
         })
       console.log(add.data);
       // toast.info(add.data.message, { autoClose: 1500 })
-      add.data.status == "400" ? toast.error(add.data.message, { autoClose: 1500 }) : toast.info(add.data.message, { autoClose: 1500 });
+      add.data.status !== "200" ? toast.error(add.data.message, { autoClose: 1500 }) : toast.info(add.data.message, { autoClose: 1500 });
       add.data.status == "200" && setTimeout(() => {
         navigate("/admin/users");
       }
@@ -167,6 +166,7 @@ const UpdateUser = () => {
                     value={Role}
                     required
                     onChange={handleRoleChange}
+                    disabled={disable}
                   >
 
                     <MenuItem value={"batch advisor"}>Batch Advisor</MenuItem>
@@ -198,11 +198,11 @@ const UpdateUser = () => {
               </div>
             </div>
 
-            {!data ? <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+            {/* {!data ? <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">Password</Typography>
             </div> : null
-            }
-            <div className="lg:flex lg:items-start lg:justify-between">
+            } */}
+            {/* <div className="lg:flex lg:items-start lg:justify-between">
 
               {!data ? <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                 <FormControl fullWidth>
@@ -230,7 +230,7 @@ const UpdateUser = () => {
                 </FormControl>
               </div> : null}
 
-            </div>
+            </div> */}
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">Status :</Typography>
             </div>

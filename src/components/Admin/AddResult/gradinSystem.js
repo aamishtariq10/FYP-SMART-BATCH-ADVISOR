@@ -1,7 +1,7 @@
 const gradingSystem = {
   session: {
-    FA21: {
-      lg: {
+    FA21: {     
+      lg: {      
         A: {
           range: [90, 100],
           lg: [90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100],

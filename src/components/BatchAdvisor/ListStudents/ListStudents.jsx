@@ -20,28 +20,28 @@ import 'react-toastify/dist/ReactToastify.css';
 const ListStudents = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
-    const getRowId = (row) => row.id;
+    const getRowId = (row) => row.SrNo;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
     //const [openUpdate, setOpenUpdate] = React.useState(false);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
-     const dataa = {
-                BatchSection : user.BatchSection,
-                BatchAdvisorEmail: user.email
-              };
+    const dataA = {
+        BatchSection: user.BatchSection,
+        BatchAdvisorEmail: user.email
+    };
 
     const getData = async () => {
         try {
-            const student = await axios.post("http://localhost:5000/batchadvisor/student/records/get",dataa, {
+            const student = await axios.post("http://localhost:5000/batchadvisor/student/records/get", dataA, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 }
             },);
-            console.log(student.data.data);
+            console.log(student);
 
             // const data = student.data.data.map(row => ({
             //     ...row,
@@ -51,9 +51,9 @@ const ListStudents = () => {
             //     StudentRegNo: row.id, // Add the necessary fields based on your data structure
             //     StudentEmail: row.email,
             //     StudentName: row.name,
-                
+
             // }));
-            // setRows(data);
+            setRows(student.data.data);
         } catch (error) {
             toast.error("No data found");
         }
@@ -63,18 +63,18 @@ const ListStudents = () => {
         getData();
     }, []);
 
-    const handleClickOpen = (row) => {
-        navigate(`update/${row.email}/${row.id}`, { state: { data: row } });
-    };
-    const AddNewStudent = (row) => {
-        navigate(`new`);
-    };
-    // const filterRowsByName = (rows) => {
-    //     if (!rows || rows.length === 0) {
-    //         return [];
-    //     }
-    //     return rows.filter(row => row.email.toLowerCase().includes(searchValue.toLowerCase()));
+    // const handleClickOpen = (row) => {
+    //     navigate(`update/${row.email}/${row.id}`, { state: { data: row } });
     // };
+    // const AddNewStudent = (row) => {
+    //     navigate(`new`);
+    // };
+    const filterRowsByName = (rows) => {
+        if (!rows || rows.length === 0) {
+            return [];
+        }
+        return rows.filter(row => row.StudentEmail.toLowerCase().includes(searchValue.toLowerCase()));
+    };
     // const selectRowstoDelete = (row) => {
     //     const selectedRows = row;
 
@@ -88,18 +88,21 @@ const ListStudents = () => {
     //         setOpen(true);
     //     }
     // };
-    const handleCancel = () => {
-        setOpen(false);
-    };
-    
+    // const handleCancel = () => {
+    //     setOpen(false);
+    // };
+
 
     const columns = [
 
 
         { field: 'StudentRegNo', headerName: 'Reg No', width: 100 },
-        { field: 'StudentName', headerName: 'Name', width: 200 },
+        { field: 'StudentName', headerName: 'Name', width: 150 },
+        { field: 'StudentSection', headerName: 'Section', width: 150 },
         { field: 'StudentEmail', headrName: 'Email', width: 300 },
-        { field: 'StudentSemester', headerName: 'Semester', width: 100 },
+        { field: 'CurrentSemester', headerName: 'Semester', width: 100 },
+        { field: 'StudentStatus', headerName: 'Status', width: 100 },
+        
 
     ];
     return (
@@ -118,7 +121,7 @@ const ListStudents = () => {
                 </div>
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
-                   
+
                 </div>
 
 
@@ -152,17 +155,17 @@ const ListStudents = () => {
                 ">
                     <DataGrid
                         className="p-4"
-                        // rows={filterRowsByName(rows)}
+                        rows={filterRowsByName(rows)}
                         columns={columns}
                         getRowId={getRowId}
                         pageSize={10}
                         // onRowSelectionModelChange={(rows) => {
                         //     selectRowstoDelete(rows);
                         // }}
-                        checkboxSelection
-                        onRowClick={(rows) => {
-                            handleClickOpen(rows.row);
-                        }}
+                        //checkboxSelection
+                        // onRowClick={(rows) => {
+                        //     handleClickOpen(rows.row);
+                        // }}
                         components={{
                             Toolbar: GridToolbar,
                         }}
@@ -181,7 +184,7 @@ const ListStudents = () => {
                         pauseOnHover
                         theme="colored"
                     />
-                   
+
                 </div>
             </section>
         </AdminLayout>

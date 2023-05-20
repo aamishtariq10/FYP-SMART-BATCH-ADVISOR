@@ -96,6 +96,7 @@ const UpdateResults = () => {
     }
     else if (StudentStatus == 'failed') {
       setlg('F')
+      setgpa(0)
     }
     else {
       setlg("")

@@ -74,10 +74,7 @@ function App() {
                 <>
                   <Route path="/admin/profile" element={<ProfileNew />} />
                   {/* admin student routes */}
-                  <Route
-                    path="/admin/courses"
-                    element={<AddCourse />}
-                  />
+                  <Route path="/admin/courses" element={<AddCourse />} />
                   <Route
                     path="/admin/students/update/:studentname/:id"
                     element={<UpdateStudent />}
@@ -174,6 +171,7 @@ function App() {
           <Route path="/aboutus" elemsent={<AboutUs />} />
           <Route path="contactus" element={<ContactUs />} />
           <Route path="welcome" element={<Welcome />} />
+          <Route path="/" element={<Welcome />} />
         </Routes>
       </div>
     </>

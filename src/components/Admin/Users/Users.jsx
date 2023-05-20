@@ -39,10 +39,11 @@ const Users = () => {
                 }
             },);
             console.log(student.data.data);
-
             const data = student.data.data.map(row => ({
                 ...row,
+                firstLogin: row.firstLogin ? "true" : "false",
                 allowed: row.allowed ? "Allowed" : "Blocked"
+
             }));
             setRows(data);
         } catch (error) {
@@ -121,10 +122,11 @@ const Users = () => {
             ),
         },
 
-        { field: 'id', headerName: 'User id', width: 100 },
+        //  { field: 'id', headerName: 'User id', width: 100 },
         { field: 'role', headerName: 'Role', width: 200 },
         { field: 'email', headrName: 'Email', width: 300 },
         { field: 'allowed', headerName: 'Status', width: 100 },
+        { field: 'firstLogin', headerName: 'First login true means "user has not logged in yet"', width: "400" }
 
     ];
     return (
