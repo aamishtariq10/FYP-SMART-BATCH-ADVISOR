@@ -32,7 +32,8 @@ const Results = () => {
     const [course, setCourse] = React.useState([]);
     const [selectedCourse, setSelectedCourse] = React.useState('');
     const [warningMsg, setWarningMsg] = React.useState('');
-    console.log(selectedRegNo);
+    
+    console.log(searchValue)
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     const getData = async () => {
@@ -117,7 +118,10 @@ const Results = () => {
         if (selectedRegNo && selectedSessionYear && selectedCourse) {
             return rows.filter(row => row.StudentRegNo === selectedRegNo && row.SessionYear === selectedSessionYear && row.Course === selectedCourse);
         }
+
         return rows.filter(row => row.StudentRegNo.toLowerCase().includes(searchValue.toLowerCase()));
+
+
     };
     const selectRowstoDelete = (row) => {
         const selectedRows = row;
