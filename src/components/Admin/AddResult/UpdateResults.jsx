@@ -8,6 +8,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import { BatchOptions, Status, DepartmentOptions, Section } from "./DropDowns";
 import gradingSystem from "./gradinSystem";
+import CalculateGpa from "./CalculateGpa";
+import CalculateCgpa from "./CalculateCgpa";
 
 const UpdateResults = () => {
   const batchOptions = BatchOptions()
@@ -36,8 +38,10 @@ const UpdateResults = () => {
   const [teacher, setTeacher] = useState('');
   const [errorMsg, setErrorMsg] = React.useState('');
   const [disable, setDisable] = useState(false);
-
-
+  const [semesterGpa, getSemesterGpa] = useState("");
+  const [allCgpa, getAllCgpa] = useState("")
+  console.log(Status)
+  console.log(marks)
   //Params , headers and navigate
   const navigate = useNavigate();
   const { ResultID } = useParams();
@@ -54,7 +58,8 @@ const UpdateResults = () => {
             Accept: "application/json",
           },
         })
-      const regNosArray = res?.data?.data?.map(item => item.StudentRegNo);
+      //console.log(res)
+      const regNosArray = res.data.data ? res?.data?.data?.map(item => item.StudentRegNo) : [];
       setStudentRegNo(regNosArray)
       if (res.status !== '200') {
         setErrorMsg(res.data.message)
@@ -62,7 +67,7 @@ const UpdateResults = () => {
       }
     }
     catch (err) {
-      toast.error("Internal Server error ")
+      toast.error("Error Calculating GPA ")
     }
   }
   useEffect(() => {
@@ -94,21 +99,18 @@ const UpdateResults = () => {
       setMarks(0)
       setgpa(0)
     }
-    else if (StudentStatus == 'failed') {
+    if (StudentStatus == 'failed') {
       setlg('F')
       setgpa(0)
     }
-    else {
-      setlg("")
-      setMarks("")
-      setgpa("")
-    }
+    // if (StudentStatus == 'enrolled') {
+    //   setlg('')
+    //   setgpa('')
+    //   setMarks('')
+    // }
+
   }, [StudentStatus]);
-  useEffect(() => {
-    if (marksOptions && marks !== "" && !marksOptions.includes(marks)) {
-      setMarks(null);
-    }
-  }, [marksOptions, marks]);
+
 
   useEffect(() => {
     if (cgpa < 2.0 && cgpa >= 0) {
@@ -121,11 +123,12 @@ const UpdateResults = () => {
       setss('');
     }
   }, [cgpa]);
-
-
-
-
-
+  const handleGpaUpdate = (semesterGpa) => {
+    getSemesterGpa(semesterGpa);
+  };
+  const handleCgpaUpdate = (semesterGpa) => {
+    getAllCgpa(semesterGpa);
+  };
   useEffect(() => {
     if (data) {
       setSelectedRegNo(data.StudentRegNo)
@@ -133,6 +136,7 @@ const UpdateResults = () => {
       setlg(data.Grade_LG)
       setStatus(data.CourseStatus)
       setMarks(data.Marks)
+      console.log(data.marks)
       const section = data.Class.split('-');
       setBatch(section[0]);
       setDepartment(section[1]);
@@ -147,6 +151,7 @@ const UpdateResults = () => {
       setDisable(true);
     }
   }, [data])
+
   const dataA = {
     ResultID,
     studentRegNo: selectedRegNo,
@@ -163,8 +168,6 @@ const UpdateResults = () => {
     courseCredit: courseCredit,
     Teacher: teacher
   };
-
-
   const UpdateResults = async (e) => {
     e.preventDefault();
     try {
@@ -214,7 +217,7 @@ const UpdateResults = () => {
     <AdminLayout>
       <section className="flex h-full w-full  justify-center items-center">
 
-        <div className="w-full bg-white rounded p-4 m-4 ">
+        <div className=" w-full h-full bg-white rounded p-4 m-4   min-height: 100%">
           <AppBar position="static">
             <Toolbar>
               <IconButton onClick={() => navigate(-1)}>
@@ -354,19 +357,7 @@ const UpdateResults = () => {
                 </FormControl>
               </div>
 
-              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                <FormControl fullWidth>
-                  <TextField
-                    id="Cgpa"
-                    label="Cgpa"
-                    variant="outlined"
-                    value={cgpa}
-                    placeholder="0.0"
-                    onChange={(e) => setCgpa(e.target.value.toLowerCase())}
 
-                  />
-                </FormControl>
-              </div>
             </div>
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">Enter Course Details</Typography>
@@ -492,6 +483,48 @@ const UpdateResults = () => {
               </div>
             </div>
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+              <Typography variant="h9" component="h1">Calculate Semester Gpa</Typography>
+            </div>
+            <div className="lg:flex lg:items-center lg:justify-between">
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl fullWidth>
+                  <TextField
+                    id="gpa"
+                    label="Semester Gpa"
+                    variant="outlined"
+                    value={semesterGpa}
+                    disabled={true}
+                    placeholder="0.0"
+                    onChange={(e) => getSemesterGpa(e.target.value.toLowerCase())}
+                  />
+                </FormControl>
+              </div>
+              <CalculateGpa selectedRegNo={selectedRegNo} gpa={gpa} session={session}
+                courseCredit={courseCredit} StudentStatus={StudentStatus} onGpaUpdate={handleGpaUpdate}
+              />
+            </div>
+            <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+              <Typography variant="h9" component="h1">Calculate Cgpa</Typography>
+            </div>
+            <div className="lg:flex lg:items-center lg:justify-between">
+
+              <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                <FormControl fullWidth>
+                  <TextField
+                    id="Cgpa"
+                    label="Overall Cgpa"
+                    variant="outlined"
+                    value={allCgpa}
+                    placeholder="0.0"
+                    onChange={(e) => getAllCgpa(e.target.value.toLowerCase())}
+                  />
+                </FormControl>
+              </div>
+              <CalculateCgpa selectedRegNo={selectedRegNo} gpa={gpa} session={session}
+                courseCredit={courseCredit} StudentStatus={StudentStatus} onCgpapaUpdate={handleCgpaUpdate}
+              />
+            </div>
+            <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
               <Typography variant="h9" component="h1">SS :</Typography>
             </div>
             <div className="lg:flex lg:items-center lg:justify-between">
@@ -514,22 +547,27 @@ const UpdateResults = () => {
                 </FormControl>
               </div>
             </div>
+            <div className="lg:flex lg:items-center lg:justify-between">
+              <div className="w-full lg:1/2 lg:mr-4 mb-4">
+                <div className="flex items-center justify-between ">
+                  {data ?
+                    <Button type="submit" variant="contained" color="primary">
+                      Update Records
+                    </Button>
+                    :
+                    <Button type="submit" variant="contained" color="primary">
+                      Add Records
+                    </Button>
+                  }
+                  {errorMsg ? (
+                    <div className="text-red-500 text-sm">{errorMsg + " \n"}</div>
+                  ) : null
 
-            <div className="flex items-center justify-between ">
-              {data ?
-                <Button type="submit" variant="contained" color="primary">
-                  Update Records
-                </Button>
-                :
-                <Button type="submit" variant="contained" color="primary">
-                  Add Records
-                </Button>
-              }
-              {errorMsg ? (
-                <div className="text-red-500 text-sm">{errorMsg + " \n"}</div>
-              ) : null
+                  }
+                </div>
+              </div>
 
-              }
+
             </div>
           </form>
 
