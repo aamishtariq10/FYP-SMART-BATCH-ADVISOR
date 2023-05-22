@@ -28,7 +28,7 @@ const UpdateResults = () => {
   const [marksOptions, setMarksOptions] = useState([]);
   const [gpa, setgpa] = useState("");
   const [gpaOptions, setgpaOptions] = useState([]);
-  const [cgpa, setCgpa] = useState("");
+  //const [cgpa, setCgpa] = useState("");
   const [ss, setss] = useState("");
   const [Batch, setBatch] = useState('');
   const [sectionString, setSectionString] = useState('');
@@ -113,16 +113,16 @@ const UpdateResults = () => {
 
 
   useEffect(() => {
-    if (cgpa < 2.0 && cgpa >= 0) {
+    if (allCgpa < 2.0 && allCgpa >= 0) {
       setss('pb-probation')
     }
-    else if (cgpa >= 2.0) {
+    else if (allCgpa >= 2.0) {
       setss("gas")
     }
     else {
       setss('');
     }
-  }, [cgpa]);
+  }, [allCgpa]);
   const handleGpaUpdate = (semesterGpa) => {
     getSemesterGpa(semesterGpa);
   };
@@ -141,7 +141,7 @@ const UpdateResults = () => {
       setBatch(section[0]);
       setDepartment(section[1]);
       setSectionString(section[2]);
-      setCgpa(data.CGPA)
+      getAllCgpa(data.CGPA)
       setCourseCode(data.CourseCode)
       setCourseCredit(data.CourseCredit)
       setCourseName(data.Course)
@@ -149,6 +149,8 @@ const UpdateResults = () => {
       setgpa(data.GPA)
       setTeacher(data.Teacher)
       setDisable(true);
+      getSemesterGpa(data.SemesterGpa)
+      
     }
   }, [data])
 
@@ -162,7 +164,8 @@ const UpdateResults = () => {
     lg: lg,
     marks: marks,
     gpa: gpa,
-    cgpa: cgpa,
+    cgpa: allCgpa,
+    semesterGpa,
     courseName: courseName,
     courseCode: courseCode,
     courseCredit: courseCredit,
@@ -515,6 +518,7 @@ const UpdateResults = () => {
                     label="Overall Cgpa"
                     variant="outlined"
                     value={allCgpa}
+                    disabled={true}
                     placeholder="0.0"
                     onChange={(e) => getAllCgpa(e.target.value.toLowerCase())}
                   />

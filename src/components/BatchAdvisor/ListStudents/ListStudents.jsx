@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import { AdminLayout } from "../../../layouts/AdminLayout";
+import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
@@ -51,7 +51,6 @@ const ListStudents = () => {
             //     StudentRegNo: row.id, // Add the necessary fields based on your data structure
             //     StudentEmail: row.email,
             //     StudentName: row.name,
-
             // }));
             setRows(student.data.data);
         } catch (error) {
@@ -96,24 +95,24 @@ const ListStudents = () => {
     const columns = [
 
 
-        { field: 'StudentRegNo', headerName: 'Reg No', width: 100 },
+        { field: 'StudentRegNo', headerName: 'Reg No', width: 150 },
         { field: 'StudentName', headerName: 'Name', width: 150 },
         { field: 'StudentSection', headerName: 'Section', width: 150 },
         { field: 'StudentEmail', headrName: 'Email', width: 300 },
         { field: 'CurrentSemester', headerName: 'Semester', width: 100 },
         { field: 'StudentStatus', headerName: 'Status', width: 100 },
-        
+
 
     ];
     return (
-        <AdminLayout>
+        <BatchAdvisorLayout>
             <Box
                 sx={{ borderBottom: 1, borderColor: "divider" }}
                 className="p-10 flex justify-between items-center flex-row"
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Lit of Students
+                        List of Students
                     </Typography>
                     <Typography variant="body1" color="primary">
                         You can see all the stuents here
@@ -187,7 +186,7 @@ const ListStudents = () => {
 
                 </div>
             </section>
-        </AdminLayout>
+        </BatchAdvisorLayout>
     );
 };
 
