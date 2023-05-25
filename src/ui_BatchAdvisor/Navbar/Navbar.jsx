@@ -41,7 +41,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.role === "batch advisor") {
-      setUsername(user.role);
+      setUsername(user.BatchAdvisorName);
       setEmail(user.email);
       setProfile(user.profile);
 
@@ -65,7 +65,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
                 <SidebarMobileClose />
               </button>
               <a href="/" className="lg:mr-14">
-                <p className="lg:px-6"> Admin panel</p>
+                <p className="lg:px-6"> Batch Advisor panel</p>
               </a>
             </div>
             <div className="flex items-center">

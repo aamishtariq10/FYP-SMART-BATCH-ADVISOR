@@ -39,7 +39,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
-      setUsername(user.role);
+      setUsername(user.StudentName);
       setEmail(user.email);
       setProfile(user.profile);
     }
