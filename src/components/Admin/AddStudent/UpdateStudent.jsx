@@ -20,6 +20,7 @@ const UpdateStudent = () => {
   const [StudentSection, setSection] = useState("");
   const [Department, setDepartment] = useState("");
   const [CurrentSemester, setCurrentSemester] = useState("");
+  const [disable, setDisable] = useState(false)
   //Params , headers and navigate
   const navigate = useNavigate();
   const { id } = useParams();
@@ -48,6 +49,7 @@ const UpdateStudent = () => {
       setSectionString(Section[2]);
       setCurrentSemester(data.CurrentSemester);
       setStatus(data.StudentStatus);
+      setDisable(true);
     }
   }, [data]);
   console.log(StudentName, Batch, RollNo, sectionString, Department, StudentEmail, StudentStatus, StudentSection, CurrentSemester);
@@ -94,9 +96,18 @@ const UpdateStudent = () => {
             Accept: "application/json",
           }
         },)
-      navigate("/admin/students");
+      if (status !== '200') {
+        toast.info(add.data.message, { autoClose: 1500 })
+      }
+      else {
+        toast.info(add.data.message, { autoClose: 1500 })
+        // setTimeout(() => {
+        //   navigate("/admin/students");
+        // }, 1000);
+      }
+
       console.log(add.data);
-      toast.info(add.data.message, { autoClose: 1500 })
+
     }
     catch (error) {
       toast.error(error.response.data.message, { autoClose: 1500 })
@@ -145,6 +156,7 @@ const UpdateStudent = () => {
                     label="Email"
                     variant="outlined"
                     value={StudentEmail}
+                    disabled={disable}
                     placeholder="xyz@cuilahore.edu.pk"
                     onChange={(e) => setEmail(e.target.value.toLowerCase())}
                     required

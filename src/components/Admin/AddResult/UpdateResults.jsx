@@ -184,7 +184,7 @@ const UpdateResults = () => {
         });
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
-        // navigate("/admin/students");
+         navigate("/admin/results");
       }, 1000);
     }
     catch (error) {
