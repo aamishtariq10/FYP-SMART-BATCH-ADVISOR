@@ -33,11 +33,6 @@ const sideNavigation = [
     href: "/comparison",
     icon: <ChartPieIcon className={iconClass} />,
   },
-  {
-    name: "help",
-    href: "/report",
-    icon: <DocumentIcon className={iconClass} />,
-  },
 ];
 
 export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {

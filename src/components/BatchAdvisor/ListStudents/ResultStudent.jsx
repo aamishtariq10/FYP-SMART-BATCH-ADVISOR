@@ -3,40 +3,41 @@ import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
 import { GridToolbar } from '@mui/x-data-grid-pro';
 import { Typography, Paper, TextField, Button, Box } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
 import axios from "axios";
+import { useNavigate,useLocation } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
-import { Link , useNavigate} from 'react-router-dom'
 
-
-
-
-const ListStudents = () => {
+const ResultCard = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
-    const getRowId = (row) => row.SrNo;
+    const getRowId = (row) => row.ResultID;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
+    //const [openUpdate, setOpenUpdate] = React.useState(false);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
-    const dataA = {
-        BatchSection: user.BatchSection,
-        BatchAdvisorEmail: user.email
-    };
-
+    const query = new URLSearchParams(useLocation().search);
+debugger
     const getData = async () => {
         try {
-            const student = await axios.post("http://localhost:5000/batchadvisor/student/records/get", dataA, {
+            const student = await axios.get("http://localhost:5000/batchadvisor/student/results/get/" + query.get('id') , {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 }
             },);
-            console.log(student);
-
             setRows(student.data.data);
         } catch (error) {
             toast.error("No data found");
@@ -47,41 +48,22 @@ const ListStudents = () => {
         getData();
     }, []);
 
-   
     const filterRowsByName = (rows) => {
         if (!rows || rows.length === 0) {
             return [];
         }
-        return rows.filter(row => row.StudentEmail.toLowerCase().includes(searchValue.toLowerCase()));
+        return rows.filter(row => row.StudentRegNo.toLowerCase().includes(searchValue.toLowerCase()));
     };
-
-    // const setSearchValues=()=>{
-    //     // const navigate = useNavigate();
-    //     // navigate('/resultcard', { state: { id: 7, color: 'green' } });
-    // }
-   
-
 
     const columns = [
 
-
-        { field: 'StudentRegNo', headerName: 'Reg No', width: 150 },
-        { field: 'StudentName', headerName: 'Name', width: 150 },
-        { field: 'StudentSection', headerName: 'Section', width: 150 },
-        { field: 'StudentEmail', headrName: 'Email', width: 300 },
-        { field: 'CurrentSemester', headerName: 'Semester', width: 100 },
-        { field: 'StudentStatus', headerName: 'Status', width: 100 },
-        {
-            field: "action",
-            headerName: "Action",
-            sortable: false,
-            renderCell: ({ row }) =>
-            
-              <Link class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" to={'/resultstudent?id=' + row.StudentRegNo}  
-             >
-                Result
-              </Link>,
-          },
+      { field: 'StudentRegNo', headerName: 'Registration Number', width: 140 },
+        { field: 'CourseCode', headerName: 'Course Code', width: 100 },
+        { field: 'Course', headerName: 'Course Name', width: 150 },
+        { field: 'Class', headerName: 'Class', width: 150 },
+        { field: 'Teacher', headrName: 'Faculty', width: 150 },
+        { field: 'Marks', headerName: 'Marks', width: 100 },
+        { field: 'CGPA', headerName: 'CPGA', width: 100 },
         
 
     ];
@@ -93,10 +75,10 @@ const ListStudents = () => {
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        List of Students
+                        Student Results
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the students here
+                        Here you can View Student Results
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
@@ -107,29 +89,8 @@ const ListStudents = () => {
 
             </Box>
 
-            <section className="flex flex-col w-full px-4 h-full justify-center items-center">
-                <Paper
-                    initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
-                    className="flex items-center w-full max-w-512 px-8 m-4 py-4 rounded-4"
-                >
-                    <TextField
-                        variant="standard"
-                        margin="dense"
-                        required
-                        fullWidth
-                        id="Search"
-                        name="Search"
-                        autoComplete="email"
-                        autoFocus
-                        onChange={(e) => setSearchValue(e.target.value)}
-                        placeholder="Search Student By email"
-                        InputProps={{
-                            startAdornment: <PersonSearchIcon />,
-                            disableUnderline: true,
-                        }}
-                    />
-                </Paper>
+            <section classname="flex flex-col w-full px-4 h-full justify-center items-center">
+               
                 <div className="rounded-lg bg-white text-center shadow p-4 my-4 mx-4 w-full h-screen
 
                 ">
@@ -171,4 +132,4 @@ const ListStudents = () => {
     );
 };
 
-export default ListStudents;
+export default ResultCard;

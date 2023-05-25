@@ -34,6 +34,8 @@ import UpdateUser from "./components/Admin/Users/UpdateUser";
 import DashboardBatchAdvisor from "./components/BatchAdvisor/Profile/ProfileBatchAdvisor";
 import StudentsList from "./components/BatchAdvisor/ListStudents/ListStudents";
 import StudentRequests from "./components/BatchAdvisor/StudentRequests/StudentRequests";
+import ResultStudent from "./components/BatchAdvisor/ListStudents/ResultStudent";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -137,6 +139,8 @@ function App() {
                     element={<RegisteredCourses />}
                   />
 
+                  <Route path="/resultcard" element={<ResultCard />} />
+
                   <Route path="/pendingcourses" element={<PendingCourses />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/student/profile" element={<Profile />} />
@@ -158,6 +162,7 @@ function App() {
                     path="/batchadvisor/studentrequests"
                     element={<StudentRequests />}
                   />
+                  <Route path="/resultstudent" element={<ResultStudent />} />
                 </>
               ) : (
                 <></>
