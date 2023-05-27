@@ -14,7 +14,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { MainLayout } from "../../../layouts/MainLayout";
 import axios from "axios";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
 const ResultCard = () => {
@@ -28,16 +28,17 @@ const ResultCard = () => {
     const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
     const query = new URLSearchParams(useLocation().search);
-debugger
     const getData = async () => {
         try {
-            const student = await axios.get("http://localhost:5000/batchadvisor/student/results/get/" + (query.get('id') ? query.get('id') : user.StudentRegNo), {
+            const student = await axios.get("http://localhost:5000/batchadvisor/student/results/get/" +
+                (query.get('id') ? query.get('id') : user.StudentRegNo), {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 }
             },);
+            console.log(student.data.data)
             setRows(student.data.data);
         } catch (error) {
             toast.error("No data found");
@@ -74,14 +75,23 @@ debugger
 
     const columns = [
 
-      { field: 'StudentRegNo', headerName: 'Registration Number', width: 140 },
-        { field: 'CourseCode', headerName: 'Course Code', width: 100 },
-        { field: 'Course', headerName: 'Course Name', width: 150 },
-        { field: 'Class', headerName: 'Class', width: 150 },
-        { field: 'Teacher', headrName: 'Faculty', width: 150 },
-        { field: 'Marks', headerName: 'Marks', width: 100 },
-        { field: 'CGPA', headerName: 'CPGA', width: 100 },
-        
+        { field: 'StudentRegNo', headerName: 'StudentRegNo', width: 130 },
+        { field: 'SessionYear', headerName: 'Session', width: 80 },
+        { field: 'CourseStatus', headrName: 'CourseStatus', width: 100 },
+        { field: 'CourseCode', headerName: 'CourseCode', width: 100 },
+        { field: 'Course', headerName: 'Course', width: 150 },
+        { field: 'CourseCredit', headerName: 'Credit', width: 100 },
+        { field: 'Class', headerName: 'Class', width: 130 },
+        { field: 'Teacher', headerName: 'Teacher', width: 200 },
+        { field: 'Marks', headerName: 'Marks', width: 80 },
+        { field: 'Grade_LG', headerName: 'LG', width: 100 },
+        { field: 'GPA', headerName: 'GPA', width: 80 },
+        { field: 'SemesterGpa', headerName: 'S Gpa', width: 100 },
+        { field: 'CGPA', headerName: 'CGPA', width: 80 },
+        { field: 'SS', headerName: 'SS', width: 80 },
+
+
+
 
     ];
     return (
@@ -92,10 +102,10 @@ debugger
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Student Results
+                        Result Card
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        Here you can View Student Results
+                        Here you can View your Result card
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
@@ -106,8 +116,7 @@ debugger
 
             </Box>
 
-            <section classname="flex flex-col w-full px-4 h-full justify-center items-center">
-               
+            <section className="flex flex-col w-full px-4 h-full justify-center items-center">
                 <div className="rounded-lg bg-white text-center shadow p-4 my-4 mx-4 w-full h-screen
 
                 ">

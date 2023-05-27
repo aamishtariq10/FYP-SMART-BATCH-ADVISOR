@@ -19,17 +19,28 @@ import "react-toastify/dist/ReactToastify.css";
 const calculate = (filteredData) => {
   const { gpaSum, creditSum } = filteredData.reduce(
     (result, item) => {
-      const credit = parseInt(item.CourseCredit.split("(")[0]);
-      result.gpaSum += item.GPA * credit;
-      result.creditSum += credit;
+      const credit = item.CourseCredit
+        ? parseInt(item.CourseCredit.split("(")[0])
+        : 0;
+      const parsedCredit = isNaN(credit) ? 0 : credit;
+    //  console.log(item.GPA);
+      result.gpaSum += item.GPA * parsedCredit;
+      result.creditSum += parsedCredit;
       return result;
     },
     { gpaSum: 0, creditSum: 0 }
   );
+
+  if (creditSum === 0) {
+    return 0;
+  }
+
   const gpaAverage = gpaSum / creditSum;
-  console.log("Sum of multiplied Cgpas:", gpaSum);
-  console.log("Sum of course credits:", creditSum);
-  console.log("GPA Average:", gpaAverage);
+
+//   console.log("Sum of multiplied GPAs:", gpaSum);
+//   console.log("Sum of course credits:", creditSum);
+//   console.log("GPA Average:", gpaAverage);
+
   return gpaAverage;
 };
 
@@ -43,13 +54,17 @@ const CalculateCgpa = (props) => {
     courseCredit,
     StudentStatus,
     onCgpapaUpdate,
+    courseCode,
+    ResultID,
+    lg,
   } = props;
   const isDataMissing =
     !session ||
     gpa == null ||
     !selectedRegNo ||
     !courseCredit ||
-    !StudentStatus;
+    !StudentStatus ||
+    !courseCode;
   useEffect(() => {
     setDisabled(isDataMissing);
     setErrorMsg("please select all the fields");
@@ -57,51 +72,83 @@ const CalculateCgpa = (props) => {
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).token
     : null;
-  console.log(session);
-  console.log(gpa);
-  console.log(selectedRegNo);
-  console.log(courseCredit);
-  console.log(StudentStatus);
+//   console.log(session);
+//   console.log(gpa);
+//   console.log(selectedRegNo);
+//   console.log(courseCredit);
+//   console.log(StudentStatus);
 
   const StudentRegNo = selectedRegNo;
   const handleCalculateCgpa = async (e) => {
     const newData = {
+      Grade_LG: lg,
+      ResultID,
+      SessionYear: session,
+      CourseCode: courseCode,
       GPA: gpa,
       CourseCredit: courseCredit,
       CourseStatus: StudentStatus,
     };
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/admin/results/get/allresults?selectedRegNo=${StudentRegNo}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-      console.log(res);
-      if (res.status !== "200") {
-        setErrorMsg(res.data.message);
+    // try {
+    const res = await axios.get(
+      `http://localhost:5000/admin/results/get/allresults?selectedRegNo=${StudentRegNo}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       }
-      if (!res.data.data) {
+    );
+   // console.log(res);
+    if (res.status !== "200") {
+      setErrorMsg(res.data.message);
+    }
+    if (!res.data.data) {
+      onCgpapaUpdate(gpa);
+    } else {
+      const data = res.data.data;
+      console.log(data);
+      console.log(ResultID);
+      const sameResultID = ResultID
+        ? [...data.filter((item) => item.ResultID != newData.ResultID), newData]
+        : [...data,newData];
+      console.log("filtered", sameResultID);
+      const filteredData = sameResultID.filter(
+        (item) =>
+          !(item.CourseStatus === "withdraw" && item.Grade_LG === "withdraw")
+      );
+     console.log(filteredData);
+     
+      const highestGPACourseRecord = filteredData
+        .filter((record) => record.CourseCode === courseCode)
+        .reduce(
+          (highestRecord, record) =>
+            record.GPA >= highestRecord.GPA ? record : highestRecord,
+          { GPA: 0 }
+        );
+     console.log(".............", highestGPACourseRecord.GPA);
+      let ResultantData;
+      if (highestGPACourseRecord.GPA === 0) {
+        ResultantData = filteredData;
+      } else {
+        ResultantData = highestGPACourseRecord
+          ? [
+              ...filteredData.filter(
+                (item) => item.CourseCode != highestGPACourseRecord.CourseCode
+              ),
+              highestGPACourseRecord,
+            ]
+          : filteredData;
+      }
+   console.log(ResultantData);
+      if (!ResultantData) {
         onCgpapaUpdate(gpa);
       } else {
-        const data = res.data.data;
-        console.log("data", data);
-        const updatedData = [...data, newData];
-        console.log("updated ", updatedData);
-        const filteredData = updatedData
-          ? updatedData.filter((item) => item.CourseStatus !== "withdraw")
-          : [];
-        const semesterGpa = calculate(filteredData);
-        console.log(semesterGpa);
+        const semesterGpa = calculate(ResultantData);
+      console.log(semesterGpa);
         onCgpapaUpdate(semesterGpa);
       }
-      //setStudentRegNo(regNosArray)
-    } catch (err) {
-      toast.error("Internal Server error ");
     }
   };
   return (

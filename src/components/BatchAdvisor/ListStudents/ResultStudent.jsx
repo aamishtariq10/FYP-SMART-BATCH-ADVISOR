@@ -57,14 +57,21 @@ debugger
 
     const columns = [
 
-      { field: 'StudentRegNo', headerName: 'Registration Number', width: 140 },
-        { field: 'CourseCode', headerName: 'Course Code', width: 100 },
-        { field: 'Course', headerName: 'Course Name', width: 150 },
-        { field: 'Class', headerName: 'Class', width: 150 },
-        { field: 'Teacher', headrName: 'Faculty', width: 150 },
-        { field: 'Marks', headerName: 'Marks', width: 100 },
-        { field: 'CGPA', headerName: 'CPGA', width: 100 },
-        
+        { field: 'StudentRegNo', headerName: 'StudentRegNo', width: 130 },
+        { field: 'SessionYear', headerName: 'Session', width: 80 },
+        { field: 'CourseStatus', headrName: 'CourseStatus', width: 100 },
+        { field: 'CourseCode', headerName: 'CourseCode', width: 100 },
+        { field: 'Course', headerName: 'Course', width: 150 },
+        { field: 'CourseCredit', headerName: 'Credit', width: 100 },
+        { field: 'Class', headerName: 'Class', width: 130 },
+        { field: 'Teacher', headerName: 'Teacher', width: 200 },
+        { field: 'Marks', headerName: 'Marks', width: 80 },
+        { field: 'Grade_LG', headerName: 'LG', width: 100 },
+        { field: 'GPA', headerName: 'GPA', width: 80 },
+        { field: 'SemesterGpa', headerName: 'S Gpa', width: 100 },
+        { field: 'CGPA', headerName: 'CGPA', width: 80 },
+        { field: 'SS', headerName: 'SS', width: 80 },
+
 
     ];
     return (

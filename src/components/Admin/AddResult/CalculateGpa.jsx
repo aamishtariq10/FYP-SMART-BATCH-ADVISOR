@@ -6,48 +6,54 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 const calculate = (filteredData) => {
-
     const { gpaSum, creditSum } = filteredData.reduce((result, item) => {
-        const credit = parseInt(item.CourseCredit.split('(')[0]);
-        result.gpaSum += item.GPA * credit;
-        result.creditSum += credit;
-        return result;
+      const credit = item.CourseCredit ? parseInt(item.CourseCredit.split('(')[0]) : 0;
+      const parsedCredit = isNaN(credit) ? 0 : credit;
+      result.gpaSum += item.GPA * parsedCredit;
+      result.creditSum += parsedCredit;
+      return result;
     }, { gpaSum: 0, creditSum: 0 });
+  
+    if (creditSum === 0) {
+      return 0;
+    }
+  
     const gpaAverage = gpaSum / creditSum;
+  
     console.log('Sum of multiplied GPAs:', gpaSum);
     console.log('Sum of course credits:', creditSum);
     console.log('GPA Average:', gpaAverage);
-    return gpaAverage
-}
+  
+    return gpaAverage;
+  };
+  
 
+
+  
 const CalculateGpa = (props) => {
     const [errorMsg, setErrorMsg] = useState("");
     const [disabled, setDisabled] = useState(false);
-    const { session, gpa, selectedRegNo, courseCredit, StudentStatus, onGpaUpdate } = props
-    const isDataMissing = !session || gpa == null || !selectedRegNo || !courseCredit || !StudentStatus;
+    const { session, gpa, selectedRegNo, courseCredit, StudentStatus, courseCode, onGpaUpdate, ResultID, lg } = props
+    const isDataMissing = !session || gpa == null || !selectedRegNo || !courseCredit || !StudentStatus || !courseCode || !lg;
     useEffect(() => {
         setDisabled(isDataMissing);
         setErrorMsg("please select all the fields")
     }, [isDataMissing]);
 
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-    console.log(session)
-    console.log(gpa)
-    console.log(selectedRegNo)
-    console.log(courseCredit)
-    console.log(StudentStatus)
 
     const StudentRegNo = selectedRegNo
     const handleCalculateGpa = async (e) => {
 
         const newData = {
-            GPA: gpa,
+            ResultID,
+            SessionYear: session,
+            CourseCode: courseCode,
             CourseCredit: courseCredit,
-            CourseStatus: StudentStatus
-
+            CourseStatus: StudentStatus,
+            GPA: gpa,
+            Grade_LG: lg,
         }
         try {
             const res = await axios.get(`http://localhost:5000/admin/results/get/semesterresults?selectedRegNo=${StudentRegNo}&session=${session}`,
@@ -58,7 +64,7 @@ const CalculateGpa = (props) => {
                         Accept: "application/json",
                     },
                 })
-            console.log(res)
+          
             if (res.status !== '200') {
                 setErrorMsg(res.data.message)
             }
@@ -66,18 +72,20 @@ const CalculateGpa = (props) => {
                 onGpaUpdate(gpa)
             }
             else {
-                const data = res.data.data
-                console.log("data", data)
-                const updatedData = [...data, newData];
-                console.log("updated ", updatedData)
-                const filteredData = updatedData ? updatedData.filter(item => item.CourseStatus !== 'withdraw') : [];
-                const semesterGpa = calculate(filteredData)
-                console.log(semesterGpa)
-                onGpaUpdate(semesterGpa)
+                const data = res.data.data;
+                console.log(data);
+                const sameResultID = ResultID ? [...data.filter(item => item.ResultID != newData.ResultID), newData] : data;
+               console.log("same result id not included", sameResultID);
+               console.log("results ", ResultID);
+                let updatedData = sameResultID.filter(item => !(item.SessionYear === newData.SessionYear && item.CourseCode === newData.CourseCode));
+                updatedData.push(newData);
+                console.log("updated", updatedData);
+                const filteredData = updatedData.filter(item => !(item.CourseStatus === 'withdraw' && item.Grade_LG === 'withdraw'));
+                const semesterGpa = calculate(filteredData);
+                console.log(semesterGpa);
+                onGpaUpdate(semesterGpa);
             }
-
             //setStudentRegNo(regNosArray)
-
         }
         catch (err) {
             toast.error("Internal Server error ")

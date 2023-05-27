@@ -40,8 +40,6 @@ const UpdateResults = () => {
   const [disable, setDisable] = useState(false);
   const [semesterGpa, getSemesterGpa] = useState("");
   const [allCgpa, getAllCgpa] = useState("")
-  console.log(Status)
-  console.log(marks)
   //Params , headers and navigate
   const navigate = useNavigate();
   const { ResultID } = useParams();
@@ -58,7 +56,6 @@ const UpdateResults = () => {
             Accept: "application/json",
           },
         })
-      //console.log(res)
       const regNosArray = res.data.data ? res?.data?.data?.map(item => item.StudentRegNo) : [];
       setStudentRegNo(regNosArray)
       if (res.status !== '200') {
@@ -74,24 +71,27 @@ const UpdateResults = () => {
     getStudentRegNo();
   }, [])
   useEffect(() => {
-    const sessionKeys = Object.keys(gradingSystem.session);
-    const lgKeys =
-      session <= sessionKeys[0]
-        ? Object.keys(gradingSystem?.session['FA21']?.lg)
-        : Object.keys(gradingSystem?.session['SP22']?.lg);
-    setLgOtions(lgKeys);
-    const lgData =
-      session === sessionKeys[0]
-        ? gradingSystem.session[sessionKeys[0]].lg[lg]?.marks || [0]
-        : gradingSystem.session[sessionKeys[1]].lg[lg]?.marks || [0];
-    setMarksOptions(lgData);
-    const lggpa =
-      session === sessionKeys[0]
-        ? gradingSystem.session[sessionKeys[0]].lg[lg]?.gpa
-        : gradingSystem.session[sessionKeys[1]].lg[lg]?.gpa;
-    const GpaArr = [lggpa]
-    setgpaOptions(GpaArr)
-  }, [session, lg]);
+    const Batch = selectedRegNo?.split('-');
+    if (Batch) {
+      const sessionKeys = Object.keys(gradingSystem.session);
+      const lgKeys =
+        Batch[0] <= sessionKeys[0]
+          ? Object.keys(gradingSystem?.session['FA21']?.lg)
+          : Object.keys(gradingSystem?.session['SP22']?.lg);
+      setLgOtions(lgKeys);
+      const lgData =
+        Batch[0] <= sessionKeys[0]
+          ? gradingSystem.session[sessionKeys[0]].lg[lg]?.marks || [0]
+          : gradingSystem.session[sessionKeys[1]].lg[lg]?.marks || [0];
+      setMarksOptions(lgData);
+      const lggpa =
+        Batch[0] <= sessionKeys[0]
+          ? gradingSystem.session[sessionKeys[0]].lg[lg]?.gpa
+          : gradingSystem.session[sessionKeys[1]].lg[lg]?.gpa;
+      const GpaArr = [lggpa]
+      setgpaOptions(GpaArr)
+    }
+  }, [lg, selectedRegNo]);
 
   useEffect(() => {
     if (StudentStatus == 'withdraw') {
@@ -136,7 +136,6 @@ const UpdateResults = () => {
       setlg(data.Grade_LG)
       setStatus(data.CourseStatus)
       setMarks(data.Marks)
-      console.log(data.marks)
       const section = data.Class.split('-');
       setBatch(section[0]);
       setDepartment(section[1]);
@@ -150,7 +149,7 @@ const UpdateResults = () => {
       setTeacher(data.Teacher)
       setDisable(true);
       getSemesterGpa(data.SemesterGpa)
-      
+
     }
   }, [data])
 
@@ -184,7 +183,7 @@ const UpdateResults = () => {
         });
       toast.info(res.data.message, { autoClose: 1500 })
       setTimeout(() => {
-         navigate("/admin/results");
+        navigate("/admin/results");
       }, 1000);
     }
     catch (error) {
@@ -502,8 +501,9 @@ const UpdateResults = () => {
                   />
                 </FormControl>
               </div>
-              <CalculateGpa selectedRegNo={selectedRegNo} gpa={gpa} session={session}
-                courseCredit={courseCredit} StudentStatus={StudentStatus} onGpaUpdate={handleGpaUpdate}
+              <CalculateGpa selectedRegNo={selectedRegNo} gpa={gpa} session={session} courseCode={courseCode} ResultID={ResultID}
+                lg={lg} courseCredit={courseCredit} StudentStatus={StudentStatus} onGpaUpdate={handleGpaUpdate}
+
               />
             </div>
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
@@ -524,8 +524,8 @@ const UpdateResults = () => {
                   />
                 </FormControl>
               </div>
-              <CalculateCgpa selectedRegNo={selectedRegNo} gpa={gpa} session={session}
-                courseCredit={courseCredit} StudentStatus={StudentStatus} onCgpapaUpdate={handleCgpaUpdate}
+              <CalculateCgpa selectedRegNo={selectedRegNo} gpa={gpa} session={session} courseCode={courseCode} ResultID={ResultID}
+                lg={lg} courseCredit={courseCredit} StudentStatus={StudentStatus} onCgpapaUpdate={handleCgpaUpdate}
               />
             </div>
             <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
