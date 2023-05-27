@@ -12,9 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import { MainLayout } from "../../../layouts/MainLayout";
+import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
 const ResultCard = () => {
@@ -28,17 +28,16 @@ const ResultCard = () => {
     const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
     const query = new URLSearchParams(useLocation().search);
+debugger
     const getData = async () => {
         try {
-            const student = await axios.get("http://localhost:5000/batchadvisor/student/results/get/" +
-                (query.get('id') ? query.get('id') : user.StudentRegNo), {
+            const student = await axios.get("http://localhost:5000/batchadvisor/student/results/get/" + query.get('id') , {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 }
             },);
-            console.log(student.data.data)
             setRows(student.data.data);
         } catch (error) {
             toast.error("No data found");
@@ -55,23 +54,6 @@ const ResultCard = () => {
         }
         return rows.filter(row => row.StudentRegNo.toLowerCase().includes(searchValue.toLowerCase()));
     };
-    // const selectRowstoDelete = (row) => {
-    //     const selectedRows = row;
-
-    //     setSelectedRows(selectedRows);
-    // };
-    // const handleClickOpenDialogue = () => {
-    //     if (selectedRows.length === 0) {
-    //         toast.error("No rows selected");
-    //     }
-    //     else {
-    //         setOpen(true);
-    //     }
-    // };
-    // const handleCancel = () => {
-    //     setOpen(false);
-    // };
-
 
     const columns = [
 
@@ -91,21 +73,19 @@ const ResultCard = () => {
         { field: 'SS', headerName: 'SS', width: 80 },
 
 
-
-
     ];
     return (
-        <MainLayout>
+        <BatchAdvisorLayout>
             <Box
                 sx={{ borderBottom: 1, borderColor: "divider" }}
                 className="p-10 flex justify-between items-center flex-row"
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Result Card
+                        Student Results
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        Here you can View your Result card
+                        Here you can View Student Results
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
@@ -116,7 +96,8 @@ const ResultCard = () => {
 
             </Box>
 
-            <section className="flex flex-col w-full px-4 h-full justify-center items-center">
+            <section classname="flex flex-col w-full px-4 h-full justify-center items-center">
+               
                 <div className="rounded-lg bg-white text-center shadow p-4 my-4 mx-4 w-full h-screen
 
                 ">
@@ -154,7 +135,7 @@ const ResultCard = () => {
 
                 </div>
             </section>
-        </MainLayout>
+        </BatchAdvisorLayout>
     );
 };
 

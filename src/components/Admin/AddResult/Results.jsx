@@ -32,7 +32,8 @@ const Results = () => {
     const [course, setCourse] = React.useState([]);
     const [selectedCourse, setSelectedCourse] = React.useState('');
     const [warningMsg, setWarningMsg] = React.useState('');
-    console.log(selectedRegNo);
+
+    console.log(searchValue)
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
     const getData = async () => {
@@ -45,10 +46,11 @@ const Results = () => {
                     Accept: "application/json",
                 },
             },);
-            setRows(results.data.data);
+
             if (results.data.data.length === 0) {
                 toast.error("No data found");
             }
+            else { setRows(results.data.data); }
         }
         catch (err) {
             toast.error("No data found");
@@ -117,7 +119,10 @@ const Results = () => {
         if (selectedRegNo && selectedSessionYear && selectedCourse) {
             return rows.filter(row => row.StudentRegNo === selectedRegNo && row.SessionYear === selectedSessionYear && row.Course === selectedCourse);
         }
+
         return rows.filter(row => row.StudentRegNo.toLowerCase().includes(searchValue.toLowerCase()));
+
+
     };
     const selectRowstoDelete = (row) => {
         const selectedRows = row;
@@ -176,15 +181,16 @@ const Results = () => {
         { field: 'SessionYear', headerName: 'Session', width: 80 },
         { field: 'CourseStatus', headrName: 'CourseStatus', width: 100 },
         { field: 'CourseCode', headerName: 'CourseCode', width: 100 },
-        { field: 'Course', headerName: 'Course', width: 100 },
+        { field: 'Course', headerName: 'Course', width: 180 },
         { field: 'CourseCredit', headerName: 'Credit', width: 100 },
         { field: 'Class', headerName: 'Class', width: 130 },
         { field: 'Teacher', headerName: 'Teacher', width: 200 },
         { field: 'Marks', headerName: 'Marks', width: 80 },
-        { field: 'Grade_LG', headerName: 'LG', width: 80 },
+        { field: 'Grade_LG', headerName: 'LG', width: 100 },
         { field: 'GPA', headerName: 'GPA', width: 80 },
+        { field: 'SemesterGpa', headerName: 'Semester Gpa', width: 100 },
         { field: 'CGPA', headerName: 'CGPA', width: 80 },
-        { field: 'SS', headerName: 'SS', width: 80 },
+        { field: 'SS', headerName: 'SS', width: 120 },
     ];
     return (
         <AdminLayout>

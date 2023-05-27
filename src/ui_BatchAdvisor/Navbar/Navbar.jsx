@@ -10,6 +10,8 @@ export const Navbar = ({ handleSideBarStatus }) => {
   const [isActive, setActive] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState("");
+
 
   // const email = "aamishtariq943@gmail.com";
   const navigate = useNavigate();
@@ -39,8 +41,10 @@ export const Navbar = ({ handleSideBarStatus }) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.role === "batch advisor") {
-      setUsername(user.role);
+      setUsername(user.BatchAdvisorName);
       setEmail(user.email);
+      setProfile(user.profile);
+
     }
   }, []);
 
@@ -61,7 +65,7 @@ export const Navbar = ({ handleSideBarStatus }) => {
                 <SidebarMobileClose />
               </button>
               <a href="/" className="lg:mr-14">
-                <p className="lg:px-6"> Admin panel</p>
+                <p className="lg:px-6"> Batch Advisor panel</p>
               </a>
             </div>
             <div className="flex items-center">
@@ -84,7 +88,13 @@ export const Navbar = ({ handleSideBarStatus }) => {
                     onClick={toggleClass}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <div className="flex-shrink-0 h-8 w-8 rounded-full bg-black"></div>
+                    <div className="flex-shrink-0 h-8 w-8 rounded-full">
+                    <img
+                        src={profile}
+                        className="flex-shrink-0 h-8 w-8 rounded-full"
+                        alt="Profile"
+                      />
+                    </div>
                   </button>
                 </div>
                 <div

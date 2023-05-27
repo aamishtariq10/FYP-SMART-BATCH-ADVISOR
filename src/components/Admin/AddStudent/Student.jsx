@@ -140,7 +140,7 @@ const Student = () => {
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     <div className="mb-4 sm:mb-0">
-                        <AddByUpload
+                    <AddByUpload
                         //  getData={getData}
                         />
                     </div>

@@ -34,19 +34,19 @@ export const AdminLayout = ({ currentProjectFetch = undefined, children }) => {
     <>
       <div>
         <Navbar handleSideBarStatus={() => setShowSideBar(!showSideBar)} />
-        <div className="flex bg-gray-50 pt-16">
+        <div className="flex bg-gray-50 pt-16 ">
           <Sidebar
             currentProjectFetch={currentProjectFetch}
             showSideBar={showSideBar}
           />
           <div
-            className={`relative h-full bg-gray-50 transition delay-150 ease-in-out ml-auto ${
+            className={`relative max-h-full bg-gray-50 transition delay-150 ease-in-out ml-auto ${
               showSideBar
                 ? "w-full lg:w-[calc(100%_-_16rem)]"
-                : "w-full sm:w-full md:w-full lg:w-full"
+                : "w-full h-100vh"
             } `}
           >
-            <main>{children}</main>
+            <main >{children}</main>
             <Footer />
           </div>
         </div>
