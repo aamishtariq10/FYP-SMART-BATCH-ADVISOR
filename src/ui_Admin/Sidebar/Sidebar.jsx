@@ -34,7 +34,7 @@ const sideNavigation = [
   },
   {
     name: "Courses",
-    href: "/admin/courses",
+    href: "/admin/schemeofstudy",
     icon: <DocumentIcon className={iconClass} />,
     disable: true,
   },

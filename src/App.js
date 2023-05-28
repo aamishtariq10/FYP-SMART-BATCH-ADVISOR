@@ -35,7 +35,7 @@ import DashboardBatchAdvisor from "./components/BatchAdvisor/Profile/ProfileBatc
 import StudentsList from "./components/BatchAdvisor/ListStudents/ListStudents";
 import StudentRequests from "./components/BatchAdvisor/StudentRequests/StudentRequests";
 import ResultStudent from "./components/BatchAdvisor/ListStudents/ResultStudent";
-
+import SchemeOfStudy from "./components/Admin/AddCourse/SchemeOfStudy";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -71,12 +71,15 @@ function App() {
           ) : (
             <>
               {/* <Route path="/" element={<Registration />} /> */}
-
               {isAdmin ? (
                 <>
                   <Route path="/admin/profile" element={<ProfileNew />} />
                   {/* admin student routes */}
-                  <Route path="/admin/courses" element={<AddCourse />} />
+                  <Route path="/admin/schemeofstudy/add" element={<AddCourse />} />
+                  <Route
+                    path="/admin/schemeofstudy"
+                    element={<SchemeOfStudy />}
+                  />
                   <Route
                     path="/admin/students/update/:studentname/:id"
                     element={<UpdateStudent />}
