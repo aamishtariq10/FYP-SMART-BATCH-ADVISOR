@@ -204,7 +204,10 @@ const UpdateResults = () => {
       )
       if (add.data.status == 200) {
         toast.info(add.data.message, { autoClose: 1500 })
-        navigate("/admin/results");
+        
+        setTimeout(() => {
+          navigate("/admin/results");
+        }, 1000);
       }
       else {
         setErrorMsg(add.data.message)

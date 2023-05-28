@@ -33,8 +33,14 @@ const sideNavigation = [
     disable: false,
   },
   {
-    name: "Courses",
+    name: "Scheme of Study",
     href: "/admin/schemeofstudy",
+    icon: <DocumentIcon className={iconClass} />,
+    disable: true,
+  },
+  {
+    name: "Add Courses to Student",
+    href: "/admin/studentcourses",
     icon: <DocumentIcon className={iconClass} />,
     disable: true,
   },

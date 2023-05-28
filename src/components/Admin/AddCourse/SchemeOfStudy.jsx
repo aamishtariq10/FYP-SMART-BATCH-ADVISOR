@@ -7,15 +7,47 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import FolderCopySharpIcon from '@mui/icons-material/FolderCopySharp';
 const SchemeOfStudy = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
-    const getRowId = (row) => row.SrNO;
+    const getRowId = (row) => row.scheme_id;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
+    const [open, setOpen] = React.useState(false);
+
+    const getData = async () => {
+        try {
+            const student = await axios.get("http://localhost:5000/admin/scheme-of-study/get",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },);
+            console.log(student.data.data)
+            setRows(student.data.data);
+            console.log(student);
+        } catch (error) {
+            toast.error("No data found");
+        }
+    };
+
+    React.useEffect(() => {
+        getData();
+    }, []);
+
+    console.log(rows)
     const AddNewStudent = (row) => {
         navigate(`add`);
     };
@@ -23,16 +55,90 @@ const SchemeOfStudy = () => {
         if (!rows || rows.length === 0) {
             return [];
         }
-        return rows.filter(row => row.StudentName.toLowerCase().includes(searchValue.toLowerCase()));
+        return rows.filter(row => row.sessionyear.toLowerCase().includes(searchValue.toLowerCase()));
+    };
+    const selectRowstoDelete = (row) => {
+        const selectedRows = row;
+        setSelectedRows(selectedRows);
+    };
+    const handleClickOpenDialogue = () => {
+        if (selectedRows.length === 0) {
+            toast.error("No rows selected");
+        }
+        else {
+            setOpen(true);
+        }
+    };
+    const handleCancel = () => {
+        setOpen(false);
+    };
+    const handleClose = (row) => {
+        console.log(selectedRows)
+        axios
+            .put(`http://localhost:5000/admin/scheme-of-study/delete`, {
+                data: { ids: selectedRows },
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },)
+            .then((res) => {
+                toast.info(res.data.message);
+                getData();
+            })
+            .catch((err) => {
+                toast.error(err.data.message);
+            });
+
+        setOpen(false);
     };
     const columns = [
-        { field: 'BatchAdvisorID', headerName: 'BatchAdvisorID', width: 130 },
-        { field: 'StudentRegNo', headerName: 'StudentRegNo', width: 200 },
-        { field: 'StudentName', headerName: 'StudentName', width: 150 },
-        { field: 'StudentEmail', headrName: 'StudentEmail', width: 250 },
-        { field: 'StudentSection', headerName: 'StudentSection', width: 130 },
-        { field: 'StudentStatus', headerName: 'StudentStatus', width: 130 },
-        { field: 'CurrentSemester', headerName: 'CurrentSemester', width: 130 },
+        {
+            field: 'delete',
+            width: 75,
+            sortable: false,
+            disableColumnMenu: true,
+            renderHeader: () => (
+                <IconButton onClick={handleClickOpenDialogue}>
+                    <DeleteIcon />
+                </IconButton>
+            ),
+        },
+        { field: 'sessionyear', headerName: 'Session Year', width: 150 },
+        { field: 'department', headerName: 'Department', width: 130 },
+        {
+            field: 'action',
+            headerName: 'View Courses',
+            sortable: false,
+            width: 130,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`courses?id=${row.scheme_id}`, { state: { data: row } });
+                    }}
+                >
+                    <FolderCopySharpIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
+        {
+            field: 'courses',
+            headerName: 'Add New Courses to student',
+            sortable: false,
+            width: 200,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`studentcourses/add`, { state: { data: row } });
+                    }}
+                >
+                    <FolderCopySharpIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
     ];
     return (
         <AdminLayout>
@@ -42,10 +148,10 @@ const SchemeOfStudy = () => {
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Students
+                        Scheme of studies
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the Students here
+                        You can see all scheme of studies here
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
@@ -82,7 +188,7 @@ const SchemeOfStudy = () => {
                         name="Search"
                         autoComplete="StudentName"
                         autoFocus
-                            onChange={(e) => setSearchValue(e.target.value)}
+                        onChange={(e) => setSearchValue(e.target.value)}
                         placeholder="Search Student By Name"
                         InputProps={{
                             startAdornment: <PersonSearchIcon />,
@@ -95,23 +201,18 @@ const SchemeOfStudy = () => {
                 ">
                     <DataGrid
                         className="p-4"
-                         rows={filterRowsByName(rows)}
+                        rows={filterRowsByName(rows)}
                         columns={columns}
-                         getRowId={getRowId}
+                        getRowId={getRowId}
                         pageSize={10}
-                        // onRowSelectionModelChange={(rows) => {
-                        //     selectRowstoDelete(rows);
-                        // }}
+                        onRowSelectionModelChange={(rows) => {
+                            selectRowstoDelete(rows);
+                        }}
                         checkboxSelection
-                        // onRowClick={(rows) => {
-                        //     handleClickOpen(rows.row);
-                        // }}
                         components={{
                             Toolbar: GridToolbar,
                         }}
                     />
-
-
                     <ToastContainer
                         position="top-right"
                         autoClose={5000}
@@ -124,6 +225,26 @@ const SchemeOfStudy = () => {
                         pauseOnHover
                         theme="colored"
                     />
+                    <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="draggable-dialog-title"
+                    >
+                        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+                            Confirm Delete
+                        </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to delete?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button autoFocus onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleClose}>Delete</Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             </section>
         </AdminLayout>

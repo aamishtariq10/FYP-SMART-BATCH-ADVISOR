@@ -159,7 +159,7 @@ const Results = () => {
                 getData();
             })
             .catch((err) => {
-                toast.error("");
+                toast.error("results not deleted");
             });
 
         setOpen(false);

@@ -16,7 +16,7 @@ import ContentPasteOffSharpIcon from '@mui/icons-material/ContentPasteOffSharp';
 import ContentPasteSharpIcon from '@mui/icons-material/ContentPasteSharp';
 import { Send as SendIcon } from '@mui/icons-material';
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-const AddCourse = () => {
+const AddCoursesToStudent = () => {
   const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -442,4 +442,4 @@ const AddCourse = () => {
   );
 };
 
-export default AddCourse;
+export default AddCoursesToStudent;

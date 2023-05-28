@@ -30,13 +30,13 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UpdateUser from "./components/Admin/Users/UpdateUser";
-
 import DashboardBatchAdvisor from "./components/BatchAdvisor/Profile/ProfileBatchAdvisor";
 import StudentsList from "./components/BatchAdvisor/ListStudents/ListStudents";
 import StudentRequests from "./components/BatchAdvisor/StudentRequests/StudentRequests";
 import ResultStudent from "./components/BatchAdvisor/ListStudents/ResultStudent";
 import SchemeOfStudy from "./components/Admin/AddCourse/SchemeOfStudy";
-
+import AddCoursesToStudent from "./components/Admin/AddCourse/AddCoursesToStudent";
+import ViewStudentCourses from "./components/Admin/StudentCoursesAdd/ViewStudentCourses"
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,7 +75,10 @@ function App() {
                 <>
                   <Route path="/admin/profile" element={<ProfileNew />} />
                   {/* admin student routes */}
+                 <Route path="/admin/schemeofstudy/studentcourses/add" element={<AddCoursesToStudent/>} />
+                  {/* <Route path="/admin/studentcourses" element={<ViewStudentCourses/>} /> */}
                   <Route path="/admin/schemeofstudy/add" element={<AddCourse />} />
+                  <Route path="/admin/schemeofstudy/courses" element={<AddCourse />} />
                   <Route
                     path="/admin/schemeofstudy"
                     element={<SchemeOfStudy />}
