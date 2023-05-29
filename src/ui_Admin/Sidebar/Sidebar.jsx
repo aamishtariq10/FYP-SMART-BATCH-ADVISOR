@@ -1,6 +1,5 @@
 import {
   HomeIcon,
-  StarIcon,
   UsersIcon,
   ClipboardDocumentListIcon,
   UserCircleIcon,
@@ -44,11 +43,6 @@ const sideNavigation = [
     icon: <DocumentIcon className={iconClass} />,
     disable: true,
   },
-  // {
-  //   name: "Add Batch Advisor",
-  //   href: "/admin/addbatchadvisor",
-  //   icon: <ChartPieIcon className={iconClass} />,
-  // },
 
   {
     name: "Student Results",

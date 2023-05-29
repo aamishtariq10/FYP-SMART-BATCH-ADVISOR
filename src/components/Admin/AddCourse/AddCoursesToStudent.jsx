@@ -1,21 +1,17 @@
 
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import { AppBar, Toolbar, Box, Typography, Select, Alert, InputLabel, Table, TableHead, TableBody, TableRow, TableCell, MenuItem, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button } from '@mui/material';
+import {  toast } from 'react-toastify';
+import { AppBar, Toolbar, Box, Typography, Select,  InputLabel, Table, TableHead, TableBody, TableRow, TableCell, MenuItem, IconButton, FormControl, TextField, Button } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@material-ui/icons';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-//import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
-import { BatchOptions, Status, DepartmentOptions, semesters, Section } from "../../../utils/DropDowns";
-import { makeStyles } from '@material-ui/core/styles';
+import { BatchOptions,  DepartmentOptions, semesters } from "../../../utils/DropDowns";
 import ContentPasteOffSharpIcon from '@mui/icons-material/ContentPasteOffSharp';
 import ContentPasteSharpIcon from '@mui/icons-material/ContentPasteSharp';
 import { Send as SendIcon } from '@mui/icons-material';
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate,  useLocation } from "react-router-dom";
 const AddCoursesToStudent = () => {
   const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
   const location = useLocation();
@@ -26,7 +22,6 @@ const AddCoursesToStudent = () => {
   //console.log("data",data)
   const navigate = useNavigate();
   const batchOptions = BatchOptions()
-  const semester = [...semesters];
   const DepartmentOption = [...DepartmentOptions];
   const [courseDetails, setCourseDetails] = useState([]);
   const [department, setDepartment] = useState('');

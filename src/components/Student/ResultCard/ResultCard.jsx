@@ -2,30 +2,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
 import { GridToolbar } from '@mui/x-data-grid-pro';
-import { Typography, Paper, TextField, Button, Box } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import { Typography, Box } from '@mui/material';
+
 import { MainLayout } from "../../../layouts/MainLayout";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 
 const ResultCard = () => {
-    const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
     const getRowId = (row) => row.ResultID;
     const [searchValue, setSearchValue] = React.useState('');
-    const [selectedRows, setSelectedRows] = React.useState([]);
-    //const [openUpdate, setOpenUpdate] = React.useState(false);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-    const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
     const query = new URLSearchParams(useLocation().search);
     const getData = async () => {
@@ -55,23 +43,6 @@ const ResultCard = () => {
         }
         return rows.filter(row => row.StudentRegNo.toLowerCase().includes(searchValue.toLowerCase()));
     };
-    // const selectRowstoDelete = (row) => {
-    //     const selectedRows = row;
-
-    //     setSelectedRows(selectedRows);
-    // };
-    // const handleClickOpenDialogue = () => {
-    //     if (selectedRows.length === 0) {
-    //         toast.error("No rows selected");
-    //     }
-    //     else {
-    //         setOpen(true);
-    //     }
-    // };
-    // const handleCancel = () => {
-    //     setOpen(false);
-    // };
-
 
     const columns = [
 
@@ -125,14 +96,7 @@ const ResultCard = () => {
                         rows={filterRowsByName(rows)}
                         columns={columns}
                         getRowId={getRowId}
-                        pageSize={10}
-                        // onRowSelectionModelChange={(rows) => {
-                        //     selectRowstoDelete(rows);
-                        // }}
-                        //checkboxSelection
-                        // onRowClick={(rows) => {
-                        //     handleClickOpen(rows.row);
-                        // }}
+                        pageSize={10}                
                         components={{
                             Toolbar: GridToolbar,
                         }}
