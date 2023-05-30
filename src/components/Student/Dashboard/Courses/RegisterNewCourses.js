@@ -3,6 +3,7 @@ import Dashboard from "../Dashboard";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { Send as SendIcon } from "@mui/icons-material";
+import sendRequest from "../courseRequest";
 import {
   Table,
   TableHead,
@@ -72,9 +73,16 @@ const RegisterNewCourses = () => {
       selectedCourses.filter((course) => course.course_code !== courseCode)
     );
   };
-  const handleSubmit = () => {
-    // Send the selected courses via axios request
+  const handleSubmit = async () => {
     console.log("Selected Courses:", selectedCourses);
+    try {
+      const res = await sendRequest(selectedCourses);
+      toast.info(res.message)
+      setSelectedCourses([])
+      console.log("res", res.message);
+    } catch (error) {
+      toast.info("Internal Server Error")
+    }
   };
   return (
     <Dashboard>
