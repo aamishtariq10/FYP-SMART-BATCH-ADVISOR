@@ -13,7 +13,6 @@ import ContentPasteSharpIcon from '@mui/icons-material/ContentPasteSharp';
 import { Send as SendIcon } from '@mui/icons-material';
 import { useNavigate,  useLocation } from "react-router-dom";
 const AddCoursesToStudent = () => {
-  const BatchOption = BatchOptions();
   const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -24,15 +23,12 @@ const AddCoursesToStudent = () => {
   const navigate = useNavigate();
   const batchOptions = BatchOptions()
   const DepartmentOption = [...DepartmentOptions];
-  const [Batch, setBatch] = useState("");
   const [courseDetails, setCourseDetails] = useState([]);
   const [department, setDepartment] = useState('');
   const [session, setSession] = useState('');
   const [newCourse, setNewCourse] = useState({ courseTitle: '', courseCode: '', credits: '', preRequisite: '', courseType: "" });
   const [showForm, setShowForm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-  const [Semester, setSemester] = useState("");
-  const [teacher, setTeacher] = useState('');
   const [enableEditing, setEnableEditing] = useState(false)
 
   useEffect(() => {
@@ -49,48 +45,60 @@ const AddCoursesToStudent = () => {
       setEnableEditing(true)
     }
   }, [data]);
-  const [addedCourses, setAddedCourses] = useState([]);
 
-  const handleAddCourse = (index, course) => {
-    const updatedAddedCourses = [...addedCourses];
-    updatedAddedCourses.push(course);
-    setAddedCourses(updatedAddedCourses);
-  };
 
   const handleEnableEditing = () => {
     setEnableEditing(!enableEditing)
   }
+
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
-  const handleRemoveCourse = (course) => {
-    const updatedAddedCourses = addedCourses.filter((addedCourse) => {
-      return addedCourse !== course;
-    });
-    setAddedCourses(updatedAddedCourses);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const updatedValue = name === 'courseCode' ? value.toUpperCase() : value;
+    setNewCourse({ ...newCourse, [name]: updatedValue });
+  };
+  const handleUpdateCourse = (index, updatedCourse) => {
+    const updatedCourseDetails = [...courseDetails];
+    updatedCourseDetails[index] = updatedCourse;
+    setCourseDetails(updatedCourseDetails);
+    setEditIndex(null); // Clear the edit index
+    setNewCourse({ courseTitle: '', courseCode: '', credits: '', preRequisite: '', courseType: '' }); // Reset the form values
   };
 
-  console.log(addedCourses)
+
+  const handleAddCourse = (e) => {
+    e.preventDefault();
+    setCourseDetails([...courseDetails, newCourse]);
+    setNewCourse({ courseTitle: '', courseCode: '', credits: '', preRequisite: '', courseType: '' });
+  };
+
+  const handleRemoveCourse = (index) => {
+    const updatedCourseDetails = [...courseDetails];
+    updatedCourseDetails.splice(index, 1);
+    setCourseDetails(updatedCourseDetails);
+  };
+  const handleEditCourse = (index, course) => {
+    setEditIndex(index);
+    setNewCourse(course);
+  };
 
   const formData = {
-    scheme_id: data.scheme_id,
-    Batch,
-    Semester,
-    teacher,
-    courses: addedCourses,
+    department,
+    session,
+    courses: courseDetails,
   };
-  const AddCourses = async (e) => {
+  const AddScheme = async (e) => {
     e.preventDefault();
     try {
-      const add = await axios.post('http://localhost:5000/admin/studentcourses/addnew', formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          }
-        },
-      );
+      const add = await axios.post('http://localhost:5000/admin/scheme-of-study/add', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }
+      },);
       if (add.data.status == '200') {
         toast.info(add.data.message, { autoClose: 1500 })
         setTimeout(() => {
@@ -98,41 +106,38 @@ const AddCoursesToStudent = () => {
         }, 1000);
       }
       else {
-        console.log(data)
         toast.info(add.data.message, { autoClose: 1500 })
       }
-
     } catch (error) {
-
-      toast.error("internal server error", { autoClose: 1500 })
+      toast.error(error.response.data.message, { autoClose: 1500 })
     }
   };
-  // const UpdateScheme = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const add = await axios.put(`http://localhost:5000/admin/scheme-of-study/update/${id}`, formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       }
-  //     },);
-  //     if (add.data.status == '200') {
+  const UpdateScheme = async (e) => {
+    e.preventDefault();
+    try {
+      const add = await axios.put(`http://localhost:5000/admin/scheme-of-study/update/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        }
+      },);
+      if (add.data.status == '200') {
 
-  //       toast.info(add.data.message, { autoClose: 1500 })
-  //       setTimeout(() => {
-  //         navigate("/admin/schemeofstudy");
-  //       }, 1000);
-  //     }
-  //     else {
-  //       toast.info(add.data.message, { autoClose: 1500 })
-  //     }
-  //     // console.log(res.data); // Handle successful response
-  //   } catch (error) {
+        toast.info(add.data.message, { autoClose: 1500 })
+        setTimeout(() => {
+          navigate("/admin/schemeofstudy");
+        }, 1000);
+      }
+      else {
+        toast.info(add.data.message, { autoClose: 1500 })
+      }
+      // console.log(res.data); // Handle successful response
+    } catch (error) {
 
-  //     toast.error(error.response.data.message, { autoClose: 1500 })
-  //   }
-  // };
+      toast.error(error.response.data.message, { autoClose: 1500 })
+    }
+  };
   return (
     <AdminLayout>
       <section className="flex h-auto  justify-center items-center">
@@ -144,7 +149,7 @@ const AddCoursesToStudent = () => {
               </IconButton>
               <Typography variant="h8">Back</Typography>
               <Typography variant="h6" className="ml-4 text-center w-full">
-                Add courses to Students
+               Add courses to Students
               </Typography>
             </Toolbar>
           </AppBar>
@@ -197,7 +202,7 @@ const AddCoursesToStudent = () => {
           </Box>
           {enableEditing && (
             <form
-              onSubmit={AddCourses}
+              onSubmit={!data ? AddScheme : UpdateScheme}
 
               className="bg-gray shadow-md rounded py-8 px-8 pt-6 pb-8 mb-4"
               id="myForm"
@@ -210,12 +215,12 @@ const AddCoursesToStudent = () => {
               <div className="mb-4 lg:flex lg:items-center lg:justify-between">
                 <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                   <FormControl className="w-full">
-                    <InputLabel id="batchInput">Session</InputLabel>
+                    <InputLabel id="batchInput">Batch</InputLabel>
                     <Select
-                      labelId="Session"
-                      id="Session"
-                      label="Session"
-                      disabled={true}
+                      labelId="batchInput"
+                      id="batchSelect"
+                      label="Batch"
+                      disabled ={true}
                       required
                       value={session}
                       onChange={(e) => setSession(e.target.value)}
@@ -235,7 +240,7 @@ const AddCoursesToStudent = () => {
                       labelId="departmentInput"
                       id="departmentSelect"
                       label="Department"
-                      disabled={true}
+                      disabled ={true}
                       required
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
@@ -269,59 +274,81 @@ const AddCoursesToStudent = () => {
                   </div>
                   <div className="mb-4 lg:flex lg:items-center lg:justify-between">
                     <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                      <FormControl className="w-full mr-2">
-                        <InputLabel id="BatchInput">Batch</InputLabel>
-                        <Select
-                          labelId="BatchSelect"
-                          id="demo-select-small"
-                          label="Batch"
-                          required
-                          value={Batch}
-                          onChange={(event) => setBatch(event.target.value)}
-                        >
-                          {BatchOption.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </div>
-
-                    <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
-                      <FormControl className="w-full mr-2">
-                        <InputLabel id="demo-select-small">Semester</InputLabel>
-                        <Select
-                          labelId="CurrentSemesterSelectct"
-                          id="CurrentSemesterSelect"
-                          label="Semester"
-                          value={Semester}
-                          onChange={(event) => setSemester(event.target.value)}
-                        >
-                          {semester.map((option) => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))
-                          }
-                        </Select>
-
+                      <FormControl fullWidth>
+                        <TextField
+                          id="courseTitle"
+                          label="Course Title"
+                          variant="outlined"
+                          name="courseTitle"
+                          value={newCourse.courseTitle}
+                          placeholder="Enter course title"
+                          onChange={handleInputChange}
+                        />
                       </FormControl>
                     </div>
                     <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
                       <FormControl fullWidth>
                         <TextField
-                          id="teacher name"
-                          label="Teacher Name"
+                          id="courseCode"
+                          label="Course Code"
                           variant="outlined"
-                          value={teacher}
-                          placeholder="John Doe"
-                          onChange={(e) => setTeacher(e.target.value.toLowerCase())}
-
+                          name="courseCode"
+                          value={newCourse.courseCode}
+                          placeholder="Enter course code"
+                          onChange={handleInputChange}
+                        />
+                      </FormControl>
+                    </div>
+                    <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                      <FormControl fullWidth>
+                        <TextField
+                          id="credits"
+                          label="Credits"
+                          variant="outlined"
+                          name="credits"
+                          value={newCourse.credits}
+                          placeholder="Enter credits"
+                          onChange={handleInputChange}
                         />
                       </FormControl>
                     </div>
                   </div>
+                  <div className="mb-4 lg:flex lg:items-center lg:justify-between">
+                    <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                      <FormControl fullWidth>
+                        <TextField
+                          id="preRequisite"
+                          label="Pre Requisite"
+                          variant="outlined"
+                          name="preRequisite"
+                          value={newCourse.preRequisite}
+                          placeholder="Enter course pre-requisite"
+                          onChange={handleInputChange}
+                        />
+                      </FormControl>
+                    </div>
+                    <div className="w-full lg:w-1/2 lg:mr-4 mb-4">
+                      <FormControl fullWidth>
+                        <TextField
+                          id="courseType"
+                          label="Course Type"
+                          variant="outlined"
+                          name="courseType"
+                          value={newCourse.courseType}
+                          placeholder="Enter course type"
+                          onChange={handleInputChange}
+                        />
+                      </FormControl>
+                    </div>
+                  </div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddCourse}
+                    className="rounded"
+                  >
+                    Add
+                  </Button>
                 </div>
               )}
             </form>
@@ -336,7 +363,6 @@ const AddCoursesToStudent = () => {
                       <TableCell align="center">Course Name</TableCell>
                       <TableCell align="center">Course Code</TableCell>
                       <TableCell align="center">Credits</TableCell>
-                    {/* <TableCell align="center">Enter Teacher Name</TableCell> */}
                       <TableCell align="center">Course Pre Req</TableCell>
                       <TableCell align="center">Course Type</TableCell>
                       <TableCell align="center">Actions</TableCell>
@@ -349,43 +375,54 @@ const AddCoursesToStudent = () => {
                         <TableCell align="center">{course.courseTitle}</TableCell>
                         <TableCell align="center">{course.courseCode}</TableCell>
                         <TableCell align="center">{course.credits}</TableCell>
-                        {/* <TableCell align="center">
-                          <div className="w-full">
-                            <FormControl fullWidth>
-                              <TextField
-                                id="teacher-name"
-                                label="Teacher Name"
-                                variant="outlined"
-                                value={teacher}
-                                placeholder="John Doe"
-                                onChange={(e) => setTeacher(e.target.value.toLowerCase())}
-                                className="fixed-width-input" // Add a CSS class to the TextField component
-                              />
-                            </FormControl>
-                          </div>
-                        </TableCell> */}
                         <TableCell align="center">{course.preRequisite}</TableCell>
                         <TableCell align="center">{course.courseType}</TableCell>
                         <TableCell align="center">
-                          <Button
-                            type="button"
-                            disabled={!enableEditing || addedCourses.includes(course)}
-                            onClick={() => handleAddCourse(index, course)}
-                            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded mr-2"
-                          >
-                            Add
-                          </Button>
-                          <Button
-                            type="button"
-                            disabled={!enableEditing}
-                            onClick={() => handleRemoveCourse(course)}
-                            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded"
-                          >
-                            Remove
-                          </Button>
+
+                          {editIndex === index ? (
+                            <>
+                              <Button
+                                form="myForm" type="button"
+                                disabled={!enableEditing}
+                                onClick={() => handleUpdateCourse(index, newCourse)}
+                                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded mr-2"
+                              >
+                                Update
+                              </Button>
+                              <Button
+                                type="button"
+                                disabled={!enableEditing}
+                                onClick={() => {
+                                  setEditIndex(null);
+                                  setNewCourse({ courseTitle: '', courseCode: '', credits: '', preRequisite: '', courseType: '' });
+                                }}
+                                className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1 px-2 rounded"
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                type="button"
+                                disabled={!enableEditing}
+                                onClick={() => handleEditCourse(index, course)}
+                                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded mr-2"
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                type="button"
+                                disabled={!enableEditing}
+                                onClick={() => handleRemoveCourse(index)}
+                                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded"
+                              >
+                                Remove
+                              </Button>
+                            </>
+                          )}
                         </TableCell>
                       </TableRow>
-
                     ))}
 
                   </TableBody>
