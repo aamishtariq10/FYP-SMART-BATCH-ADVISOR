@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Select, Alert, InputLabel, MenuItem, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Select,  InputLabel, MenuItem, IconButton, FormControl, TextField, Button } from '@mui/material';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { ArrowBack } from '@mui/icons-material';
@@ -75,13 +75,19 @@ const UpdateStudent = () => {
           }
         },);
 
-      toast.info(res.data.message, { autoClose: 1500 })
-      setTimeout(() => {
-        navigate("/admin/students");
-      }, 1000);
+        if (res.data.status == 200) {
+          toast.info(res.data.message, { autoClose: 1500 })
+          setTimeout(() => {
+            navigate("/admin/students");
+          }, 1000);
+        }
+        else {
+         // setErrorMsg(add.data.message)
+          toast.error(res.data.message, { autoClose: 1500 })
+        }
     }
     catch (error) {
-      toast.error(error.response.data.message, { autoClose: 1500 })
+      toast.error("internal server error", { autoClose: 1500 })
     }
   }
   const AddStudent = async (e) => {
@@ -96,18 +102,17 @@ const UpdateStudent = () => {
             Accept: "application/json",
           }
         },)
-      if (status !== '200') {
+      if (add.data.status == '200') {
+
         toast.info(add.data.message, { autoClose: 1500 })
+        setTimeout(() => {
+          navigate("/admin/students");
+        }, 1000);
       }
       else {
         toast.info(add.data.message, { autoClose: 1500 })
-        // setTimeout(() => {
-        //   navigate("/admin/students");
-        // }, 1000);
+       
       }
-
-      console.log(add.data);
-
     }
     catch (error) {
       toast.error(error.response.data.message, { autoClose: 1500 })

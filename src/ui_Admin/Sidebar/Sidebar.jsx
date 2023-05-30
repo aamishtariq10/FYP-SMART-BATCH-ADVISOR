@@ -1,6 +1,5 @@
 import {
   HomeIcon,
-  StarIcon,
   UsersIcon,
   ClipboardDocumentListIcon,
   UserCircleIcon,
@@ -33,16 +32,17 @@ const sideNavigation = [
     disable: false,
   },
   {
-    name: "Courses",
-    href: "/admin/courses",
+    name: "Scheme of Study",
+    href: "/admin/schemeofstudy",
     icon: <DocumentIcon className={iconClass} />,
     disable: true,
   },
-  // {
-  //   name: "Add Batch Advisor",
-  //   href: "/admin/addbatchadvisor",
-  //   icon: <ChartPieIcon className={iconClass} />,
-  // },
+  {
+    name: "Add Courses to Student",
+    href: "/admin/studentcourses",
+    icon: <DocumentIcon className={iconClass} />,
+    disable: true,
+  },
 
   {
     name: "Student Results",

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { AppBar, Toolbar, Typography, Select, InputLabel, Autocomplete, MenuItem, FormControlLabel, Checkbox, IconButton, FormControl, TextField, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Select, InputLabel, Autocomplete, MenuItem, IconButton, FormControl, TextField, Button } from '@mui/material';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
 import { ArrowBack } from '@mui/icons-material';
@@ -204,7 +204,10 @@ const UpdateResults = () => {
       )
       if (add.data.status == 200) {
         toast.info(add.data.message, { autoClose: 1500 })
-        navigate("/admin/results");
+        
+        setTimeout(() => {
+          navigate("/admin/results");
+        }, 1000);
       }
       else {
         setErrorMsg(add.data.message)

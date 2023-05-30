@@ -18,6 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import AddByUpload from './AddByUpload';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 
 const Results = () => {
     const navigate = useNavigate();
@@ -159,7 +160,7 @@ const Results = () => {
                 getData();
             })
             .catch((err) => {
-                toast.error("");
+                toast.error("results not deleted");
             });
 
         setOpen(false);
@@ -217,7 +218,7 @@ const Results = () => {
                         onClick={AddNewResult}
                         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
                     >
-                        <PersonAddAlt1Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+                        <ContentPasteSearchIcon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
                         <span className="hidden sm:inline-block">Add New</span>
                     </Button>
 

@@ -1,262 +1,66 @@
-//import React, { useEffect, useState } from "react";
-import { MainLayout } from "../../../layouts/MainLayout";
-import { Card, CardBody } from "../../../ui/Card";
-import { Table } from "flowbite-react";
-import {
-  //ArrowPathIcon,
-  PlusIcon,
-  //TrashIcon
-} from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
-
+import { Link, useLocation } from 'react-router-dom';
+import { Card, CardContent, Typography, AppBar, Toolbar, Button, makeStyles } from '@material-ui/core';
+import { MainLayout } from '../../../layouts/MainLayout';
+const useStyles = makeStyles((theme) => ({
+  selectedLink: {
+    textDecoration: 'underline',
+    fontWeight: 'bold',
+    color: "white"
+  },
+}));
 const Dashboard = ({ children }) => {
-  // const user = JSON.parse(localStorage.getItem("userEmail"));
-  // const [allProjects, setallProjects] = useState([]);
-  // const [currentProjects, setcurrentProjects] = useState([]);
-  // const brandList = JSON.parse(localStorage.getItem("brandList"));
-  // const [currentProject, setcurrentProject] = useState(
-  //   brandList?.length > 0
-  //     ? brandList[0]
-  //     : {
-  //         p_id: -1,
-  //       }
-  // );
-  // async function getUserProjects() {
-  //   if (!user) return;
-  //   try {
-  //     const res = await fetch("http://localhost:8000/getProjects", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ u_id: user.id }),
-  //     });
-  //     const projects = await res.json();
-  //     setallProjects(projects);
-  //     setcurrentProjects(projects);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const location = useLocation();
+  const isLinkSelected = (pathname) => {
+    return location.pathname === pathname;
+  };
 
-  // useEffect(() => {
-  //   getUserProjects();
-  // }, []);
+  const classes = useStyles();
 
-  // async function updateProject(projectId) {
-  //   try {
-  //     const res = await fetch("http://localhost:8000/updateProject", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ u_id: user.id, p_id: projectId }),
-  //     });
-  //     const data = await res.json();
-  //     alert(data.message);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // async function deleteProject(projectId) {
-  //   try {
-  //     const res = await fetch("http://localhost:8000/deleteProject", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ u_id: user.id, p_id: projectId }),
-  //     });
-  //     const data = await res.json();
-  //     alert(data.message);
-  //     const modifiedProjects = currentProjects.filter(
-  //       (item) => item.p_id !== projectId
-  //     );
-  //     setcurrentProjects(modifiedProjects);
-  //     localStorage.removeItem("brandList");
-  //     setcurrentProject({
-  //       p_id: -1,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // const changeCurrentProject = (item) => {
-  //   setcurrentProject(item);
-  //   localStorage.setItem(
-  //     "brandList",
-  //     JSON.stringify([
-  //       {
-  //         p_id: item.p_id,
-  //         brandNames: [
-  //           item.p_brand_name,
-  //           item.p_competitor_name,
-  //           item.p_hashtag,
-  //         ],
-  //       },
-  //     ])
-  //   );
-  // };
   return (
-    <MainLayout currentProjectFetch={{ projectFetch: true }}>
-      <div className="m-4 min-h-screen">
-        <Card className="my-4">
-          <CardBody>
-            <p className="text-xl font-bold">Welcome</p>
-
-            <p>You can manage your projects here</p>
-          </CardBody>
+    <MainLayout>
+      <div style={{ margin: '1rem' }}>
+        <Card variant="outlined" style={{ marginBottom: '1rem' }}>
+          <CardContent>
+            <Typography variant="h5" component="h2" style={{ fontWeight: 'bold' }}>
+              Courses
+            </Typography>
+            <Typography variant="body1">
+              You can register your courses here
+            </Typography>
+          </CardContent>
         </Card>
-        <nav class="bg-blue-900 dark:bg-gray-700">
-          <div class="max-w-screen-xl px-4 py-1 mx-auto md:px-6">
-            <div class="flex items-center">
-              <ul class="flex flex-row mt-0 mr-4 space-x-4 text-sm font-medium">
-                <li>
-                  <Link
-                    to="/dashboard/registeredcourses"
-                    className="text-white dark:text-white hover:underline"
-                  >
-                    <p>Registered Courses</p>
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/dashboard/addcourses"
-                    class="text-white dark:text-white hover:underline"
-                  >
-                    Add New Courses
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/dashboard/pendingcourses"
-                    class="text-white dark:text-white hover:underline"
-                  >
-                    Pending Courses
-                  </Link>
-                </li>
-                <Link
-                  to="/dashboard/electives"
-                  class="text-white dark:text-white hover:underline"
-                >
-                  Electives
-                </Link>
-              </ul>
-            </div>
-          </div>
-        </nav>
-        {/* <div className="flex flex-wrap -mx-4">
-          <div className="w-full md:w-1/4 px-4 mb-4">
-            {" "}
-            <a
-              href="/registeredcourses"
-              className="block max-w-m p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-blue-600 text-center"
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Button
+              component={Link}
+              to="/dashboard/registeredcourses"
+              className={isLinkSelected('/dashboard/registeredcourses') ? classes.selectedLink : ''}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Registered Courses
-              </h5>
-            </a>
-          </div>
-          <div className="w-full md:w-1/4 px-4 mb-4">
-            {" "}
-            <a
-              href="/registeredcourses"
-              className="block max-w-m p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-blue-600 text-center"
+              Registered Courses
+            </Button>
+            <Button
+              component={Link}
+              to="/dashboard/registernewcourses"
+              className={isLinkSelected('/dashboard/registernewcourses') ? classes.selectedLink : ''}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Register Courses
-              </h5>
-            </a>
-          </div>
-          <div className="w-full md:w-1/4 px-4 mb-6">
-            {" "}
-            <a
-              href="/registeredcourses"
-              className="block max-w-m p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-blue-600 text-center"
+              Add New Courses
+            </Button>
+            <Button
+              component={Link}
+              to="/dashboard/pendingcourses"
+              className={isLinkSelected('/dashboard/pendingcourses') ? classes.selectedLink : ''}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Pending Courses
-              </h5>
-            </a>
-          </div>
-          <div className="w-full md:w-1/4 px-4 mb-6">
-            {" "}
-            <a
-              href="/registeredcourses"
-              className="block max-w-m p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-blue-600 text-center"
+              Pending Courses
+            </Button>
+            <Button
+              component={Link}
+              to="/dashboard/electivecourses"
+              className={isLinkSelected('/dashboard/electivecourses') ? classes.selectedLink : ''}
             >
-              <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                Pending Courses
-              </h5>
-            </a>
-          </div>
-        </div> */}
-
-        {/* <Card className="my-2">
-          <CardBody>
-            <p className="text-xl font-bold">Welcome</p>
-
-            <p>You can manage your projects here</p>
-          </CardBody>
-        </Card> */}
-        {/* <Card className="my-4">
-          <CardBody>
-            <button className="p-2 rounded-md bg-green-400 my-2">
-              <Link to={"/monitor"} className="flex items-center space-x-1">
-                <PlusIcon className="h-5 w-5" />
-                <span>Create a project</span>
-              </Link>
-            </button>
-            <Table>
-              <Table.Head>
-                <Table.HeadCell>Select Project</Table.HeadCell>
-                <Table.HeadCell>Project ID</Table.HeadCell>
-                <Table.HeadCell>Brand Name</Table.HeadCell>
-                <Table.HeadCell>Competitor Name</Table.HeadCell>
-                <Table.HeadCell>Hashtag</Table.HeadCell>
-                <Table.HeadCell>Created At</Table.HeadCell>
-                <Table.HeadCell>Updated At</Table.HeadCell>
-                <Table.HeadCell>Update</Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
-              <Table.Body>
-                {/* {currentProjects?.map((item, index) => (
-                  <Table.Row key={index}>
-                    <Table.Cell>
-                      <input
-                        onChange={() => changeCurrentProject(item)}
-                        type="checkbox"
-                        name=""
-                        checked={currentProject.p_id === item.p_id}
-                        id=""
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{item.p_id}</Table.Cell>
-                    <Table.Cell>{item.p_brand_name}</Table.Cell>
-                    <Table.Cell>{item.p_competitor_name}</Table.Cell>
-                    <Table.Cell>{item.p_hashtag}</Table.Cell>
-                    <Table.Cell>{item.p_creation_at}</Table.Cell>
-                    <Table.Cell>{item.p_update_at}</Table.Cell>
-                    <Table.Cell>
-                      <ArrowPathIcon
-                        onClick={() => updateProject(item.p_id)}
-                        className="h-5 w-5 text-green-500 cursor-pointer"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <TrashIcon
-                        onClick={() => deleteProject(item.p_id)}
-                        className="h-5 w-5 text-red-500 cursor-pointer"
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))} 
-              </Table.Body>
-            </Table>
-          </CardBody>
-        </Card> */}
+              Electives
+            </Button>
+          </Toolbar>
+        </AppBar>
         <main>{children}</main>
       </div>
     </MainLayout>

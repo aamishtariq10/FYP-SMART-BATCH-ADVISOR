@@ -1,9 +1,13 @@
 import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
-import { GridToolbar, GridContextProvider } from '@mui/x-data-grid-pro';
-import { Typography, Paper, TextField, Button, Box, Checkbox } from '@mui/material';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { GridToolbar } from '@mui/x-data-grid-pro';
+import { Typography, Paper, TextField, Button, Box } from '@mui/material';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import { AdminLayout } from "../../../layouts/AdminLayout";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -11,40 +15,32 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
-import { AdminLayout } from "../../../layouts/AdminLayout";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
-
-const Users = () => {
+import FolderCopySharpIcon from '@mui/icons-material/FolderCopySharp';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PreviewIcon from '@mui/icons-material/Preview';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+const SchemeOfStudy = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
-    const getRowId = (row) => row.id;
+    const getRowId = (row) => row.scheme_id;
     const [searchValue, setSearchValue] = React.useState('');
     const [selectedRows, setSelectedRows] = React.useState([]);
-    //const [openUpdate, setOpenUpdate] = React.useState(false);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
     const [open, setOpen] = React.useState(false);
-    //if update is clicked
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     const getData = async () => {
         try {
-            const student = await axios.get("http://localhost:5000/admin/users/get", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                }
-            },);
-            console.log(student.data.data);
-
-            const data = student.data.data.map(row => ({
-                ...row,
-                allowed: row.allowed ? "Allowed" : "Blocked"
-            }));
-            setRows(data);
+            const student = await axios.get("http://localhost:5000/admin/scheme-of-study/get",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    }
+                },);
+            console.log(student.data.data)
+            setRows(student.data.data);
+            console.log(student);
         } catch (error) {
             toast.error("No data found");
         }
@@ -54,21 +50,18 @@ const Users = () => {
         getData();
     }, []);
 
-    const handleClickOpen = (row) => {
-        navigate(`update/${row.email}/${row.id}`, { state: { data: row } });
-    };
+    console.log(rows)
     const AddNewStudent = (row) => {
-        navigate(`new`);
+        navigate(`add`);
     };
     const filterRowsByName = (rows) => {
         if (!rows || rows.length === 0) {
             return [];
         }
-        return rows.filter(row => row.email.toLowerCase().includes(searchValue.toLowerCase()));
+        return rows.filter(row => row.sessionyear.toLowerCase().includes(searchValue.toLowerCase()));
     };
     const selectRowstoDelete = (row) => {
         const selectedRows = row;
-
         setSelectedRows(selectedRows);
     };
     const handleClickOpenDialogue = () => {
@@ -83,9 +76,9 @@ const Users = () => {
         setOpen(false);
     };
     const handleClose = (row) => {
+        console.log(selectedRows)
         axios
-            .put(
-                "http://localhost:5000/admin/users/delete", {
+            .put(`http://localhost:5000/admin/scheme-of-study/delete`, {
                 data: { ids: selectedRows },
             },
                 {
@@ -93,9 +86,8 @@ const Users = () => {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                         Accept: "application/json",
-                    },
-                }
-            )
+                    }
+                },)
             .then((res) => {
                 toast.info(res.data.message);
                 getData();
@@ -106,26 +98,50 @@ const Users = () => {
 
         setOpen(false);
     };
-
     const columns = [
         {
-            field: "delete",
+            field: 'delete',
             width: 75,
             sortable: false,
             disableColumnMenu: true,
             renderHeader: () => (
-                <IconButton onClick={handleClickOpenDialogue}
-                >
+                <IconButton onClick={handleClickOpenDialogue}>
                     <DeleteIcon />
                 </IconButton>
             ),
         },
-
-        { field: 'id', headerName: 'User id', width: 100 },
-        { field: 'role', headerName: 'Role', width: 200 },
-        { field: 'email', headrName: 'Email', width: 300 },
-        { field: 'allowed', headerName: 'Status', width: 100 },
-
+        { field: 'sessionyear', headerName: 'Session Year', width: 150 },
+        { field: 'department', headerName: 'Department', width: 130 },
+        {
+            field: 'action',
+            headerName: 'View Courses',
+            sortable: false,
+            width: 130,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`courses?id=${row.scheme_id}`, { state: { data: row } });
+                    }}
+                >
+                    <PreviewIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
+        {
+            field: 'courses',
+            headerName: 'Add New Courses to student',
+            sortable: false,
+            width: 200,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`studentcourses/add`, { state: { data: row } });
+                    }}
+                >
+                    <PostAddIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
     ];
     return (
         <AdminLayout>
@@ -135,16 +151,16 @@ const Users = () => {
             >
                 <div className="flex flex-col items-start">
                     <Typography variant="h5" color="primary" align="center" fontWeight="bold">
-                        Users
+                        Scheme of studies
                     </Typography>
                     <Typography variant="body1" color="primary">
-                        You can see all the Users here
+                        You can see all scheme of studies here
                     </Typography>
                 </div>
                 <div className="flex-grow"></div>
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                     {/* <div className="mb-4 sm:mb-0">
-                        <AddByUpload
+                    <AddByUpload
                         //  getData={getData}
                         />
                     </div> */}
@@ -152,7 +168,7 @@ const Users = () => {
                         onClick={AddNewStudent}
                         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
                     >
-                        <PersonAddAlt1Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+                        <ControlPointIcon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
                         <span className="hidden sm:inline-block">Add New</span>
                     </Button>
                 </div>
@@ -173,10 +189,10 @@ const Users = () => {
                         fullWidth
                         id="Search"
                         name="Search"
-                        autoComplete="email"
+                        autoComplete="StudentName"
                         autoFocus
                         onChange={(e) => setSearchValue(e.target.value)}
-                        placeholder="Search Student By email"
+                        placeholder="Search Student By Name"
                         InputProps={{
                             startAdornment: <PersonSearchIcon />,
                             disableUnderline: true,
@@ -196,15 +212,10 @@ const Users = () => {
                             selectRowstoDelete(rows);
                         }}
                         checkboxSelection
-                        onRowClick={(rows) => {
-                            handleClickOpen(rows.row);
-                        }}
                         components={{
                             Toolbar: GridToolbar,
                         }}
                     />
-
-
                     <ToastContainer
                         position="top-right"
                         autoClose={5000}
@@ -243,4 +254,4 @@ const Users = () => {
     );
 };
 
-export default Users;
+export default SchemeOfStudy;
