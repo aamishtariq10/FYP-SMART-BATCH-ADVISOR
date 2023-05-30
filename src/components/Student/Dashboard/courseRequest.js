@@ -9,6 +9,7 @@ const sendRequest = (data) => {
     const courseDetails = {
       StudentRegNo: user.StudentRegNo,
       StudentSemester: user.CurrentSemester,
+      section: user.StudentSection,
       courses: data,
     };
 

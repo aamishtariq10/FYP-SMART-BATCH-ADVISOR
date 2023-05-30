@@ -18,13 +18,14 @@ import {
 
 const CourseList = (props) => {
   const { courses } = props
-  const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+
+  const [teacher, setSelectedTeacher] = useState("");
+  const [section, setSelectedSection] = useState("");
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   console.log(selectedCourses)
   const handleAdd = (course) => {
-    const updatedCourse = { ...course, selectedTeacher, selectedSection };
+    const updatedCourse = { ...course, teacher, section };
     setSelectedCourses((prevSelectedCourses) => [...prevSelectedCourses, updatedCourse]);
   };
 
@@ -45,14 +46,14 @@ const CourseList = (props) => {
       toast.info("Internal Server Error")
     }
   };
-  const handleTeacherChange = (event, course_code, course_title, credits) => {
+  const handleTeacherChange = (event, course_code, course_title, credits, course_type) => {
     const { value } = event.target;
     const existingCourse = selectedCourses.find((course) => course.course_code === course_code);
 
     if (existingCourse) {
       const updatedCourses = selectedCourses.map((course) => {
         if (course.course_code === course_code) {
-          return { ...course, selectedTeacher: value };
+          return { ...course, teacher: value };
         }
         return course;
       });
@@ -60,22 +61,23 @@ const CourseList = (props) => {
     } else if (value && value !== '') {
       const selectedCourse = {
         course_code: course_code,
-        courseName: course_title,
+        course_title: course_title,
+        course_type: course_type,
         credits: credits,
-        selectedTeacher: value,
+        teacher: value,
       };
       setSelectedCourses((prevCourses) => [...prevCourses, selectedCourse]);
     }
   };
 
-  const handleSectionChange = (event, course_code, course_title, credits) => {
+  const handleSectionChange = (event, course_code, course_title, credits, course_type) => {
     const { value } = event.target;
     const existingCourse = selectedCourses.find((course) => course.course_code === course_code);
 
     if (existingCourse) {
       const updatedCourses = selectedCourses.map((course) => {
         if (course.course_code === course_code) {
-          return { ...course, selectedSection: value };
+          return { ...course, section: value };
         }
         return course;
       });
@@ -85,7 +87,8 @@ const CourseList = (props) => {
         course_code: course_code,
         courseName: course_title,
         credit: credits,
-        selectedSection: value,
+        course_type: course_type,
+        section: value,
       };
       setSelectedCourses((prevCourses) => [...prevCourses, selectedCourse]);
     }
@@ -172,8 +175,8 @@ const CourseList = (props) => {
                     <Select
                       labelId={`TeacherSelect-${course.course_code}`}
                       id={`TeacherSelect-${course.course_code}`}
-                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.selectedTeacher || ''}
-                      onChange={(event) => handleTeacherChange(event, course.course_code, course.course_title, course.credits)}
+                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.teacher || ''}
+                      onChange={(event) => handleTeacherChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
 
                     >
                       {teachers.map((option) => (
@@ -191,8 +194,8 @@ const CourseList = (props) => {
                     <Select
                       labelId={`SectionSelect-${course.course_code}`}
                       id={`SectionSelect-${course.course_code}`}
-                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.selectedSection || ''}
-                      onChange={(event) => handleSectionChange(event, course.course_code, course.course_title, course.credits)}
+                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.section || ''}
+                      onChange={(event) => handleSectionChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
                     >
                       {Sections.map((option) => (
                         <MenuItem key={option} value={option}>
@@ -213,7 +216,7 @@ const CourseList = (props) => {
                     </Button>
                   ) : (
                     <Button
-                      disabled={!(selectedTeacher && selectedSection)}
+                      disabled={!(teacher && section)}
                       className="bg-blue-500 text-white px-4 py-2 rounded px-10"
                       onClick={() => handleAdd(course)}
                     >
