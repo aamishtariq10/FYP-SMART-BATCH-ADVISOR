@@ -2,24 +2,21 @@ import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
 import { GridToolbar } from '@mui/x-data-grid-pro';
-import { Typography, Paper, TextField, Button, Box } from '@mui/material';
+import { Typography, Paper, TextField, Box } from '@mui/material';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
 import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
-import { Link , useNavigate} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 
 
 const ListStudents = () => {
-    const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
     const getRowId = (row) => row.SrNo;
     const [searchValue, setSearchValue] = React.useState('');
-    const [selectedRows, setSelectedRows] = React.useState([]);
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-    const [open, setOpen] = React.useState(false);
     const user = JSON.parse(localStorage.getItem("user"));
     const dataA = {
         BatchSection: user.BatchSection,

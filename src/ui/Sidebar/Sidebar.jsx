@@ -15,7 +15,7 @@ let iconClass =
 const sideNavigation = [
   {
     name: "Dashboard",
-    href: "/dashboard/registeredcourses",
+    href: "/dashboard",
     icon: <HomeIcon className={iconClass} />,
   },
   {

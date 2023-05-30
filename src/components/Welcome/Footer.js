@@ -8,47 +8,18 @@ const FooterWelcome = () => {
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>
             <Footer.Brand
-              alt="Flowbite Logo"
-              href="https://flowbite.com"
-              name="Flowbite"
-              src="https://flowbite.com/docs/images/logo.svg"
+              alt="Logo"
+              href="https://www.cuilahore.edu.pk"
+              name="CUI Lahore"
+              src="https://scontent.flhe5-1.fna.fbcdn.net/v/t39.30808-6/326735146_579187470297376_4092953525416670635_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeFzwgTnCeRoyNHezVI9n2jIJQoK6NU8YrslCgro1Txiu2BG24VDo7QkgaRZYLifkxJoW_3juYs48BkxHC9sQqJ4&_nc_ohc=3bp0amTVu8gAX9xN0ZG&_nc_ht=scontent.flhe5-1.fna&oh=00_AfANFlj2Au-0C2LoC4h93zrZ4yyaRtFazOQulW3Ln8HdGQ&oe=6478EC03"
             />
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6">
-            <div>
-              <Footer.Title title="about" />
-              <Footer.LinkGroup col>
-                <Footer.Link href="#">Flowbite</Footer.Link>
-                <Footer.Link href="#">Tailwind CSS</Footer.Link>
-              </Footer.LinkGroup>
-            </div>
-            <div>
-              <Footer.Title title="Follow us" />
-              <Footer.LinkGroup col>
-                <Footer.Link href="#">Github</Footer.Link>
-                <Footer.Link href="#">Discord</Footer.Link>
-              </Footer.LinkGroup>
-            </div>
-            <div>
-              <Footer.Title title="Legal" />
-              <Footer.LinkGroup col>
-                <Footer.Link href="#">Privacy Policy</Footer.Link>
-                <Footer.Link href="#">Terms & Conditions</Footer.Link>
-              </Footer.LinkGroup>
-            </div>
+          <div className="flex flex-col space-y-4">
+            Smart Batch Advisor - 2023
           </div>
+         
         </div>
-        <Footer.Divider />
-        <div className="w-full sm:flex sm:items-center sm:justify-between">
-          <Footer.Copyright by="Flowbite™" href="#" year={2022} />
-          <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
-            <Footer.Icon href="#" icon={"facebook"} />
-            <Footer.Icon href="#" icon={"facebook"} />
-            <Footer.Icon href="#" icon={"facebook"} />
-            <Footer.Icon href="#" icon={"facebook"} />
-            <Footer.Icon href="#" icon={"facebook"} />
-          </div>
-        </div>
+       
       </div>
     </Footer>
   );
