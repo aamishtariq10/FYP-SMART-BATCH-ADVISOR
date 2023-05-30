@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import MonitorBrand from "./components/MonitorBrand";
 // import Mentions from "./components/Mentions/Mentions";
-import PendingCourses from "./components/Student/Dashboard/PendingCourses/PendingCourses";
+import PendingCourses from "./components/Student/Dashboard/Courses/PendingCourses";
 import RegisteredCourses from "./components/Student/Dashboard/RegisteredCourses/RegisteredCourses";
 import Dashboard from "./components/Student/Dashboard/Dashboard";
 import PageNotFound from "./components/PageNotFound";
@@ -36,7 +36,9 @@ import StudentRequests from "./components/BatchAdvisor/StudentRequests/StudentRe
 import ResultStudent from "./components/BatchAdvisor/ListStudents/ResultStudent";
 import SchemeOfStudy from "./components/Admin/AddCourse/SchemeOfStudy";
 import AddCoursesToStudent from "./components/Admin/AddCourse/AddCoursesToStudent";
-import ViewStudentCourses from "./components/Admin/StudentCoursesAdd/ViewStudentCourses"
+import ViewStudentCourses from "./components/Admin/StudentCoursesAdd/ViewStudentCourses";
+import RegisterNewCourses from "./components/Student/Dashboard/Courses/RegisterNewCourses";
+import ElectiveCourses from "./components/Student/Dashboard/Courses/ElectiveCourses";
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,10 +77,19 @@ function App() {
                 <>
                   <Route path="/admin/profile" element={<ProfileNew />} />
                   {/* admin student routes */}
-                 <Route path="/admin/schemeofstudy/studentcourses/add" element={<AddCoursesToStudent/>} />
+                  <Route
+                    path="/admin/schemeofstudy/studentcourses/add"
+                    element={<AddCoursesToStudent />}
+                  />
                   {/* <Route path="/admin/studentcourses" element={<ViewStudentCourses/>} /> */}
-                  <Route path="/admin/schemeofstudy/add" element={<AddCourse />} />
-                  <Route path="/admin/schemeofstudy/courses" element={<AddCourse />} />
+                  <Route
+                    path="/admin/schemeofstudy/add"
+                    element={<AddCourse />}
+                  />
+                  <Route
+                    path="/admin/schemeofstudy/courses"
+                    element={<AddCourse />}
+                  />
                   <Route
                     path="/admin/schemeofstudy"
                     element={<SchemeOfStudy />}
@@ -139,6 +150,14 @@ function App() {
                     path="/dashboard/registeredcourses"
                     element={<RegisteredCourses />}
                   />
+                  <Route
+                    path="/dashboard/registernewcourses"
+                    element={<RegisterNewCourses />}
+                  />
+                  <Route
+                    path="/dashboard/electivecourses"
+                    element={<ElectiveCourses />}
+                  />
 
                   <Route
                     path="/dashboard/Electives"
@@ -160,6 +179,7 @@ function App() {
                     path="/batchadvisor/dashboard"
                     element={<DashboardBatchAdvisor />}
                   />
+
                   <Route
                     path="/batchadvisor/studentslist"
                     element={<StudentsList />}

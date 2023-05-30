@@ -47,7 +47,7 @@ export const MainLayout = ({ currentProjectFetch = undefined, children }) => {
             } `}
           >
             <main>{children}</main>
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </div>
       </div>
