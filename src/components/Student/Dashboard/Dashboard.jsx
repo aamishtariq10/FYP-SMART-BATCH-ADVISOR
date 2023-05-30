@@ -25,7 +25,7 @@ const Dashboard = ({ children }) => {
               Courses
             </Typography>
             <Typography variant="body1">
-              You can register your courses here
+              You can register your courses
             </Typography>
           </CardContent>
         </Card>
