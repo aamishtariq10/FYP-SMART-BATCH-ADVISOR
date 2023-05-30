@@ -1,5 +1,4 @@
 import React from "react";
-
 const CourseCard = ({ courseName, courseCode, section, onDelete, onAdd }) => {
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
@@ -23,5 +22,4 @@ const CourseCard = ({ courseName, courseCode, section, onDelete, onAdd }) => {
     </div>
   );
 };
-
 export default CourseCard;
