@@ -23,6 +23,7 @@ const AddCoursesToStudent = () => {
   //console.log("data",data)
   const navigate = useNavigate();
   const batchOptions = BatchOptions()
+  const semester = [...semesters]
   const DepartmentOption = [...DepartmentOptions];
   const [Batch, setBatch] = useState("");
   const [courseDetails, setCourseDetails] = useState([]);
