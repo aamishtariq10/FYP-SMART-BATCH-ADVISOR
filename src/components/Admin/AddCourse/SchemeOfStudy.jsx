@@ -16,6 +16,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import FolderCopySharpIcon from '@mui/icons-material/FolderCopySharp';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import PreviewIcon from '@mui/icons-material/Preview';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 const SchemeOfStudy = () => {
     const navigate = useNavigate();
     const [rows, setRows] = React.useState([]);
@@ -120,7 +123,7 @@ const SchemeOfStudy = () => {
                         navigate(`courses?id=${row.scheme_id}`, { state: { data: row } });
                     }}
                 >
-                    <FolderCopySharpIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                    <PreviewIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
                 </Button>
             ),
         },
@@ -135,7 +138,7 @@ const SchemeOfStudy = () => {
                         navigate(`studentcourses/add`, { state: { data: row } });
                     }}
                 >
-                    <FolderCopySharpIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                    <PostAddIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
                 </Button>
             ),
         },
@@ -165,7 +168,7 @@ const SchemeOfStudy = () => {
                         onClick={AddNewStudent}
                         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
                     >
-                        <PersonAddAlt1Icon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+                        <ControlPointIcon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
                         <span className="hidden sm:inline-block">Add New</span>
                     </Button>
                 </div>
