@@ -1,6 +1,8 @@
 import React, { useState, Fragment } from "react";
 //import CourseCard from "./CourseCard";
 import { Send as SendIcon } from '@mui/icons-material';
+import { ToastContainer, toast } from "react-toastify";
+import sendRequest from "../courseRequest";
 import {
   Table,
   TableHead,
@@ -16,64 +18,77 @@ import {
 
 const CourseList = (props) => {
   const { courses } = props
-  const [selectedTeacher, setSelectedTeacher] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
+
+  const [teacher, setSelectedTeacher] = useState("");
+  const [section, setSelectedSection] = useState("");
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   console.log(selectedCourses)
   const handleAdd = (course) => {
-    const updatedCourse = { ...course, selectedTeacher, selectedSection };
+    const updatedCourse = { ...course, teacher, section };
     setSelectedCourses((prevSelectedCourses) => [...prevSelectedCourses, updatedCourse]);
   };
 
-  const handleRemove = (courseCode) => {
+  const handleRemove = (course_code) => {
     setSelectedCourses((prevSelectedCourses) =>
-      prevSelectedCourses.filter((course) => course.courseCode !== courseCode)
+      prevSelectedCourses.filter((course) => course.course_code !== course_code)
     );
   };
-  const handleSubmit = () => {
-    // Send the selected courses via axios request
-    console.log('Selected Courses:', selectedCourses);
+
+  const handleSubmit = async () => {
+    console.log("Selected Courses:", selectedCourses);
+    try {
+      const res = await sendRequest(selectedCourses);
+      toast.info(res.message)
+      setSelectedCourses([])
+      console.log("res", res.message);
+    } catch (error) {
+      toast.info("Internal Server Error")
+    }
   };
-  const handleTeacherChange = (event, CourseCode, Course, CourseCredit) => {
+  const handleTeacherChange = (event, course_code, course_title, credits, course_type) => {
     const { value } = event.target;
-    const existingCourse = selectedCourses.find((course) => course.courseCode === CourseCode);
+    const existingCourse = selectedCourses.find((course) => course.course_code === course_code);
 
     if (existingCourse) {
       const updatedCourses = selectedCourses.map((course) => {
-        if (course.courseCode === CourseCode) {
-          return { ...course, selectedTeacher: value };
+        if (course.course_code === course_code) {
+          return { ...course, teacher: value };
         }
         return course;
       });
       setSelectedCourses(updatedCourses);
     } else if (value && value !== '') {
       const selectedCourse = {
-        courseCode: CourseCode,
-        courseName: Course,
-        selectedTeacher: value,
+        course_code: course_code,
+        course_title: course_title,
+        course_type: course_type,
+        credits: credits,
+        teacher: value,
       };
       setSelectedCourses((prevCourses) => [...prevCourses, selectedCourse]);
     }
   };
 
-  const handleSectionChange = (event, CourseCode, Course, CourseCredit) => {
+  const handleSectionChange = (event, course_code, course_title, credits, course_type) => {
     const { value } = event.target;
-    const existingCourse = selectedCourses.find((course) => course.courseCode === CourseCode);
+    const existingCourse = selectedCourses.find((course) => course.course_code === course_code);
 
     if (existingCourse) {
       const updatedCourses = selectedCourses.map((course) => {
-        if (course.courseCode === CourseCode) {
-          return { ...course, selectedSection: value };
+        if (course.course_code === course_code) {
+          return { ...course, section: value };
         }
         return course;
       });
       setSelectedCourses(updatedCourses);
     } else if (value && value !== '') {
       const selectedCourse = {
-        courseCode: CourseCode,
-        courseName: Course,
-        selectedSection: value,
+        course_code: course_code,
+        courseName: course_title,
+        credit: credits,
+        course_type: course_type,
+        section: value,
       };
       setSelectedCourses((prevCourses) => [...prevCourses, selectedCourse]);
     }
@@ -130,12 +145,6 @@ const CourseList = (props) => {
     "FA23-BCS-A",
   ];
 
-
-  const [show, setShow] = useState(true);
-
-  // const handleAdd = (value) => {
-  // };
-
   return (
     // <div className="mb-4 lg:flex lg:items-center lg:justify-between p-4">
     <div className="w-full lg:mr-4 mb-4" style={{ overflowX: 'auto' }}>
@@ -146,6 +155,7 @@ const CourseList = (props) => {
               <TableCell>Course Code</TableCell>
               <TableCell>Course Name</TableCell>
               <TableCell>Course Credit</TableCell>
+              <TableCell>Course Type</TableCell>
               <TableCell>Select Teacher Name</TableCell>
               <TableCell>Select Section</TableCell>
               <TableCell>Press to Add</TableCell>
@@ -153,18 +163,20 @@ const CourseList = (props) => {
           </TableHead>
           <TableBody className="bg-white divide-y divide-gray-200">
             {courses.map((course, index) => (
-              <TableRow key={course.CourseCode}>
-                <TableCell>{course.CourseCode}</TableCell>
-                <TableCell>{course.Course}</TableCell>
-                <TableCell>{course.CourseCredit}</TableCell>
+              <TableRow key={course.course_code}>
+                <TableCell>{course.course_code}</TableCell>
+                <TableCell>{course.course_title}</TableCell>
+                <TableCell>{course.credits}</TableCell>
+                <TableCell>{course.course_type}</TableCell>
+
                 <TableCell>
-                  <FormControl  className="w-full mr-2" size="small">
-                    <InputLabel id={`TeacherInput-${course.CourseCode}`}> Teacher</InputLabel>
+                  <FormControl className="w-full mr-2" size="small">
+                    <InputLabel id={`TeacherInput-${course.course_code}`}> Teacher</InputLabel>
                     <Select
-                      labelId={`TeacherSelect-${course.CourseCode}`}
-                      id={`TeacherSelect-${course.CourseCode}`}
-                      value={selectedCourses.find((c) => c.courseCode === course.CourseCode)?.selectedTeacher || ''}
-                      onChange={(event) => handleTeacherChange(event, course.CourseCode, course.Course, course.CourseCredit)}
+                      labelId={`TeacherSelect-${course.course_code}`}
+                      id={`TeacherSelect-${course.course_code}`}
+                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.teacher || ''}
+                      onChange={(event) => handleTeacherChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
 
                     >
                       {teachers.map((option) => (
@@ -178,12 +190,12 @@ const CourseList = (props) => {
 
                 <TableCell>
                   <FormControl className="w-full mr-2" size="small">
-                    <InputLabel id={`SectionInput-${course.CourseCode}`}>Section</InputLabel>
+                    <InputLabel id={`SectionInput-${course.course_code}`}>Section</InputLabel>
                     <Select
-                      labelId={`SectionSelect-${course.CourseCode}`}
-                      id={`SectionSelect-${course.CourseCode}`}
-                      value={selectedCourses.find((c) => c.courseCode === course.CourseCode)?.selectedSection || ''}
-                      onChange={(event) => handleSectionChange(event, course.CourseCode, course.Course, course.CourseCredit)}
+                      labelId={`SectionSelect-${course.course_code}`}
+                      id={`SectionSelect-${course.course_code}`}
+                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.section || ''}
+                      onChange={(event) => handleSectionChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
                     >
                       {Sections.map((option) => (
                         <MenuItem key={option} value={option}>
@@ -195,16 +207,16 @@ const CourseList = (props) => {
                 </TableCell>
 
                 <TableCell>
-                  {selectedCourses.some((selectedCourse) => selectedCourse.courseCode === course.CourseCode) ? (
+                  {selectedCourses.some((selectedCourse) => selectedCourse.course_code === course.course_code) ? (
                     <Button
                       className="bg-red-500 text-white px-4 py-2 rounded px-10"
-                      onClick={() => handleRemove(course.CourseCode)}
+                      onClick={() => handleRemove(course.course_code)}
                     >
                       Remove
                     </Button>
                   ) : (
                     <Button
-                      disabled={!(selectedTeacher && selectedSection)}
+                      disabled={!(teacher && section)}
                       className="bg-blue-500 text-white px-4 py-2 rounded px-10"
                       onClick={() => handleAdd(course)}
                     >
@@ -238,8 +250,18 @@ const CourseList = (props) => {
           </div>
         </div>
       ) : null}
-
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
 
       {/* 
       </div> */}

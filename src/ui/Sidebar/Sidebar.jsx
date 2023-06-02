@@ -15,7 +15,7 @@ let iconClass =
 const sideNavigation = [
   {
     name: "Dashboard",
-    href: "/dashboard/registeredcourses",
+    href: "/dashboard",
     icon: <HomeIcon className={iconClass} />,
   },
   {
@@ -24,13 +24,8 @@ const sideNavigation = [
     icon: <AcademicCapIcon className={iconClass} />,
   },
   {
-    name: "Probabation Status",
-    href: "/mentions",
-    icon: <DocumentIcon className={iconClass} />,
-  },
-  {
-    name: "Batch Advisor Comments",
-    href: "/comparison",
+    name: "Requested Courses",
+    href: "/requested/get",
     icon: <ChartPieIcon className={iconClass} />,
   },
 ];
@@ -57,11 +52,10 @@ export const Sidebar = ({ currentProjectFetch = undefined, showSideBar }) => {
   return (
     <aside
       id="sidebar"
-      className={`fixed top-0 left-0 z-20 h-full  bg-white flex-shrink-0 flex-col pt-16 transition-width duration-75 sm:w-0 flex lg:w-64 ${
-        !showSideBar && "w-0 sm:w-0 lg:-w-64"
+      className={`fixed top-0 left-0 z-20 h-full  bg-white flex-shrink-0 flex-col pt-16 transition-width duration-75 sm:w-0 flex lg:w-64 ${!showSideBar && "w-0 sm:w-0 lg:-w-64"
           ? "w-64 sm:w-64 md:w-64 lg:w-0"
           : "w-0"
-      }  `}
+        }  `}
     >
       <div className="relative flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white pt-0">
         <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">

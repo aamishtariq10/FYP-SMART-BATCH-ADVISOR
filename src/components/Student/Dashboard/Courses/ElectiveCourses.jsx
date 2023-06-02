@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import Dashboard from "../Dashboard";
 import axios from "axios";
+import sendRequest from "../courseRequest";
 import { ToastContainer, toast } from "react-toastify";
 import { Send as SendIcon } from "@mui/icons-material";
 import {
@@ -57,7 +58,17 @@ const ElectiveCourses = () => {
   React.useEffect(() => {
     getData();
   }, []);
-
+  const handleSubmit = async () => {
+    console.log("Selected Courses:", selectedCourses);
+    try {
+      const res = await sendRequest(selectedCourses);
+      toast.info(res.message)
+      setSelectedCourses([])
+      console.log("res", res.message);
+    } catch (error) {
+      toast.info("Internal Server Error")
+    }
+  };
   const handleAddCourse = (course_code) => {
     const selectedCourse = CoursesDetails.find(
       (course) => course.course_code === course_code
@@ -66,16 +77,13 @@ const ElectiveCourses = () => {
       setSelectedCourses([...selectedCourses, selectedCourse]);
     }
   };
-  
+
   const handleRemove = (courseCode) => {
     setSelectedCourses(
       selectedCourses.filter((course) => course.course_code !== courseCode)
     );
   };
-  const handleSubmit = () => {
-    // Send the selected courses via axios request
-    console.log("Selected Courses:", selectedCourses);
-  };
+
   return (
     <Dashboard>
       <section className="flex h-full w-full  justify-center items-center">
@@ -133,9 +141,8 @@ const ElectiveCourses = () => {
           {CoursesDetails.length > 0 ? (
             <div className="   flex justify-end mt-4">
               <div
-                className={`w-18 rounded-md ${
-                  selectedCourses.length > 0 ? "bg-blue-400" : "bg-gray-400"
-                } `}
+                className={`w-18 rounded-md ${selectedCourses.length > 0 ? "bg-blue-400" : "bg-gray-400"
+                  } `}
               >
                 <Button
                   type="button"

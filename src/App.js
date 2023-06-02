@@ -39,6 +39,8 @@ import AddCoursesToStudent from "./components/Admin/AddCourse/AddCoursesToStuden
 import ViewStudentCourses from "./components/Admin/StudentCoursesAdd/ViewStudentCourses";
 import RegisterNewCourses from "./components/Student/Dashboard/Courses/RegisterNewCourses";
 import ElectiveCourses from "./components/Student/Dashboard/Courses/ElectiveCourses";
+import RequestedCourses from "./components/Student/Dashboard/RequestedCourses/RequestedCourses";
+import ReviewRequest from "./components/Student/Dashboard/RequestedCourses/ReviewRequest";
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -143,6 +145,10 @@ function App() {
               {isStudent ? (
                 <>
                   <Route
+                    path="/requested/get/request"
+                    element={<ReviewRequest />}
+                  />
+                  <Route
                     path="/dashboard/pendingcourses"
                     element={<PendingCourses />}
                   />
@@ -159,15 +165,13 @@ function App() {
                     element={<ElectiveCourses />}
                   />
 
-                  <Route
-                    path="/dashboard/Electives"
-                    element={<RegisteredCourses />}
-                  />
+                  <Route path="/dashboard/" element={<RegisteredCourses />} />
 
                   <Route path="/resultcard" element={<ResultCard />} />
 
-                  <Route path="/pendingcourses" element={<PendingCourses />} />
+                  {/* <Route path="/pendingcourses" element={<PendingCourses />} /> */}
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/requested/get" element={<RequestedCourses />} />
                   <Route path="/student/profile" element={<Profile />} />
                 </>
               ) : (
