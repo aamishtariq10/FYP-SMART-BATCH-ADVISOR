@@ -142,6 +142,7 @@ const Results = () => {
     };
     const handleClose = (row) => {
         console.log(selectedRows)
+        
         axios
             .put(`http://localhost:5000/admin/results/delete`, {
                 data: { ids: selectedRows },
@@ -266,9 +267,9 @@ const Results = () => {
                                 labelId="RegistrationNumberSelect"
                                 id="RegistrationNumber"
                                 label="Registration #"
-                                value={selectedRegNo}
+                                value={selectedRegNo || ""}
                                 onChange={(event) => {
-                                    setSelectedRegNo(event.target.value)
+                                    setSelectedRegNo(event?.target?.value)
 
                                 }}
                             > <MenuItem value="">
@@ -290,7 +291,7 @@ const Results = () => {
                                 labelId="Session"
                                 id="Session"
                                 label="Session"
-                                value={selectedSessionYear}
+                                value={selectedSessionYear || ""}
                                 onChange={(event) => {
                                     setSelectedSessionYear(event.target.value)
 
@@ -314,7 +315,7 @@ const Results = () => {
                                 labelId="Session"
                                 id="Session"
                                 label="Session"
-                                value={selectedCourse}
+                                value={selectedCourse || ""}
                                 onChange={(event) => setSelectedCourse(event.target.value)}
                             > <MenuItem value="">
                                     <em>None</em>
