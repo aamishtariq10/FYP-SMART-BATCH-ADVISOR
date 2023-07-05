@@ -13,6 +13,7 @@ import {
   TableCell,
   Select,
   MenuItem,
+  TextField,
   Button,
 } from '@mui/material';
 
@@ -94,57 +95,20 @@ const CourseList = (props) => {
     }
   };
 
-
-  const teachers = [
-    "Teacher 1",
-    "Teacher 2",
-    "Teacher 3",
-    "Teacher 4",
-    "Teacher 5",
-    "Teacher 6",
-    "Teacher 7",
-    "Teacher 8",
-    "Teacher 9",
-    "Teacher 10",
-    "Teacher 11",
-    "Teacher 12",
-    "Teacher 13",
-    "Teacher 14",
-    "Teacher 15",
-    "Teacher 16",
-    "Teacher 17",
-    "Teacher 18",
-    "Teacher 19",
-    "Teacher 20",
+  const departmentOptions = ["BAF", "BAI", "BAR", "BBA", "BCE", "BCS", "BDE", "BEC", "BEE", "BEN", "BID", "BMC", "BPH", "BPY", "BSE", "BSM", "BST", "CHE", "PCH", "PCS", "PEE", "PHM", "PMS", "PMT", "PPC", "PPH", "PST", "R06", "RBA", "RCH", "RCP", "RCS", "REC", "REE", "REL", "RMS", "RMT", "RNE", "RPH", "RPM", "RPY", "RST",
   ];
-  const Sections = [
-    "FA19-BCS-A",
-    "FA19-BCS-B",
-    "FA19-BCS-C",
-    "SP20-BCS-A",
-    "SP20-BCS-B",
-    "SP20-BCS-C",
-    "FA20-BCS-A",
-    "FA20-BCS-B",
-    "FA20-BCS-C",
-    "SP21-BCS-A",
-    "SP21-BCS-B",
-    "SP21-BCS-C",
-    "FA21-BCS-A",
-    "FA21-BCS-B",
-    "FA21-BCS-C",
-    "SP22-BCS-A",
-    "SP22-BCS-B",
-    "SP22-BCS-C",
-    "FA22-BCS-A",
-    "FA22-BCS-B",
-    "FA22-BCS-C",
-    "SP23-BCS-A",
-    "SP23-BCS-B",
-    "SP23-BCS-C",
-    "FA23-BCS-A",
-  ];
+  const sessions = ["FA19", "SP20", "FA20", "SP21", "FA21", "SP22", "FA22", "SP23", "FA23"];
 
+  const Sections = sessions.flatMap((session) =>
+    departmentOptions.flatMap((department) => [
+      `${session}-${department}-A`,
+      `${session}-${department}-B`,
+      `${session}-${department}-C`,
+    ])
+  );
+
+
+  console.log(Sections);
   return (
     // <div className="mb-4 lg:flex lg:items-center lg:justify-between p-4">
     <div className="w-full lg:mr-4 mb-4" style={{ overflowX: 'auto' }}>
@@ -171,41 +135,35 @@ const CourseList = (props) => {
 
                 <TableCell>
                   <FormControl className="w-full mr-2" size="small">
-                    <InputLabel id={`TeacherInput-${course.course_code}`}> Teacher</InputLabel>
-                    <Select
-                      labelId={`TeacherSelect-${course.course_code}`}
-                      id={`TeacherSelect-${course.course_code}`}
+                    {/* <InputLabel htmlFor={`TeacherInput-${course.course_code}`}>Teacher</InputLabel> */}
+                    <TextField
+                      placeholder="teacher name"
+                      id={`TeacherInput-${course.course_code}`}
                       value={selectedCourses.find((c) => c.course_code === course.course_code)?.teacher || ''}
                       onChange={(event) => handleTeacherChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
-
-                    >
-                      {teachers.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      size="small"
+                    />
                   </FormControl>
-                </TableCell>
 
+                </TableCell>
                 <TableCell>
-                  <FormControl className="w-full mr-2" size="small">
-                    <InputLabel id={`SectionInput-${course.course_code}`}>Section</InputLabel>
-                    <Select
-                      labelId={`SectionSelect-${course.course_code}`}
-                      id={`SectionSelect-${course.course_code}`}
-                      value={selectedCourses.find((c) => c.course_code === course.course_code)?.section || ''}
-                      onChange={(event) => handleSectionChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
-                    >
-                      {Sections.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <select
+                    id={`SectionSelect-${course.course_code}`}
+                    className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    value={selectedCourses.find((c) => c.course_code === course.course_code)?.section || ''}
+                    onChange={(event) => handleSectionChange(event, course.course_code, course.course_title, course.credits, course.course_type)}
+                  >
+                    <option value="">Select a section</option>
+                    {Sections.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </TableCell>
-
                 <TableCell>
                   {selectedCourses.some((selectedCourse) => selectedCourse.course_code === course.course_code) ? (
                     <Button
