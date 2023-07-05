@@ -181,10 +181,18 @@ const UpdateResults = () => {
             Accept: "application/json",
           },
         });
-      toast.info(res.data.message, { autoClose: 1500 })
-      setTimeout(() => {
-        navigate("/admin/results");
-      }, 1000);
+
+      if (res.data.status == 200) {
+        toast.info(res.data.message, { autoClose: 1500 })
+
+        setTimeout(() => {
+          navigate("/admin/results");
+        }, 1000);
+      } else {
+        setErrorMsg(res.data.message)
+        toast.error(res.data.message, { autoClose: 1500 })
+      }
+
     }
     catch (error) {
       toast.error(error.response.data.message, { autoClose: 1500 })
@@ -204,7 +212,7 @@ const UpdateResults = () => {
       )
       if (add.data.status == 200) {
         toast.info(add.data.message, { autoClose: 1500 })
-        
+
         setTimeout(() => {
           navigate("/admin/results");
         }, 1000);
