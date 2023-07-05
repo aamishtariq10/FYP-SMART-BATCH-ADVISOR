@@ -7,7 +7,7 @@ import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import { AdminLayout } from "../../../layouts/AdminLayout";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,6 +21,7 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 const SchemeOfStudy = () => {
     const navigate = useNavigate();
+    
     const [rows, setRows] = React.useState([]);
     const getRowId = (row) => row.scheme_id;
     const [searchValue, setSearchValue] = React.useState('');

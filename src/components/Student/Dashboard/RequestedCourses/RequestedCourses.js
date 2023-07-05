@@ -3,7 +3,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import React from "react";
 import { MainLayout } from "../../../../layouts/MainLayout";
 import { GridToolbar } from "@mui/x-data-grid-pro";
-import { Typography, Paper, TextField, Button, Box } from "@mui/material";
+import {
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Box,
+  Badge,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
@@ -13,28 +20,25 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
-import FolderCopySharpIcon from "@mui/icons-material/FolderCopySharp";
-import PostAddIcon from "@mui/icons-material/PostAdd";
 import PreviewIcon from "@mui/icons-material/Preview";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
 const RequestedCourses = () => {
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]);
   const getRowId = (row) => row.id;
   const [searchValue, setSearchValue] = React.useState("");
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const token = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")).token
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
     : null;
   const [open, setOpen] = React.useState(false);
 
   const getData = async () => {
     try {
       const student = await axios.get(
-        "http://localhost:5000/student/request/Coursereg/get",
+        `http://localhost:5000/student/request/Coursereg/get/${user.StudentRegNo}/${user.CurrentSemester}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
@@ -88,7 +92,7 @@ const RequestedCourses = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
@@ -146,6 +150,7 @@ const RequestedCourses = () => {
     { field: "credits", headerName: "Credits", width: 150 },
     { field: "course_type", headerName: "Course Type", width: 150 },
     { field: "teacher", headerName: "Teacher", width: 150 },
+    { field: "class_section", headerName: "Class Section", width: 150 },
     { field: "status", headerName: "Request Status", width: 150 },
     {
       field: "action",
@@ -155,35 +160,44 @@ const RequestedCourses = () => {
       renderCell: ({ row }) => (
         <Button
           type="submit"
-          variant="contained"
-          color="primary"
+          variant="outline"
+          // color="primary"
           onClick={() => {
             navigate(`request`, { state: { data: row } });
           }}
         >
-          <PreviewIcon
-            className="w-2 h-2 sm:w-6 sm:h-6 text-white"
-            aria-hidden="true"
-          />
+          {row.seenStudent === 0 ? ( // Condition to check if seen is 0
+            <Badge color="secondary" variant="dot">
+              <PreviewIcon
+                className="w-2 h-2 sm:w-6 sm:h-6 text-blue-500"
+                aria-hidden="true"
+              />
+            </Badge>
+          ) : (
+            <PreviewIcon
+              className="w-2 h-2 sm:w-6 sm:h-6 text-primary"
+              aria-hidden="true"
+            />
+          )}
         </Button>
       ),
     },
-    {
-      field: "cancel",
-      headerName: "Cancel Request",
-      sortable: false,
-      width: 130,
-      renderCell: ({ row }) => (
-        <Button
-          type="button"
-          variant="contained"
-          color="error"
-         // onClick={handleCancelRequest(row.id)}
-        >
-          Cancel
-        </Button>
-      ),
-    },
+    // {
+    //   field: "cancel",
+    //   headerName: "Cancel Request",
+    //   sortable: false,
+    //   width: 130,
+    //   renderCell: ({ row }) => (
+    //     <Button
+    //       type="button"
+    //       variant="contained"
+    //       color="error"
+    //       // onClick={handleCancelRequest(row.id)}
+    //     >
+    //       Cancel
+    //     </Button>
+    //   ),
+    // },
     // {
     //   field: "courses",
     //   headerName: "Add New Courses to student",

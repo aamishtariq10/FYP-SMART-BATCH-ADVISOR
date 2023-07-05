@@ -25,22 +25,17 @@ function AddByUpload(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
-
   const handleUpload = () => {
     const formData = new FormData();
     formData.append("file", selectedFile);
     axios
       .post("http://localhost:5000/admin/batchadvisor/upload", formData, {
         headers: {
-
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-
         },
       })
       .then((res) => {
-        // console.log("++++++++++=> ", res);
+        console.log("++++++++++=> ", res);
         toast.info(res.data.message, {
           position: "top-right",
           autoClose: 5000,
@@ -54,7 +49,7 @@ function AddByUpload(props) {
         getData();
       })
       .catch((err) => {
-        // console.log("++++++++++=> ", err);
+        console.log("++++++++++=> ", err);
 
         toast.error(err.response.data.message, { autoClose: 1500 });
       });
@@ -66,6 +61,7 @@ function AddByUpload(props) {
       <Button
         component="span"
         onClick={handleClickOpen}
+        disabled
         className="flex items-center justify-center space-x-1 h-12 px-4 mx-4 text-sm font-medium text-white bg-blue-900 rounded-md shadow-lg sm:text-base sm:px-6"
       >
         <UploadFileIcon className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />

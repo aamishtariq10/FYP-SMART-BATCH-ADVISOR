@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { MainLayout } from "../../../../layouts/MainLayout";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import {
   AppBar,
   Toolbar,
@@ -13,6 +15,7 @@ import {
   TableRow,
   TableCell,
   MenuItem,
+  TableContainer,
   IconButton,
   FormControl,
   TextField,
@@ -24,8 +27,8 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons";
 
 import { useNavigate, useLocation } from "react-router-dom";
 const ReviewRequest = () => {
-  const token = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")).token
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
     : null;
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,17 +38,81 @@ const ReviewRequest = () => {
   const rowData = location.state?.data;
   const [comments, setComments] = useState([]);
   const [reply, setReply] = useState("");
-
+  const [errorMsg, setErrorMsg] = useState("");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  };
   const handleReplyChange = (e) => {
     setReply(e.target.value);
   };
+  useEffect(() => {
+    setComments(JSON.parse(rowData.comments));
+  }, [rowData]);
 
-  const handleReplySubmit = () => {
-    // Logic to submit the reply to the backend or update state
-    // ...
-    // Clear the reply input field
-    setReply("");
+  const handleReplySubmit = async () => {
+    if (!reply) {
+      setErrorMsg("Reply is not allowed to be empty");
+      return;
+    }
+    setErrorMsg("");
+    const currentTime = new Date().toLocaleString();
+    const newReply = {
+      batchadvisor: user?.StudentName,
+      comment: reply,
+      time: currentTime,
+    };
+    try {
+      const res = await axios.post(
+        `http://localhost:5000/student/request/comment/reply/${rowData.id}`,
+        newReply,
+        config
+      );
+      if (res.data.status === 200) {
+        const data = {
+          seenBatchAdvisor: false,
+        };
+        await updateSeen(data);
+        setReply("");
+        toast.info(res?.data?.message);
+      } else {
+        toast.error(res?.data?.message);
+      }
+    } catch (error) {
+      toast.error("Internal server Error");
+    }
   };
+  const getReq = async () => {
+    const res = await axios.get(
+      `http://localhost:5000/student/request/comment/reply/${rowData.id}`,
+      config
+    );
+    setComments(JSON.parse(res?.data?.data[0]?.comments));
+  };
+  useEffect(() => {
+    getReq();
+  }, [reply]);
+  const containerRef = useRef(null);
+  useEffect(() => {
+    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  }, [comments]);
+  const updateSeen = async (data) => {
+    const res = await axios.post(
+      `http://localhost:5000/student/request/comment/updateseen/${rowData.id}`,
+      data,
+      config
+    );
+  };
+
+  useEffect(() => {
+    const data = {
+      seenStudent: true,
+    };
+    updateSeen(data);
+  }, [reply]);
   return (
     <MainLayout>
       <AppBar position="static" sx={{ bgcolor: "primary" }}>
@@ -90,45 +157,103 @@ const ReviewRequest = () => {
         <Typography variant="h4" className="text-2xl font-bold mb-4">
           Course Request Details
         </Typography>
-        <List className="mb-8">
-          <ListItem className="mb-4">
-            <ListItemText primary={`Student Reg No: ${rowData.StudentRegNo}`} />
-          </ListItem>
-          <ListItem className="mb-4">
-            <ListItemText primary={`Course Code: ${rowData.course_code}`} />
-          </ListItem>
-          <ListItem className="mb-4">
-            <ListItemText primary={`Course Title: ${rowData.course_title}`} />
-          </ListItem>
-          <ListItem className="mb-4">
-            <ListItemText primary={`Semester: ${rowData.semester}`} />
-          </ListItem>
-          {/* Add more list items for other details */}
-        </List>
+
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Field</TableCell>
+                <TableCell>Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>Student Reg No</TableCell>
+                <TableCell>{rowData.StudentRegNo}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Course Code</TableCell>
+                <TableCell>{rowData.course_code}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Course Title</TableCell>
+                <TableCell>{rowData.course_title}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Semester</TableCell>
+                <TableCell>{rowData.semester}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Course Type</TableCell>
+                <TableCell>{rowData.course_type}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Course Teacher</TableCell>
+                <TableCell>{rowData.teacher}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
         <Typography variant="h5" className="text-xl font-bold mb-4">
           Comments
         </Typography>
-        <List className="mb-4">
-          {comments.map((comment, index) => (
-            <ListItem key={index} className="mb-2">
-              <ListItemText primary={comment} />
-            </ListItem>
-          ))}
-        </List>
-        <div className="mb-4">
+        <div className="flex overflow-x-auto h-60 mb-4" ref={containerRef}>
+          <List className="mb-2">
+            {comments?.map((comment, index) => (
+              <ListItem key={index} className={`mb-2`}>
+                <ListItemText
+                  primary={
+                    <div
+                      className={`${
+                        comment.batchadvisor === user?.StudentName
+                          ? "bg-blue-500 rounded text-white text-right ml-auto"
+                          : "bg-gray-300 rounded text-left mr-auto"
+                      } p-2 w-1/2 break-all`}
+                      style={{ overflowWrap: "break-word" }}
+                    >
+                      {comment.comment}
+                    </div>
+                  }
+                  secondary={
+                    <div>
+                      <span className="block mb-1">
+                        {comment.batchadvisor === user?.StudentName
+                          ? "You"
+                          : comment.batchadvisor}{" "}
+                        {comment.time}
+                      </span>
+                    </div>
+                  }
+                  className={`text-${
+                    comment.batchadvisor === user?.StudentName
+                      ? "right"
+                      : "left"
+                  }`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+
+        <div className="mb-2">
           <TextField
             multiline
-            rows={4}
+            rows={2}
             variant="outlined"
-            placeholder="Reply to Batch Advisor"
+            placeholder="Reply to student"
             value={reply}
             onChange={handleReplyChange}
             className="w-full"
           />
+          {errorMsg ? (
+            <div className="text-red-500 text-sm">{errorMsg + " \n"}</div>
+          ) : null}
         </div>
         <Button variant="contained" color="primary" onClick={handleReplySubmit}>
           Submit Reply
         </Button>
+        {/* <ToastContainer /> */}
       </div>
     </MainLayout>
   );

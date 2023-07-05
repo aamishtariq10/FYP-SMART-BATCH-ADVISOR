@@ -2,18 +2,32 @@ import { ToastContainer, toast } from 'react-toastify';
 import { DataGrid } from '@mui/x-data-grid';
 import React from "react";
 import { GridToolbar } from '@mui/x-data-grid-pro';
-import { Typography, Paper, TextField, Box } from '@mui/material';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { BatchAdvisorLayout } from "../../../layouts/BatchAdvisorLayout";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'
-
-
+import PreviewIcon from '@mui/icons-material/Preview';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import {
+    Table,
+    TableHead,
+    FormControl,
+    InputLabel,
+    TableBody,
+    TableRow,
+    TableCell,
+    Select,
+    MenuItem,
+    Button,
+    Typography, Paper, TextField, Box
+} from "@mui/material";
 
 
 const ListStudents = () => {
     const [rows, setRows] = React.useState([]);
+    const navigate = useNavigate();
     const getRowId = (row) => row.SrNo;
     const [searchValue, setSearchValue] = React.useState('');
     const token = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).token : null;
@@ -44,7 +58,7 @@ const ListStudents = () => {
         getData();
     }, []);
 
-   
+
     const filterRowsByName = (rows) => {
         if (!rows || rows.length === 0) {
             return [];
@@ -56,7 +70,7 @@ const ListStudents = () => {
     //     // const navigate = useNavigate();
     //     // navigate('/resultcard', { state: { id: 7, color: 'green' } });
     // }
-   
+
 
 
     const columns = [
@@ -64,23 +78,66 @@ const ListStudents = () => {
 
         { field: 'StudentRegNo', headerName: 'Reg No', width: 150 },
         { field: 'StudentName', headerName: 'Name', width: 150 },
-        { field: 'StudentSection', headerName: 'Section', width: 150 },
-        { field: 'StudentEmail', headrName: 'Email', width: 300 },
+        { field: 'StudentSection', headerName: 'Section', width: 120 },
+        { field: 'StudentEmail', headrName: 'Email', width: 250 },
         { field: 'CurrentSemester', headerName: 'Semester', width: 100 },
         { field: 'StudentStatus', headerName: 'Status', width: 100 },
         {
-            field: "action",
-            headerName: "Action",
+            field: 'CGPA',
+            headerName: 'Student CGPA',
+            width: 150,
+            renderCell: ({ value }) => {
+                let color = '';
+                if (value < 2) {
+                    color = 'red';
+                } else if (Math.abs(value - 2.2) <= 0.2) {
+                    color = 'orange';
+                }
+                return <span style={{ color }}>{value}</span>;
+            },
+        },
+        {
+            field: "Results",
+            headerName: "Results",
             sortable: false,
             renderCell: ({ row }) =>
-            
-              <Link class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" to={'/resultstudent?id=' + row.StudentRegNo}  
-             >
-                Result
-              </Link>,
-          },
-        
 
+                <Link class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded" to={'/resultstudent?id=' + row.StudentRegNo}
+                >
+                    Result
+                </Link>,
+        },
+
+        {
+            field: 'regcourses',
+            headerName: 'Registered Courses',
+            sortable: false,
+            width: 150,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`/batchadvisor/studentslist/regCourses/${row.StudentRegNo}/${row.CurrentSemester}`);
+                    }}
+                >
+                    <PreviewIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
+        {
+            field: 'Pending',
+            headerName: 'Pending Courses',
+            sortable: false,
+            width: 150,
+            renderCell: ({ row }) => (
+                <Button type="submit" variant="contained" color="primary"
+                    onClick={() => {
+                        navigate(`/batchadvisor/studentslist/pending/${row.StudentRegNo}/${row.CurrentSemester}`);
+                    }}
+                >
+                    <PendingActionsIcon className="w-2 h-2 sm:w-6 sm:h-6 text-white" aria-hidden="true" />
+                </Button>
+            ),
+        },
     ];
     return (
         <BatchAdvisorLayout>

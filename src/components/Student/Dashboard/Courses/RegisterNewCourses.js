@@ -23,11 +23,12 @@ const RegisterNewCourses = () => {
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : null;
-  const RegNo = user.StudentRegNo.split("-");
+  const RegNo = user?.StudentRegNo?.split("-");
   const data = {
     batch: RegNo[0],
     department: RegNo[1],
-    semester: user.CurrentSemester,
+    semester: user?.CurrentSemester,
+    StudentRegNo: user?.StudentRegNo,
     course_type: "regular",
   };
   console.log(data);
@@ -45,10 +46,10 @@ const RegisterNewCourses = () => {
           },
         }
       );
-      console.log(student.data.data);
-      setCoursesDetails(student.data.data);
+      console.log(student?.data?.data);
+      setCoursesDetails(student?.data?.data);
       // setRows(student.data.data);
-      console.log(student);
+      // console.log(student);
     } catch (error) {
       // toast.error("No data found");
     }
@@ -67,7 +68,7 @@ const RegisterNewCourses = () => {
       setSelectedCourses([...selectedCourses, selectedCourse]);
     }
   };
-  
+
   const handleRemove = (courseCode) => {
     setSelectedCourses(
       selectedCourses.filter((course) => course.course_code !== courseCode)
@@ -77,11 +78,11 @@ const RegisterNewCourses = () => {
     console.log("Selected Courses:", selectedCourses);
     try {
       const res = await sendRequest(selectedCourses);
-      toast.info(res.message)
-      setSelectedCourses([])
+      toast.info(res.message);
+      setSelectedCourses([]);
       console.log("res", res.message);
     } catch (error) {
-      toast.info("Internal Server Error")
+      toast.info("Internal Server Error");
     }
   };
   return (
@@ -89,7 +90,7 @@ const RegisterNewCourses = () => {
       <section className="flex h-full w-full  justify-center items-center">
         {/* <div className="mb-4 lg:flex lg:items-center lg:justify-between p-4"> */}
         <div className="w-full lg:mr-4 mb-4" style={{ overflowX: "auto" }}>
-          {CoursesDetails.length > 0 ? (
+          {CoursesDetails?.length > 0 ? (
             <Table>
               <TableHead>
                 <TableRow className="bg-gray-50">
@@ -102,14 +103,14 @@ const RegisterNewCourses = () => {
                 </TableRow>
               </TableHead>
               <TableBody className="bg-white divide-y divide-gray-200">
-                {CoursesDetails.map((course, index) => (
+                {CoursesDetails?.map((course, index) => (
                   <TableRow key={course.course_code}>
                     <TableCell>{course.course_code}</TableCell>
                     <TableCell>{course.course_title}</TableCell>
                     <TableCell>{course.credits}</TableCell>
                     <TableCell>{course.teacher}</TableCell>
                     <TableCell>{course.course_type}</TableCell>
-               
+
                     <TableCell>
                       {selectedCourses.some(
                         (selectedCourse) =>
@@ -136,13 +137,15 @@ const RegisterNewCourses = () => {
               </TableBody>
             </Table>
           ) : (
-            <p>No courses to Show.</p>
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md">
+              <p>No courses to Show.</p>
+            </div>
           )}
-          {CoursesDetails.length > 0 ? (
+          {CoursesDetails?.length > 0 ? (
             <div className="   flex justify-end mt-4">
               <div
                 className={`w-18 rounded-md ${
-                  selectedCourses.length > 0 ? "bg-blue-400" : "bg-gray-400"
+                  selectedCourses?.length > 0 ? "bg-blue-400" : "bg-gray-400"
                 } `}
               >
                 <Button

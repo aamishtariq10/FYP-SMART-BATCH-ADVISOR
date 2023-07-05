@@ -41,6 +41,10 @@ import RegisterNewCourses from "./components/Student/Dashboard/Courses/RegisterN
 import ElectiveCourses from "./components/Student/Dashboard/Courses/ElectiveCourses";
 import RequestedCourses from "./components/Student/Dashboard/RequestedCourses/RequestedCourses";
 import ReviewRequest from "./components/Student/Dashboard/RequestedCourses/ReviewRequest";
+import ReviewRequestBA from "./components/BatchAdvisor/StudentRequests/ReviewRequestBA";
+import RegisteredCoursesStudent from "./components/BatchAdvisor/ListStudents/RegisteredCoursesStudent";
+import PendingCoursesStudent from "./components/BatchAdvisor/ListStudents/PendingCoursesStudent";
+import RegisteredCoursesAdmin from "./components/Admin/RegsiteredCourses/RegisteredCoursesAdmin";
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,6 +109,10 @@ function App() {
                     element={<UpdateStudent />}
                   />
                   <Route path="/admin/students" element={<Student />} />
+                  <Route
+                    path="/admin/regcourses"
+                    element={<RegisteredCoursesAdmin />}
+                  />
                   {/* admin course routes */}
                   <Route path="/admin/addcourse" element={<AddCourse />} />
                   {/* admin batch advisor routes */}
@@ -189,10 +197,22 @@ function App() {
                     element={<StudentsList />}
                   />
                   <Route
+                    path="/batchadvisor/studentslist/regCourses/:StudentRegNo/:CurrentSemester"
+                    element={<RegisteredCoursesStudent />}
+                  />
+                  <Route
+                    path="/batchadvisor/studentslist/pending/:StudentRegNo/:CurrentSemester"
+                    element={<PendingCoursesStudent />}
+                  />
+                  <Route
                     path="/batchadvisor/studentrequests"
                     element={<StudentRequests />}
                   />
                   <Route path="/resultstudent" element={<ResultStudent />} />
+                  <Route
+                    path="/batchadvisor/studentrequests/request"
+                    element={<ReviewRequestBA />}
+                  />
                 </>
               ) : (
                 <></>

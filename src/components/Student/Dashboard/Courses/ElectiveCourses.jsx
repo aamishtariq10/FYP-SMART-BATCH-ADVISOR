@@ -23,11 +23,12 @@ const ElectiveCourses = () => {
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : null;
-  const RegNo = user.StudentRegNo.split("-");
+  const RegNo = user?.StudentRegNo?.split("-");
   const data = {
     batch: RegNo[0],
     department: RegNo[1],
-    semester: user.CurrentSemester,
+    semester: user?.CurrentSemester,
+    StudentRegNo: user?.StudentRegNo,
     course_type: "elective",
   };
   console.log(data);
@@ -45,8 +46,8 @@ const ElectiveCourses = () => {
           },
         }
       );
-      console.log(student.data.data);
-      setCoursesDetails(student.data.data);
+      console.log(student?.data?.data);
+      setCoursesDetails(student?.data?.data);
       // setRows(student.data.data);
       console.log(student);
     } catch (error) {
@@ -62,9 +63,9 @@ const ElectiveCourses = () => {
     console.log("Selected Courses:", selectedCourses);
     try {
       const res = await sendRequest(selectedCourses);
-      toast.info(res.message)
+      toast.info(res?.message)
       setSelectedCourses([])
-      console.log("res", res.message);
+      console.log("res", res?.message);
     } catch (error) {
       toast.info("Internal Server Error")
     }
@@ -89,7 +90,7 @@ const ElectiveCourses = () => {
       <section className="flex h-full w-full  justify-center items-center">
         {/* <div className="mb-4 lg:flex lg:items-center lg:justify-between p-4"> */}
         <div className="w-full lg:mr-4 mb-4" style={{ overflowX: "auto" }}>
-          {CoursesDetails.length > 0 ? (
+          {CoursesDetails?.length > 0 ? (
             <Table>
               <TableHead>
                 <TableRow className="bg-gray-50">
@@ -111,7 +112,7 @@ const ElectiveCourses = () => {
                     <TableCell>{course.course_type}</TableCell>
 
                     <TableCell>
-                      {selectedCourses.some(
+                      {selectedCourses?.some(
                         (selectedCourse) =>
                           selectedCourse.course_code === course.course_code
                       ) ? (
@@ -136,9 +137,11 @@ const ElectiveCourses = () => {
               </TableBody>
             </Table>
           ) : (
-            <p>No courses to Show.</p>
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md">
+              <p>No courses to Show.</p>
+            </div>
           )}
-          {CoursesDetails.length > 0 ? (
+          {CoursesDetails?.length > 0 ? (
             <div className="   flex justify-end mt-4">
               <div
                 className={`w-18 rounded-md ${selectedCourses.length > 0 ? "bg-blue-400" : "bg-gray-400"
